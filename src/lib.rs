@@ -1,4 +1,5 @@
 pub mod api;
+pub mod error;
 
 /// Implement this trait in your code to handle slack events
 pub trait SocketModeEventHandler {
@@ -15,7 +16,7 @@ impl SocketModeClient {
     pub async fn run<T: SocketModeEventHandler>(
         token: &str,
         handler: &mut T,
-    ) -> Result<(), surf::Error> {
+    ) -> Result<(), error::Error> {
         let connection = api::open_connection(token).await?;
         Ok(())
     }
