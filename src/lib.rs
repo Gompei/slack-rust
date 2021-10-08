@@ -1,3 +1,5 @@
+use crate::api::Token;
+
 pub mod api;
 pub mod error;
 
@@ -14,10 +16,10 @@ pub struct SocketModeClient {}
 
 impl SocketModeClient {
     pub async fn run<T: SocketModeEventHandler>(
-        token: &str,
+        token: Token,
         handler: &mut T,
     ) -> Result<(), error::Error> {
-        let connection = api::open_connection(token).await?;
+        let connection = token.open_connection().await?;
         Ok(())
     }
 }

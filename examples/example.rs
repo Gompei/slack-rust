@@ -10,7 +10,7 @@ async fn main() {
         x => args[x - 1].clone(),
     };
 
-    SocketModeClient::run(&api_key, &mut EventHandler).await;
+    SocketModeClient::run(slack_rust::api::Token { api_key }, &mut EventHandler).await;
 }
 
 pub struct EventHandler;
