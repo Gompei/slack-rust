@@ -10,8 +10,7 @@ async fn main() {
         x => args[x - 1].clone(),
     };
 
-    let mut handler = EventHandler;
-    SocketModeClient::run(&api_key, &mut handler).await;
+    SocketModeClient::run(&api_key, &mut EventHandler).await;
 }
 
 pub struct EventHandler;
