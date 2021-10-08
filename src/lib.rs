@@ -18,7 +18,7 @@ pub struct SocketModeClient {}
 impl SocketModeClient {
     pub async fn run<T: SocketModeEventHandler>(
         token: Token,
-        handler: &mut T,
+        _handler: &mut T,
     ) -> Result<(), error::Error> {
         let wss_url = token.open_connection().await?;
 
