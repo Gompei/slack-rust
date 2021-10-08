@@ -1,4 +1,5 @@
 use crate::api::Token;
+use url::Url;
 
 pub mod api;
 pub mod error;
@@ -19,7 +20,11 @@ impl SocketModeClient {
         token: Token,
         handler: &mut T,
     ) -> Result<(), error::Error> {
-        let connection = token.open_connection().await?;
+        let wss_url = token.open_connection().await?;
+
+        // TODO: エラー処理が適切ではない
+        let wss_parsed = Url::parse(&wss_url.url.expect("open connection api error"));
+        println!("{:?}", wss_parsed);
         Ok(())
     }
 }
