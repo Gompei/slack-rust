@@ -1,5 +1,6 @@
 use crate::api::Token;
-use std::net::TcpStream;
+use async_tungstenite::tungstenite::Message;
+use futures_util::{SinkExt, StreamExt};
 use url::Url;
 
 pub mod api;
@@ -36,6 +37,15 @@ impl SocketModeClient {
             .await?;
 
         let (mut stream, _) = async_tungstenite::client_async(url, tls_stream).await?;
+        while let Some(message) = stream.next().await {
+            match message? {
+                Message::Text(t) => {}
+                Message::Ping(p) => {}
+                Message::Close(_) => break,
+                unknown => {}
+            }
+        }
+
         Ok(())
     }
 }
