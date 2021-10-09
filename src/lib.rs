@@ -1,4 +1,5 @@
 use crate::api::Token;
+use std::net::TcpStream;
 use url::Url;
 
 pub mod api;
@@ -21,10 +22,20 @@ impl SocketModeClient {
         _handler: &mut T,
     ) -> Result<(), error::Error> {
         let wss_url = token.open_connection().await?;
+        // TODO: NoneError エラー処理が適切ではない
+        let url = wss_url.url.expect("url does not exist");
 
-        // TODO: エラー処理が適切ではない
-        let wss_parsed = Url::parse(&wss_url.url.expect("open connection api error"));
-        println!("{:?}", wss_parsed);
+        let wss_parsed = Url::parse(&url)?;
+
+        // TODO: NoneError エラー処理が適切ではない
+        let wss_domain = wss_parsed.domain().expect("domain parse error");
+
+        let tcp_stream = async_std::net::TcpStream::connect(&format!("{}:443", wss_domain)).await?;
+        let tls_stream = async_tls::TlsConnector::default()
+            .connect(wss_domain, tcp_stream)
+            .await?;
+
+        let (mut stream, _) = async_tungstenite::client_async(url, tls_stream).await?;
         Ok(())
     }
 }
