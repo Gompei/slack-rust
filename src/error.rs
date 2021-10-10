@@ -7,6 +7,7 @@ pub enum Error {
     UrlParseError(url::ParseError),
     IOError(std::io::Error),
     WebSocketError(async_tungstenite::tungstenite::Error),
+    SerdeJsonError(serde_json::Error),
 }
 
 impl From<surf::Error> for Error {
@@ -39,6 +40,12 @@ impl From<async_tungstenite::tungstenite::Error> for Error {
     }
 }
 
+impl From<serde_json::Error> for Error {
+    fn from(err: serde_json::Error) -> Self {
+        Error::SerdeJsonError(err)
+    }
+}
+
 impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match *self {
@@ -54,6 +61,9 @@ impl fmt::Display for Error {
             }
             Error::WebSocketError(ref e) => {
                 write!(f, "WebSocket Error: {:?}", e)
+            }
+            Error::SerdeJsonError(ref e) => {
+                write!(f, "SerdeJson Error: {:?}", e)
             }
         }
     }

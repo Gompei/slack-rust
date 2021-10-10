@@ -17,6 +17,13 @@ pub trait SocketModeEventHandler {
 /// The socket client
 pub struct SocketModeClient {}
 
+#[derive(serde::Serialize)]
+pub struct SocketModeAcknowledgeMessage<'s> {
+    pub envelope_id: &'s str,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub payload: Option<&'s str>,
+}
+
 #[derive(serde::Deserialize, Debug)]
 #[serde(rename_all = "snake_case", tag = "type")]
 pub struct SocketModeMessage {
@@ -68,7 +75,23 @@ impl SocketModeClient {
                         // TODO: Enumにしたい
                         "hello" => {}
                         "event_api" => {}
-                        "interactive" => {}
+                        "interactive" => match payload {
+                            Some(result) => match &*result.message_type {
+                                "shortcut" => match envelope_id {
+                                    Some(id) => {
+                                        stream.send(Message::Text(serde_json::to_string(
+                                            &SocketModeAcknowledgeMessage {
+                                                envelope_id: &id,
+                                                payload: None,
+                                            },
+                                        )?));
+                                    }
+                                    None => {}
+                                },
+                                _ => {}
+                            },
+                            None => {}
+                        },
                         _ => println!("Unknown Socket Mode Event :{}", t),
                     },
                     Err(e) => {
