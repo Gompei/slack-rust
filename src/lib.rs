@@ -17,6 +17,17 @@ pub trait SocketModeEventHandler {
 /// The socket client
 pub struct SocketModeClient {}
 
+#[derive(serde::Deserialize, Debug)]
+#[serde(rename_all = "snake_case", tag = "type")]
+pub struct SocketModeMessage {
+    #[serde(rename = "envelope_id", skip_serializing_if = "Option::is_none")]
+    envelope_id: Option<String>,
+    #[serde(rename = "type")]
+    pub message_type: String,
+    //#[serde(rename = "payload", skip_serializing_if = "Option::is_none")]
+    //pub payload: Option<Payload>,
+}
+
 impl SocketModeClient {
     pub async fn run<T: SocketModeEventHandler>(
         token: Token,
@@ -39,7 +50,18 @@ impl SocketModeClient {
         let (mut stream, _) = async_tungstenite::client_async(url, tls_stream).await?;
         while let Some(message) = stream.next().await {
             match message? {
-                Message::Text(t) => {}
+                Message::Text(t) => match serde_json::from_str(&t) {
+                    Ok(SocketModeMessage {
+                        envelope_id,
+                        message_type,
+                        ..
+                    }) => {
+                        println!("Hello: {}", t);
+                    }
+                    Err(e) => {
+                        println!("Unknown text frame: {}: {:?}", t, e);
+                    }
+                },
                 Message::Ping(p) => {}
                 Message::Close(_) => break,
                 unknown => {}
