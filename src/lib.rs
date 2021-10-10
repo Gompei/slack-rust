@@ -85,6 +85,7 @@ impl SocketModeClient {
                                                 payload: None,
                                             },
                                         )?));
+                                        token.open_view(result.trigger_id).await?;
                                     }
                                     None => {}
                                 },
