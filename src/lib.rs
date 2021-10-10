@@ -24,8 +24,16 @@ pub struct SocketModeMessage {
     envelope_id: Option<String>,
     #[serde(rename = "type")]
     pub message_type: String,
-    //#[serde(rename = "payload", skip_serializing_if = "Option::is_none")]
-    //pub payload: Option<Payload>,
+    #[serde(rename = "payload", skip_serializing_if = "Option::is_none")]
+    pub payload: Option<Payload>,
+}
+
+#[derive(serde::Deserialize, Debug)]
+#[serde(rename_all = "snake_case", tag = "type")]
+pub struct Payload {
+    pub trigger_id: String,
+    #[serde(rename = "type")]
+    pub message_type: String,
 }
 
 impl SocketModeClient {
@@ -54,6 +62,7 @@ impl SocketModeClient {
                     Ok(SocketModeMessage {
                         envelope_id,
                         message_type,
+                        payload,
                         ..
                     }) => {
                         println!("Hello: {}", t);
