@@ -64,9 +64,13 @@ impl SocketModeClient {
                         message_type,
                         payload,
                         ..
-                    }) => {
-                        println!("Hello: {}", t);
-                    }
+                    }) => match &*message_type {
+                        // TODO: Enumにしたい
+                        "hello" => {}
+                        "event_api" => {}
+                        "interactive" => {}
+                        _ => println!("Unknown Socket Mode Event :{}", t),
+                    },
                     Err(e) => {
                         println!("Unknown text frame: {}: {:?}", t, e);
                     }
