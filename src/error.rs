@@ -8,6 +8,7 @@ pub enum Error {
     IOError(std::io::Error),
     WebSocketError(async_tungstenite::tungstenite::Error),
     SerdeJsonError(serde_json::Error),
+    OptionError(String),
 }
 
 impl From<surf::Error> for Error {
@@ -46,6 +47,12 @@ impl From<serde_json::Error> for Error {
     }
 }
 
+impl From<String> for Error {
+    fn from(err: String) -> Self {
+        Error::OptionError(err)
+    }
+}
+
 impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match *self {
@@ -64,6 +71,9 @@ impl fmt::Display for Error {
             }
             Error::SerdeJsonError(ref e) => {
                 write!(f, "SerdeJson Error: {:?}", e)
+            }
+            Error::OptionError(ref e) => {
+                write!(f, "Option Error: {:?}", e)
             }
         }
     }

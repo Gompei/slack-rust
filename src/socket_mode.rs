@@ -47,13 +47,13 @@ impl SocketModeClient {
         _handler: &mut T,
     ) -> Result<(), error::Error> {
         let wss_url = token.open_connection().await?;
-        // TODO: NoneError エラー処理が適切ではない
-        let url = wss_url.url.expect("url does not exist");
-
+        let url = wss_url
+            .url
+            .ok_or_else(|| error::Error::OptionError("Option Error".to_string()))?;
         let wss_parsed = Url::parse(&url)?;
-
-        // TODO: NoneError エラー処理が適切ではない
-        let wss_domain = wss_parsed.domain().expect("domain parse error");
+        let wss_domain = wss_parsed
+            .domain()
+            .ok_or_else(|| error::Error::OptionError("domain parse error".to_string()))?;
 
         let tcp_stream = async_std::net::TcpStream::connect(&format!("{}:443", wss_domain)).await?;
         let tls_stream = async_tls::TlsConnector::default()
