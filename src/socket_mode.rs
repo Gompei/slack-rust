@@ -6,10 +6,18 @@ use url::Url;
 
 /// Implement this trait in your code to handle slack events
 pub trait SocketModeEventHandler {
-    fn on_hello() {}
-    fn on_events_api() {}
-    fn on_interactive() {}
-    fn on_disconnect() {}
+    fn on_hello(&mut self) {
+        println!("The on_hello function is not implemented.");
+    }
+    fn on_events_api(&mut self) {
+        println!("The on_events_api function is not implemented.");
+    }
+    fn on_interactive(&mut self) {
+        println!("The on_interactive function is not implemented.")
+    }
+    fn on_disconnect(&mut self) {
+        println!("The on_disconnect function is not implemented.")
+    }
 }
 
 /// The socket client
