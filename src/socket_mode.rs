@@ -1,4 +1,4 @@
-use crate::api::Token;
+use crate::api::{ApiClient, Token};
 use crate::error;
 use async_tungstenite::tungstenite::Message;
 use futures_util::{SinkExt, StreamExt};
@@ -60,10 +60,10 @@ pub enum SocketModeEventType {
 
 impl SocketModeClient {
     pub async fn run<T: SocketModeEventHandler>(
-        token: Token,
+        client: ApiClient,
         handler: &mut T,
     ) -> Result<(), error::Error> {
-        let wss_url = token.open_connection().await?;
+        let wss_url = client.open_connection().await?;
         let url = wss_url
             .url
             .ok_or_else(|| error::Error::OptionError("Option Error".to_string()))?;
