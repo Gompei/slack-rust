@@ -1,4 +1,5 @@
-use slack_rust::SocketModeClient;
+use slack_rust::api::{ApiClient, Token};
+use slack_rust::socket_mode::{SocketModeClient, SocketModeEventHandler};
 
 #[async_std::main]
 async fn main() {
@@ -17,11 +18,13 @@ async fn main() {
     };
 
     SocketModeClient::run(
-        slack_rust::api::Token { api_key, bot_key },
+        slack_rust::api::ApiClient {
+            token: Token { api_key, bot_key },
+        },
         &mut EventHandler,
     )
     .await;
 }
 
 pub struct EventHandler;
-impl slack_rust::SocketModeEventHandler for EventHandler {}
+impl SocketModeEventHandler for EventHandler {}
