@@ -29,7 +29,7 @@ pub struct TextBlockObject {
 }
 
 pub struct Blocks {
-    block_set: Vec<Block>,
+    block_set: Box<Block>,
 }
 
 pub trait Block {
