@@ -36,7 +36,7 @@ pub struct SocketModeMessage {
     #[serde(rename = "envelope_id", skip_serializing_if = "Option::is_none")]
     envelope_id: Option<String>,
     #[serde(rename = "type")]
-    pub message_type: String,
+    pub message_type: SocketModeEventType,
     #[serde(rename = "payload", skip_serializing_if = "Option::is_none")]
     pub payload: Option<Payload>,
 }
@@ -49,10 +49,19 @@ pub struct Payload {
     pub message_type: String,
 }
 
+#[derive(serde::Deserialize, Debug)]
+#[serde(rename = "type", rename_all = "snake_case")]
+pub enum SocketModeEventType {
+    Hello,
+    Disconnect,
+    EventApi,
+    Interactive,
+}
+
 impl SocketModeClient {
     pub async fn run<T: SocketModeEventHandler>(
         token: Token,
-        _handler: &mut T,
+        handler: &mut T,
     ) -> Result<(), error::Error> {
         let wss_url = token.open_connection().await?;
         let url = wss_url
@@ -74,31 +83,13 @@ impl SocketModeClient {
                 Message::Text(t) => match serde_json::from_str(&t) {
                     Ok(SocketModeMessage {
                         envelope_id,
-                        message_type,
+                        message_type: SocketModeEventType,
                         payload,
                         ..
-                    }) => match &*message_type {
-                        // TODO: Enumにしたい
-                        "hello" => {}
-                        "event_api" => {}
-                        "interactive" => match payload {
-                            Some(result) => match &*result.message_type {
-                                "shortcut" => match envelope_id {
-                                    Some(id) => {
-                                        stream.send(Message::Text(serde_json::to_string(
-                                            &SocketModeAcknowledgeMessage {
-                                                envelope_id: &id,
-                                                payload: None,
-                                            },
-                                        )?));
-                                        token.open_view(result.trigger_id).await?;
-                                    }
-                                    None => {}
-                                },
-                                _ => {}
-                            },
-                            None => {}
-                        },
+                    }) => match SocketModeEventType {
+                        SocketModeEventType::Hello => handler.on_hello(),
+                        SocketModeEventType::EventApi => handler.on_events_api(),
+                        SocketModeEventType::Interactive => handler.on_interactive(),
                         _ => println!("Unknown Socket Mode Event :{}", t),
                     },
                     Err(e) => {
@@ -107,10 +98,9 @@ impl SocketModeClient {
                 },
                 Message::Ping(p) => {}
                 Message::Close(_) => break,
-                unknown => {}
+                _ => {}
             }
         }
-
         Ok(())
     }
 }
