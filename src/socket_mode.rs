@@ -6,13 +6,13 @@ use url::Url;
 
 /// Implement this trait in your code to handle slack events
 pub trait SocketModeEventHandler {
-    fn on_hello(&mut self) {
+    fn on_hello(&mut self, s: &SocketModeMessage) {
         println!("The on_hello function is not implemented.");
     }
-    fn on_events_api(&mut self) {
+    fn on_events_api(&mut self, s: &SocketModeMessage) {
         println!("The on_events_api function is not implemented.");
     }
-    fn on_interactive(&mut self) {
+    fn on_interactive(&mut self, s: &SocketModeMessage) {
         println!("The on_interactive function is not implemented.")
     }
     fn on_disconnect(&mut self) {
@@ -87,9 +87,25 @@ impl SocketModeClient {
                         payload,
                         ..
                     }) => match SocketModeEventType {
-                        SocketModeEventType::Hello => handler.on_hello(),
-                        SocketModeEventType::EventApi => handler.on_events_api(),
-                        SocketModeEventType::Interactive => handler.on_interactive(),
+                        SocketModeEventType::Hello => handler.on_hello(&SocketModeMessage {
+                            envelope_id,
+                            message_type: SocketModeEventType,
+                            payload,
+                        }),
+                        SocketModeEventType::EventApi => {
+                            handler.on_events_api(&SocketModeMessage {
+                                envelope_id,
+                                message_type: SocketModeEventType,
+                                payload,
+                            })
+                        }
+                        SocketModeEventType::Interactive => {
+                            handler.on_interactive(&SocketModeMessage {
+                                envelope_id,
+                                message_type: SocketModeEventType,
+                                payload,
+                            })
+                        }
                         _ => println!("Unknown Socket Mode Event :{}", t),
                     },
                     Err(e) => {
