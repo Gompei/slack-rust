@@ -34,7 +34,7 @@ pub struct SocketModeAcknowledgeMessage<'s> {
 #[serde(rename_all = "snake_case", tag = "type")]
 pub struct SocketModeMessage {
     #[serde(rename = "envelope_id", skip_serializing_if = "Option::is_none")]
-    envelope_id: Option<String>,
+    pub envelope_id: Option<String>,
     #[serde(rename = "type")]
     pub message_type: SocketModeEventType,
     #[serde(rename = "payload", skip_serializing_if = "Option::is_none")]

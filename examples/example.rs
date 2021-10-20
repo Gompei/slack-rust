@@ -34,4 +34,18 @@ impl SocketModeEventHandler for EventHandler {
     fn on_hello(&mut self, s: &SocketModeMessage) {
         println!("{:?}", s);
     }
+    fn on_interactive(&mut self, s: &SocketModeMessage) {
+        match &s.payload {
+            Some(result) => match &*result.message_type {
+                "shortcut" => match &s.envelope_id {
+                    Some(id) => {
+                        println!("{:}", id);
+                    }
+                    None => {}
+                },
+                _ => {}
+            },
+            _ => {}
+        }
+    }
 }
