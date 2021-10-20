@@ -1,5 +1,8 @@
+use async_tungstenite::tungstenite::Message;
 use slack_rust::api::{ApiClient, Token};
-use slack_rust::socket_mode::{SocketModeClient, SocketModeEventHandler};
+use slack_rust::socket_mode::{
+    SocketModeAcknowledgeMessage, SocketModeClient, SocketModeEventHandler, SocketModeMessage,
+};
 
 #[async_std::main]
 async fn main() {
@@ -27,4 +30,8 @@ async fn main() {
 }
 
 pub struct EventHandler;
-impl SocketModeEventHandler for EventHandler {}
+impl SocketModeEventHandler for EventHandler {
+    fn on_hello(&mut self, s: &SocketModeMessage) {
+        println!("{:?}", s);
+    }
+}
