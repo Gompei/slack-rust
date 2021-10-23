@@ -6,6 +6,9 @@ use url::Url;
 
 /// Implement this trait in your code to handle slack events
 pub trait SocketModeEventHandler {
+    fn on_connect(&mut self) {
+        println!("The on_connect function is not implemented.");
+    }
     fn on_hello(&mut self, s: &SocketModeMessage) {
         println!("The on_hello function is not implemented.");
     }
@@ -93,6 +96,9 @@ impl SocketModeClient {
             .await?;
 
         let (mut stream, _) = async_tungstenite::client_async(url, tls_stream).await?;
+
+        handler.on_connect();
+
         while let Some(message) = stream.next().await {
             match message? {
                 Message::Text(t) => match serde_json::from_str(&t) {
