@@ -46,7 +46,7 @@ pub struct SocketModeMessage {
 pub struct Payload {
     pub trigger_id: String,
     #[serde(rename = "type")]
-    pub message_type: String,
+    pub message_type: InteractiveType,
 }
 
 #[derive(serde::Deserialize, Debug)]
@@ -56,6 +56,21 @@ pub enum SocketModeEventType {
     Disconnect,
     EventApi,
     Interactive,
+}
+
+#[derive(serde::Deserialize, Debug)]
+#[serde(rename = "type", rename_all = "snake_case")]
+pub enum InteractiveType {
+    DialogCancellation,
+    DialogSubmission,
+    DialogSuggestion,
+    InteractionMessage,
+    MessageAction,
+    BlockActions,
+    BlockSuggestion,
+    ViewSubmission,
+    ViewClosed,
+    Shortcut,
 }
 
 impl SocketModeClient {

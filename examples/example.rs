@@ -1,7 +1,8 @@
 use async_tungstenite::tungstenite::Message;
 use slack_rust::api::{ApiClient, Token};
 use slack_rust::socket_mode::{
-    SocketModeAcknowledgeMessage, SocketModeClient, SocketModeEventHandler, SocketModeMessage,
+    InteractiveType, SocketModeAcknowledgeMessage, SocketModeClient, SocketModeEventHandler,
+    SocketModeMessage,
 };
 
 #[async_std::main]
@@ -36,8 +37,8 @@ impl SocketModeEventHandler for EventHandler {
     }
     fn on_interactive(&mut self, s: &SocketModeMessage) {
         match &s.payload {
-            Some(result) => match &*result.message_type {
-                "shortcut" => match &s.envelope_id {
+            Some(result) => match result.message_type {
+                InteractiveType::Shortcut => match &s.envelope_id {
                     Some(id) => {
                         println!("{:}", id);
                     }
