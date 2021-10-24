@@ -140,4 +140,14 @@ impl SocketModeClient {
         }
         Ok(())
     }
+
+    pub async fn ack() {
+        //     TODO: ここでWebSocketStreamを使用したい
+        //     stream.send(Message::Text(serde_json::to_string(
+        //         &SocketModeAcknowledgeMessage {
+        //             envelope_id: &id,
+        //             payload: None,
+        //         },
+        //     )?));
+    }
 }
