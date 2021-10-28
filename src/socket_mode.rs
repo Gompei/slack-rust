@@ -112,7 +112,39 @@ impl SocketModeClient {
                 .await
                 .ok_or_else(|| error::Error::OptionError("Option Error".to_string()))?;
             match next_stream? {
-                Message::Text(t) => println!("{:?}", t),
+                Message::Text(t) => match serde_json::from_str(&t) {
+                    Ok(SocketModeMessage {
+                        envelope_id,
+                        message_type: SocketModeEventType,
+                        payload,
+                        ..
+                    }) => match SocketModeEventType {
+                        SocketModeEventType::Hello => handler.on_hello(&SocketModeMessage {
+                            envelope_id,
+                            message_type: SocketModeEventType,
+                            payload,
+                        }),
+                        SocketModeEventType::EventApi => {
+                            handler.on_events_api(&SocketModeMessage {
+                                envelope_id,
+                                message_type: SocketModeEventType,
+                                payload,
+                            })
+                        }
+                        SocketModeEventType::Interactive => handler.on_interactive(
+                            &SocketModeMessage {
+                                envelope_id,
+                                message_type: SocketModeEventType,
+                                payload,
+                            },
+                            &mut stream,
+                        ),
+                        _ => println!("Unknown Socket Mode Event :{}", t),
+                    },
+                    Err(e) => {
+                        println!("Unknown text frame: {}: {:?}", t, e);
+                    }
+                },
                 Message::Ping(p) => {}
                 Message::Close(c) => {}
                 _ => {}
