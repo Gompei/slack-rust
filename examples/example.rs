@@ -1,4 +1,7 @@
+use async_std::net::TcpStream;
+use async_tls::client::TlsStream;
 use async_tungstenite::tungstenite::Message;
+use async_tungstenite::WebSocketStream;
 use slack_rust::api::{ApiClient, Token};
 use slack_rust::socket_mode::{
     InteractiveType, SocketModeAcknowledgeMessage, SocketModeClient, SocketModeEventHandler,
@@ -35,7 +38,11 @@ impl SocketModeEventHandler for EventHandler {
     fn on_hello(&mut self, s: &SocketModeMessage) {
         println!("{:?}", s);
     }
-    fn on_interactive(&mut self, s: &SocketModeMessage) {
+    fn on_interactive(
+        &mut self,
+        s: &SocketModeMessage,
+        stream: &mut WebSocketStream<TlsStream<TcpStream>>,
+    ) {
         match &s.payload {
             Some(result) => match result.message_type {
                 InteractiveType::Shortcut => match &s.envelope_id {

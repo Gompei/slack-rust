@@ -1,6 +1,9 @@
 use crate::api::{ApiClient, Token};
 use crate::error;
+use async_std::net::TcpStream;
+use async_tls::client::TlsStream;
 use async_tungstenite::tungstenite::Message;
+use async_tungstenite::WebSocketStream;
 use futures_util::{SinkExt, StreamExt};
 use url::Url;
 
@@ -15,7 +18,11 @@ pub trait SocketModeEventHandler {
     fn on_events_api(&mut self, s: &SocketModeMessage) {
         println!("The on_events_api function is not implemented.");
     }
-    fn on_interactive(&mut self, s: &SocketModeMessage) {
+    fn on_interactive(
+        &mut self,
+        s: &SocketModeMessage,
+        stream: &mut WebSocketStream<TlsStream<TcpStream>>,
+    ) {
         println!("The on_interactive function is not implemented.")
     }
     fn on_disconnect(&mut self) {
