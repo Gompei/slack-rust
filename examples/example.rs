@@ -47,9 +47,8 @@ impl SocketModeEventHandler for EventHandler {
             Some(result) => match result.message_type {
                 InteractiveType::Shortcut => match &s.envelope_id {
                     Some(id) => {
-                        println!("{:}", id);
-                        // TODO:ここでAck関数を呼び出したいが、どう修正するべきか?
-                        //xxx.ack().await;
+                        self.ack(id, stream);
+                        println!("ack")
                     }
                     None => {}
                 },

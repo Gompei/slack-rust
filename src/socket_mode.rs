@@ -28,6 +28,14 @@ pub trait SocketModeEventHandler {
     fn on_disconnect(&mut self) {
         println!("The on_disconnect function is not implemented.")
     }
+    fn ack(&mut self, envelope_id: &str, stream: &mut WebSocketStream<TlsStream<TcpStream>>) {
+        stream.send(Message::Text(
+            serde_json::to_string(&SocketModeAcknowledgeMessage {
+                envelope_id: &envelope_id,
+            })
+            .expect(""),
+        ));
+    }
 }
 
 /// The socket client
@@ -36,8 +44,6 @@ pub struct SocketModeClient {}
 #[derive(serde::Serialize)]
 pub struct SocketModeAcknowledgeMessage<'s> {
     pub envelope_id: &'s str,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub payload: Option<&'s str>,
 }
 
 #[derive(serde::Deserialize, Debug)]
