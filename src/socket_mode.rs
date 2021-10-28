@@ -99,42 +99,15 @@ impl SocketModeClient {
 
         handler.on_connect();
 
-        while let Some(message) = stream.next().await {
-            match message? {
-                Message::Text(t) => match serde_json::from_str(&t) {
-                    Ok(SocketModeMessage {
-                        envelope_id,
-                        message_type: SocketModeEventType,
-                        payload,
-                        ..
-                    }) => match SocketModeEventType {
-                        SocketModeEventType::Hello => handler.on_hello(&SocketModeMessage {
-                            envelope_id,
-                            message_type: SocketModeEventType,
-                            payload,
-                        }),
-                        SocketModeEventType::EventApi => {
-                            handler.on_events_api(&SocketModeMessage {
-                                envelope_id,
-                                message_type: SocketModeEventType,
-                                payload,
-                            })
-                        }
-                        SocketModeEventType::Interactive => {
-                            handler.on_interactive(&SocketModeMessage {
-                                envelope_id,
-                                message_type: SocketModeEventType,
-                                payload,
-                            })
-                        }
-                        _ => println!("Unknown Socket Mode Event :{}", t),
-                    },
-                    Err(e) => {
-                        println!("Unknown text frame: {}: {:?}", t, e);
-                    }
-                },
+        loop {
+            let next_stream = stream
+                .next()
+                .await
+                .ok_or_else(|| error::Error::OptionError("Option Error".to_string()))?;
+            match next_stream? {
+                Message::Text(t) => println!("{:?}", t),
                 Message::Ping(p) => {}
-                Message::Close(_) => break,
+                Message::Close(c) => {}
                 _ => {}
             }
         }
