@@ -25,7 +25,7 @@ async fn main() {
     };
 
     SocketModeClient::run(
-        slack_rust::api::ApiClient {
+        &slack_rust::api::ApiClient {
             token: Token { api_key, bot_key },
         },
         &mut EventHandler,
@@ -42,6 +42,7 @@ impl SocketModeEventHandler for EventHandler {
         &mut self,
         s: &SocketModeMessage,
         stream: &mut WebSocketStream<TlsStream<TcpStream>>,
+        client: &ApiClient,
     ) {
         match &s.payload {
             Some(result) => match result.message_type {

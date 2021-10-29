@@ -22,6 +22,7 @@ pub trait SocketModeEventHandler {
         &mut self,
         s: &SocketModeMessage,
         stream: &mut WebSocketStream<TlsStream<TcpStream>>,
+        client: &ApiClient,
     ) {
         println!("The on_interactive function is not implemented.")
     }
@@ -91,7 +92,7 @@ pub enum InteractiveType {
 
 impl SocketModeClient {
     pub async fn run<T: SocketModeEventHandler>(
-        client: ApiClient,
+        client: &ApiClient,
         handler: &mut T,
     ) -> Result<(), error::Error> {
         let wss_url = client.open_connection().await?;
@@ -144,6 +145,7 @@ impl SocketModeClient {
                                 payload,
                             },
                             &mut stream,
+                            &client,
                         ),
                         _ => println!("Unknown Socket Mode Event :{}", t),
                     },
