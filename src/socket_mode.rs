@@ -2,12 +2,14 @@ use crate::api::{ApiClient, Token};
 use crate::error;
 use async_std::net::TcpStream;
 use async_tls::client::TlsStream;
+use async_trait::async_trait;
 use async_tungstenite::tungstenite::Message;
 use async_tungstenite::WebSocketStream;
 use futures_util::{SinkExt, StreamExt};
 use url::Url;
 
 /// Implement this trait in your code to handle slack events
+#[async_trait]
 pub trait SocketModeEventHandler {
     fn on_connect(&mut self) {
         println!("The on_connect function is not implemented.");
