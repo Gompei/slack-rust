@@ -8,6 +8,7 @@ use slack_rust::socket_mode::{
     InteractiveType, SocketModeAcknowledgeMessage, SocketModeClient, SocketModeEventHandler,
     SocketModeMessage,
 };
+use std::ptr::null;
 
 #[async_std::main]
 async fn main() {
@@ -52,7 +53,24 @@ impl SocketModeEventHandler for EventHandler {
                 InteractiveType::Shortcut => match &s.envelope_id {
                     Some(id) => {
                         self.ack(id, stream);
-                        let view_modal = r#"{
+                        client
+                            .open_view(create_query(result.trigger_id.to_string()))
+                            .await
+                            .expect("test");
+                    }
+                    None => {}
+                },
+                _ => {}
+            },
+            _ => {}
+        }
+    }
+}
+
+fn create_query(trigger_id: String) -> Query {
+    return Query {
+        trigger_id,
+        view: r#"{
           "type": "modal",
           "callback_id": "modal-with-inputs",
           "title": {
@@ -92,21 +110,7 @@ impl SocketModeEventHandler for EventHandler {
             "type": "plain_text",
             "text": "Submit"
           }
-        }"#;
-
-                        let query = Query {
-                            trigger_id: result.trigger_id.to_string(),
-                            view: String::from(view_modal),
-                        };
-
-                        let a = client.open_view(query).await.expect("test");
-                        println!("{:?}", a);
-                    }
-                    None => {}
-                },
-                _ => {}
-            },
-            _ => {}
-        }
-    }
+        }"#
+        .to_string(),
+    };
 }
