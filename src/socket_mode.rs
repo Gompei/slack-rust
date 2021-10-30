@@ -20,7 +20,7 @@ pub trait SocketModeEventHandler {
     fn on_events_api(&mut self, s: &SocketModeMessage) {
         println!("The on_events_api function is not implemented.");
     }
-    fn on_interactive(
+    async fn on_interactive(
         &mut self,
         s: &SocketModeMessage,
         stream: &mut WebSocketStream<TlsStream<TcpStream>>,
@@ -93,7 +93,7 @@ pub enum InteractiveType {
 }
 
 impl SocketModeClient {
-    pub async fn run<T: SocketModeEventHandler>(
+    pub async fn run<T: SocketModeEventHandler + std::marker::Send>(
         client: &ApiClient,
         handler: &mut T,
     ) -> Result<(), error::Error> {
@@ -140,15 +140,19 @@ impl SocketModeClient {
                                 payload,
                             })
                         }
-                        SocketModeEventType::Interactive => handler.on_interactive(
-                            &SocketModeMessage {
-                                envelope_id,
-                                message_type: SocketModeEventType,
-                                payload,
-                            },
-                            &mut stream,
-                            &client,
-                        ),
+                        SocketModeEventType::Interactive => {
+                            handler
+                                .on_interactive(
+                                    &SocketModeMessage {
+                                        envelope_id,
+                                        message_type: SocketModeEventType,
+                                        payload,
+                                    },
+                                    &mut stream,
+                                    &client,
+                                )
+                                .await
+                        }
                         _ => println!("Unknown Socket Mode Event :{}", t),
                     },
                     Err(e) => {
