@@ -1,117 +1,90 @@
-use crate::api::{ApiClient, Token};
-use crate::error;
+use crate::apps::connections_open::connections_open;
+use crate::error::Error;
+use crate::http_client::Client;
+
 use async_std::net::TcpStream;
 use async_tls::client::TlsStream;
+use async_tls::TlsConnector;
 use async_trait::async_trait;
+use async_tungstenite::tungstenite::protocol::CloseFrame;
 use async_tungstenite::tungstenite::Message;
-use async_tungstenite::WebSocketStream;
+use async_tungstenite::{client_async, WebSocketStream};
 use futures_util::{SinkExt, StreamExt};
+use serde::{Deserialize, Serialize};
 use url::Url;
 
-/// Implement this trait in your code to handle slack events
+/// Implement this trait in your code to handle slack events.
 #[async_trait]
-pub trait SocketModeEventHandler {
-    fn on_connect(&mut self) {
-        println!("The on_connect function is not implemented.");
+pub trait EventHandler {
+    async fn on_close(&mut self) {
+        println!("on_close function is not implemented.")
     }
-    fn on_hello(&mut self, s: &SocketModeMessage) {
-        println!("The on_hello function is not implemented.");
+    async fn on_connect(&mut self) {
+        println!("on_connect function is not implemented.")
     }
-    fn on_events_api(&mut self, s: &SocketModeMessage) {
-        println!("The on_events_api function is not implemented.");
+    async fn on_disconnect(&mut self, s: &SocketMessage) {
+        println!("on_connect function is not implemented.")
     }
-    async fn on_interactive(
-        &mut self,
-        s: &SocketModeMessage,
-        stream: &mut WebSocketStream<TlsStream<TcpStream>>,
-        client: &ApiClient,
-    ) {
-        println!("The on_interactive function is not implemented.")
+    async fn on_events_api(&mut self, s: &SocketMessage) {
+        println!("on_events_api function is not implemented.")
     }
-    fn on_disconnect(&mut self) {
-        println!("The on_disconnect function is not implemented.")
+    async fn on_hello(&mut self, s: &SocketMessage) {
+        println!("on_hello function is not implemented.")
     }
-    fn ack(&mut self, envelope_id: &str, stream: &mut WebSocketStream<TlsStream<TcpStream>>) {
-        stream.send(Message::Text(
-            serde_json::to_string(&SocketModeAcknowledgeMessage {
-                envelope_id: &envelope_id,
-            })
-            .expect(""),
-        ));
+    async fn on_interactive(&mut self, s: &SocketMessage) {
+        println!("on_interactive function is not implemented.")
+    }
+    async fn on_ping(&mut self, ping: Vec<u8>) {
+        println!("on_ping function is not implemented.")
     }
 }
 
-/// The socket client
-pub struct SocketModeClient {}
-
-#[derive(serde::Serialize)]
-pub struct SocketModeAcknowledgeMessage<'s> {
-    pub envelope_id: &'s str,
-}
-
-#[derive(serde::Deserialize, Debug)]
-#[serde(rename_all = "snake_case", tag = "type")]
-pub struct SocketModeMessage {
-    #[serde(rename = "envelope_id", skip_serializing_if = "Option::is_none")]
+#[derive(Deserialize, Serialize, Debug)]
+pub struct SocketMessage {
     pub envelope_id: Option<String>,
     #[serde(rename = "type")]
-    pub message_type: SocketModeEventType,
-    #[serde(rename = "payload", skip_serializing_if = "Option::is_none")]
-    pub payload: Option<Payload>,
+    pub message_type: SocketEventType,
 }
 
-#[derive(serde::Deserialize, Debug)]
-#[serde(rename_all = "snake_case", tag = "type")]
-pub struct Payload {
-    pub trigger_id: String,
-    #[serde(rename = "type")]
-    pub message_type: InteractiveType,
-}
-
-#[derive(serde::Deserialize, Debug)]
-#[serde(rename = "type", rename_all = "snake_case")]
-pub enum SocketModeEventType {
+#[derive(Deserialize, Serialize, Debug)]
+#[serde(rename_all = "snake_case")]
+pub enum SocketEventType {
     Hello,
     Disconnect,
     EventApi,
     Interactive,
 }
 
-#[derive(serde::Deserialize, Debug)]
-#[serde(rename = "type", rename_all = "snake_case")]
-pub enum InteractiveType {
-    DialogCancellation,
-    DialogSubmission,
-    DialogSuggestion,
-    InteractionMessage,
-    MessageAction,
-    BlockActions,
-    BlockSuggestion,
-    ViewSubmission,
-    ViewClosed,
-    Shortcut,
+#[derive(Deserialize, Serialize, Debug)]
+pub struct AcknowledgeMessage {
+    pub envelope_id: String,
 }
 
-impl SocketModeClient {
-    pub async fn run<T: SocketModeEventHandler + std::marker::Send>(
-        client: &ApiClient,
+/// The socket mode client.
+pub struct SocketMode {}
+
+impl SocketMode {
+    /// Run slack and websocket communication.
+    pub async fn run<T: EventHandler + std::marker::Send>(
+        client: Client,
+        app_token: String,
         handler: &mut T,
-    ) -> Result<(), error::Error> {
-        let wss_url = client.open_connection().await?;
+    ) -> Result<(), Error> {
+        let wss_url = connections_open(client, app_token).await?;
         let url = wss_url
             .url
-            .ok_or_else(|| error::Error::OptionError("Option Error".to_string()))?;
+            .ok_or_else(|| Error::OptionError("connections open error".to_string()))?;
         let wss_parsed = Url::parse(&url)?;
         let wss_domain = wss_parsed
             .domain()
-            .ok_or_else(|| error::Error::OptionError("domain parse error".to_string()))?;
+            .ok_or_else(|| Error::OptionError("domain parse error".to_string()))?;
 
-        let tcp_stream = async_std::net::TcpStream::connect(&format!("{}:443", wss_domain)).await?;
-        let tls_stream = async_tls::TlsConnector::default()
+        let tcp_stream = TcpStream::connect(&format!("{}:443", wss_domain)).await?;
+        let tls_stream = TlsConnector::default()
             .connect(wss_domain, tcp_stream)
             .await?;
 
-        let (mut stream, _) = async_tungstenite::client_async(url, tls_stream).await?;
+        let (mut stream, _) = client_async(url, tls_stream).await?;
 
         handler.on_connect();
 
@@ -119,51 +92,62 @@ impl SocketModeClient {
             let next_stream = stream
                 .next()
                 .await
-                .ok_or_else(|| error::Error::OptionError("Option Error".to_string()))?;
+                .ok_or_else(|| Error::OptionError("web socket stream error".to_string()))?;
+
             match next_stream? {
                 Message::Text(t) => match serde_json::from_str(&t) {
-                    Ok(SocketModeMessage {
+                    Ok(SocketMessage {
                         envelope_id,
-                        message_type: SocketModeEventType,
-                        payload,
+                        message_type: socket_event_type,
                         ..
-                    }) => match SocketModeEventType {
-                        SocketModeEventType::Hello => handler.on_hello(&SocketModeMessage {
-                            envelope_id,
-                            message_type: SocketModeEventType,
-                            payload,
-                        }),
-                        SocketModeEventType::EventApi => {
-                            handler.on_events_api(&SocketModeMessage {
-                                envelope_id,
-                                message_type: SocketModeEventType,
-                                payload,
-                            })
-                        }
-                        SocketModeEventType::Interactive => {
+                    }) => match socket_event_type {
+                        SocketEventType::Disconnect => {
                             handler
-                                .on_interactive(
-                                    &SocketModeMessage {
-                                        envelope_id,
-                                        message_type: SocketModeEventType,
-                                        payload,
-                                    },
-                                    &mut stream,
-                                    &client,
-                                )
+                                .on_disconnect(&SocketMessage {
+                                    envelope_id,
+                                    message_type: socket_event_type,
+                                })
                                 .await
                         }
-                        _ => println!("Unknown Socket Mode Event :{}", t),
+                        SocketEventType::EventApi => {
+                            handler
+                                .on_events_api(&SocketMessage {
+                                    envelope_id,
+                                    message_type: socket_event_type,
+                                })
+                                .await
+                        }
+                        SocketEventType::Hello => {
+                            handler
+                                .on_hello(&SocketMessage {
+                                    envelope_id,
+                                    message_type: socket_event_type,
+                                })
+                                .await
+                        }
+                        SocketEventType::Interactive => {
+                            handler
+                                .on_interactive(&SocketMessage {
+                                    envelope_id,
+                                    message_type: socket_event_type,
+                                })
+                                .await
+                        }
                     },
-                    Err(e) => {
-                        println!("Unknown text frame: {}: {:?}", t, e);
-                    }
+                    Err(e) => println!("unknown text frame: {} {:?}", t, e),
                 },
-                Message::Ping(p) => {}
-                Message::Close(c) => {}
-                _ => {}
+                Message::Ping(p) => handler.on_ping(p).await,
+                Message::Close(_) => handler.on_close().await,
+                m => {
+                    println!("unsupported web socket message: {:?}", m);
+                }
             }
         }
-        Ok(())
+    }
+    pub async fn ack(envelope_id: String, stream: &mut WebSocketStream<TlsStream<TcpStream>>) {
+        stream.send(Message::Text(
+            serde_json::to_string(&AcknowledgeMessage { envelope_id })
+                .expect("send acknowledge message error"),
+        ));
     }
 }
