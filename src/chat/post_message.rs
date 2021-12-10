@@ -48,15 +48,30 @@ mod test {
     use crate::chat::post_message::PostMessageRequest;
 
     #[test]
-    fn convert_json() {
-        let response = PostMessageRequest {
+    fn convert_json_request() {
+        let request = PostMessageRequest {
             channel: "test channel".to_string(),
             text: "test text".to_string(),
         };
-        let json = serde_json::to_string_pretty(&response).unwrap();
+        let json = serde_json::to_string_pretty(&request).unwrap();
         let expected = r#"{
   "channel": "test channel",
   "text": "test text"
+}"#;
+
+        assert_eq!(json, expected);
+    }
+
+    #[test]
+    fn convert_json_response() {
+        let response = PostMessageResponse {
+            ok: false,
+            channel: Some("test channel".to_string()),
+        };
+        let json = serde_json::to_string_pretty(&response).unwrap();
+        let expected = r#"{
+  "ok": false,
+  "channel": "test channel"
 }"#;
 
         assert_eq!(json, expected);
