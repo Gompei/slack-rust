@@ -41,3 +41,24 @@ pub async fn post_message(
         .await
         .map_err(Error::SurfError)
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use crate::chat::post_message::PostMessageRequest;
+
+    #[test]
+    fn convert_json() {
+        let response = PostMessageRequest {
+            channel: "test channel".to_string(),
+            text: "test text".to_string(),
+        };
+        let json = serde_json::to_string_pretty(&response).unwrap();
+        let expected = r#"{
+  "channel": "test channel",
+  "text": "test text"
+}"#;
+
+        assert_eq!(json, expected);
+    }
+}
