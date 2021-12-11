@@ -1,4 +1,14 @@
+use serde::{Deserialize, Serialize};
+
 pub type Client = surf::Client;
+
+/// Metadata.
+#[derive(Deserialize, Serialize, Debug)]
+pub struct ResponseMetadata {
+    pub next_cursor: Option<String>,
+    pub messages: Option<Vec<String>>,
+    pub warnings: Option<Vec<String>>,
+}
 
 /// Returns the slack api url for each method.
 pub fn get_slack_url(method: &str) -> String {
