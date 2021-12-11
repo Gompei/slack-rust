@@ -2,44 +2,48 @@ use serde::{Deserialize, Serialize};
 
 use crate::chat::message::Message;
 use crate::error::Error;
-use crate::http_client::{get_slack_url, post_json, Client};
+use crate::http_client::{get_slack_url, SlackWebAPIClient};
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct PostMessageRequest {
     pub channel: String,
     pub text: String,
-    pub as_user: Option<String>,
-    pub username: Option<String>,
-    pub parse: Option<String>,
-    pub thread_ts: Option<String>,
-    pub reply_broadcast: Option<String>,
-    pub link_names: Option<i32>,
-    pub unfurl_links: Option<bool>,
-    pub unfurl_media: Option<bool>,
-    pub icon_url: Option<String>,
-    pub icon_emoji: Option<String>,
-    pub mrkdwn: Option<bool>,
-    pub escape_text: Option<bool>,
+    // pub as_user: Option<String>,
+    // pub username: Option<String>,
+    // pub parse: Option<String>,
+    // pub thread_ts: Option<String>,
+    // pub reply_broadcast: Option<String>,
+    // pub link_names: Option<i32>,
+    // pub unfurl_links: Option<bool>,
+    // pub unfurl_media: Option<bool>,
+    // pub icon_url: Option<String>,
+    // pub icon_emoji: Option<String>,
+    // pub mrkdwn: Option<bool>,
+    // pub escape_text: Option<bool>,
 }
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct PostMessageResponse {
     pub ok: bool,
-    pub error: Option<String>,
+    //pub error: Option<String>,
     pub channel: Option<String>,
-    pub ts: Option<String>,
-    pub message: Option<Message>,
+    // pub ts: Option<String>,
+    // pub message: Option<Message>,
 }
 
-pub async fn post_message(
-    client: Client,
+pub async fn post_message<T>(
+    client: &T,
     param: PostMessageRequest,
     bot_token: String,
-) -> Result<PostMessageResponse, Error> {
+) -> Result<PostMessageResponse, Error>
+where
+    T: SlackWebAPIClient,
+{
     let url = get_slack_url("chat.postMessage");
     let json = serde_json::to_string(&param)?;
 
-    post_json(client, url, json, bot_token)
+    client
+        .post_json(url, json, bot_token)
         .await?
         .body_json()
         .await
@@ -49,7 +53,7 @@ pub async fn post_message(
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::chat::post_message::PostMessageRequest;
+    use crate::http_client::default_client;
 
     #[test]
     fn convert_json_request() {
@@ -79,5 +83,20 @@ mod test {
 }"#;
 
         assert_eq!(json, expected);
+    }
+
+    #[async_std::test]
+    async fn test_post_message() {
+        // let param = PostMessageRequest {
+        //     channel: "test".to_string(),
+        //     text: "test".to_string(),
+        // };
+        // let slack_api_client = default_client();
+        //
+        // let response = post_message(slack_api_client, param, "".to_string())
+        //     .await
+        //     .expect("api call error");
+        //
+        assert_eq!(1, 1);
     }
 }

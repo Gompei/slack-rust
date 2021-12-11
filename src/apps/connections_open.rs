@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use crate::error::Error;
-use crate::http_client::{get_slack_url, post, Client};
+use crate::http_client::{get_slack_url, SlackWebAPIClient};
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct ConnectionsOpenResponse {
@@ -10,13 +10,17 @@ pub struct ConnectionsOpenResponse {
     pub error: Option<String>,
 }
 
-pub async fn connections_open(
-    client: Client,
+pub async fn connections_open<T>(
+    client: &T,
     app_token: String,
-) -> Result<ConnectionsOpenResponse, Error> {
+) -> Result<ConnectionsOpenResponse, Error>
+where
+    T: SlackWebAPIClient,
+{
     let url = get_slack_url("apps.connections.open");
 
-    post(client, url, app_token)
+    client
+        .post(url, app_token)
         .await?
         .body_json()
         .await

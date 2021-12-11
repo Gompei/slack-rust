@@ -15,7 +15,7 @@ async fn main() {
     };
 
     let response =
-        slack::chat::post_message::post_message(slack_api_client, param, slack_bot_token)
+        slack::chat::post_message::post_message(&slack_api_client, param, slack_bot_token)
             .await
             .expect("api call error");
     println!("{:?}", response);

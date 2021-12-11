@@ -14,7 +14,7 @@ async fn main() {
         limit: None,
         team_id: None,
     };
-    let response = slack::users::list::list(slack_api_client, param, slack_bot_token)
+    let response = slack::users::list::list(&slack_api_client, param, slack_bot_token)
         .await
         .expect("api call error");
     println!("{:?}", response);

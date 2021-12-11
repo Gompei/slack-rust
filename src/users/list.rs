@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use crate::error::Error;
-use crate::http_client::{get_slack_url, post_json, Client, ResponseMetadata};
+use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};
 use crate::users::user::User;
 
 #[derive(Deserialize, Serialize, Debug)]
@@ -21,15 +21,19 @@ pub struct ListResponse {
     pub response_metadata: Option<ResponseMetadata>,
 }
 
-pub async fn list(
-    client: Client,
+pub async fn list<T>(
+    client: &T,
     param: ListRequest,
     bot_token: String,
-) -> Result<ListResponse, Error> {
+) -> Result<ListResponse, Error>
+where
+    T: SlackWebAPIClient,
+{
     let url = get_slack_url("users.list");
     let json = serde_json::to_string(&param)?;
 
-    post_json(client, url, json, bot_token)
+    client
+        .post_json(url, json, bot_token)
         .await?
         .body_json()
         .await

@@ -1,6 +1,6 @@
 use crate::apps::connections_open::connections_open;
 use crate::error::Error;
-use crate::http_client::Client;
+use crate::http_client::{Client, SlackWebAPIClient};
 
 use async_std::net::TcpStream;
 use async_tls::client::TlsStream;
@@ -65,11 +65,11 @@ pub struct SocketMode {}
 
 impl SocketMode {
     /// Run slack and websocket communication.
-    pub async fn run<T: EventHandler + std::marker::Send>(
-        client: Client,
-        app_token: String,
-        handler: &mut T,
-    ) -> Result<(), Error> {
+    pub async fn run<T, S>(client: &S, app_token: String, handler: &mut T) -> Result<(), Error>
+    where
+        T: EventHandler + std::marker::Send,
+        S: SlackWebAPIClient,
+    {
         let wss_url = connections_open(client, app_token).await?;
         let url = wss_url
             .url
