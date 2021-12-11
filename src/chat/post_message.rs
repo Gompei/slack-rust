@@ -24,6 +24,7 @@ pub struct PostMessageRequest {
 #[derive(Deserialize, Serialize, Debug)]
 pub struct PostMessageResponse {
     pub ok: bool,
+    pub error: Option<String>,
     pub channel: Option<String>,
 }
 
