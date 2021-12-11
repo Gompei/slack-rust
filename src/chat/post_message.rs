@@ -39,5 +39,5 @@ pub async fn post_message(
         .await?
         .body_json()
         .await
-        .map_err(|e| Error::SurfError(e))
+        .map_err(Error::SurfError)
 }

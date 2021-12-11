@@ -20,5 +20,5 @@ pub async fn connections_open(
         .await?
         .body_json()
         .await
-        .map_err(|e| Error::SurfError(e))
+        .map_err(Error::SurfError)
 }

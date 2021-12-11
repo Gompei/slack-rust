@@ -6,7 +6,7 @@ use async_std::net::TcpStream;
 use async_tls::client::TlsStream;
 use async_tls::TlsConnector;
 use async_trait::async_trait;
-use async_tungstenite::tungstenite::protocol::CloseFrame;
+
 use async_tungstenite::tungstenite::Message;
 use async_tungstenite::{client_async, WebSocketStream};
 use futures_util::{SinkExt, StreamExt};
@@ -22,19 +22,19 @@ pub trait EventHandler {
     async fn on_connect(&mut self) {
         println!("on_connect function is not implemented.")
     }
-    async fn on_disconnect(&mut self, s: &SocketMessage) {
+    async fn on_disconnect(&mut self, _s: &SocketMessage) {
         println!("on_connect function is not implemented.")
     }
-    async fn on_events_api(&mut self, s: &SocketMessage) {
+    async fn on_events_api(&mut self, _s: &SocketMessage) {
         println!("on_events_api function is not implemented.")
     }
-    async fn on_hello(&mut self, s: &SocketMessage) {
+    async fn on_hello(&mut self, _s: &SocketMessage) {
         println!("on_hello function is not implemented.")
     }
-    async fn on_interactive(&mut self, s: &SocketMessage) {
+    async fn on_interactive(&mut self, _s: &SocketMessage) {
         println!("on_interactive function is not implemented.")
     }
-    async fn on_ping(&mut self, ping: Vec<u8>) {
+    async fn on_ping(&mut self, _ping: Vec<u8>) {
         println!("on_ping function is not implemented.")
     }
 }
