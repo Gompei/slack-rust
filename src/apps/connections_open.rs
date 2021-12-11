@@ -19,10 +19,7 @@ where
 {
     let url = get_slack_url("apps.connections.open");
 
-    client
-        .post(url, app_token)
-        .await?
-        .body_json()
-        .await
-        .map_err(Error::SurfError)
+    client.post(url, app_token).await.and_then(|result| {
+        serde_json::from_str::<ConnectionsOpenResponse>(&result).map_err(Error::SerdeJsonError)
+    })
 }

@@ -34,8 +34,8 @@ where
 
     client
         .post_json(url, json, bot_token)
-        .await?
-        .body_json()
         .await
-        .map_err(|e| Error::SurfError(e))
+        .and_then(|result| {
+            serde_json::from_str::<ListResponse>(&result).map_err(Error::SerdeJsonError)
+        })
 }

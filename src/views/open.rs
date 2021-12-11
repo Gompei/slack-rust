@@ -29,8 +29,8 @@ where
 
     client
         .post_json(url, json, bot_token)
-        .await?
-        .body_json()
         .await
-        .map_err(Error::SurfError)
+        .and_then(|result| {
+            serde_json::from_str::<ViewOpenResponse>(&result).map_err(Error::SerdeJsonError)
+        })
 }

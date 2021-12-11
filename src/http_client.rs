@@ -1,11 +1,12 @@
 use async_trait::async_trait;
-use mockall::automock;
 use serde::{Deserialize, Serialize};
+
+use crate::error::Error;
 
 #[async_trait]
 pub trait SlackWebAPIClient {
-    async fn post_json(&self, url: String, body: String, token: String) -> surf::Result;
-    async fn post(&self, url: String, token: String) -> surf::Result;
+    async fn post_json(&self, url: String, body: String, token: String) -> Result<String, Error>;
+    async fn post(&self, url: String, token: String) -> Result<String, Error>;
 }
 
 pub type Client = surf::Client;
@@ -31,22 +32,28 @@ pub fn default_client() -> Client {
 #[async_trait]
 impl SlackWebAPIClient for Client {
     /// Send a post request to the slack api.
-    async fn post_json(&self, url: String, body: String, token: String) -> surf::Result {
+    async fn post_json(&self, url: String, body: String, token: String) -> Result<String, Error> {
         let check_url = url::Url::parse(url.as_ref())?;
 
-        self.post(check_url)
+        Ok(self
+            .post(check_url)
             .header("Authorization", format!("Bearer {}", token))
             .content_type(surf::http::mime::JSON)
             .body(body)
-            .await
+            .await?
+            .body_string()
+            .await?)
     }
 
     /// Send a post request to the slack api.
-    async fn post(&self, url: String, token: String) -> surf::Result {
+    async fn post(&self, url: String, token: String) -> Result<String, Error> {
         let check_url = url::Url::parse(url.as_ref())?;
 
-        self.post(check_url)
+        Ok(self
+            .post(check_url)
             .header("Authorization", format!("Bearer {}", token))
-            .await
+            .await?
+            .body_string()
+            .await?)
     }
 }
