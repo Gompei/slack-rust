@@ -3,6 +3,7 @@ pub mod attachments;
 pub mod auth;
 pub mod block;
 pub mod chat;
+pub mod conversations;
 pub mod error;
 pub mod http_client;
 pub mod socket_mode;
