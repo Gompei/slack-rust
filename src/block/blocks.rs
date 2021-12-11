@@ -2,14 +2,14 @@ use crate::block::block_object::{OptionBlockObject, TextBlockObject};
 
 use serde::{Deserialize, Serialize};
 
-// trait Block {
-//     fn block_type(&self) -> String;
-// }
+trait Block {
+    fn block_type(&self) -> String;
+}
 
-// #[derive(Deserialize, Serialize, Debug)]
-// pub struct Blocks {
-//     pub block_set: Vec<Box<Block>>,
-// }
+#[derive(Deserialize, Serialize, Debug)]
+pub struct Blocks {
+    pub block_set: Vec<Box<Block>>,
+}
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct BlockAction {
