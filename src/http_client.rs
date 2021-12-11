@@ -11,6 +11,13 @@ pub trait SlackWebAPIClient {
 
 pub type Client = surf::Client;
 
+/// Slack default response.
+#[derive(Deserialize, Serialize, Debug)]
+pub struct DefaultResponse {
+    pub ok: bool,
+    pub error: Option<String>,
+}
+
 /// Metadata.
 #[derive(Deserialize, Serialize, Debug)]
 pub struct ResponseMetadata {
