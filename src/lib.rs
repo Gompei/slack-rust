@@ -4,6 +4,7 @@ pub mod auth;
 pub mod block;
 pub mod chat;
 pub mod conversations;
+pub mod dnd;
 pub mod error;
 pub mod http_client;
 pub mod socket_mode;
