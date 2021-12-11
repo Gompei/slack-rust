@@ -1,5 +1,4 @@
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct UserProfile {
@@ -26,21 +25,20 @@ pub struct UserProfile {
     pub status_emoji: Option<String>,
     pub status_expiration: Option<i8>,
     pub team: Option<String>,
-    pub fields: Option<UserProfileCustomFields>,
+    //pub fields: Option<UserProfileCustomFields>,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
-pub struct UserProfileCustomFields {
-    pub fields: HashMap<String, UserProfileCustomField>,
-}
+//#[derive(Deserialize, Serialize, Debug)]
+// pub struct UserProfileCustomFields {
+//     pub fields: HashMap<String, UserProfileCustomField>,
+// }
 
-#[derive(Deserialize, Serialize, Debug)]
-pub struct UserProfileCustomField {
-    pub value: Option<String>,
-    pub alt: Option<String>,
-    pub label: Option<String>,
-}
-
+// #[derive(Deserialize, Serialize, Debug)]
+// pub struct UserProfileCustomField {
+//     pub value: Option<String>,
+//     pub alt: Option<String>,
+//     pub label: Option<String>,
+// }
 #[derive(Deserialize, Serialize, Debug)]
 pub struct User {
     pub id: Option<String>,
@@ -51,8 +49,8 @@ pub struct User {
     pub real_name: Option<String>,
     pub tz: Option<String>,
     pub tz_label: Option<String>,
-    pub tz_offset: Option<i8>,
-    pub profile: Option<UserProfile>,
+    pub tz_offset: Option<i16>,
+    //pub profile: Option<UserProfile>,
     pub is_bot: Option<bool>,
     pub is_admin: Option<bool>,
     pub is_owner: Option<bool>,
@@ -70,12 +68,12 @@ pub struct User {
     pub enterprise_user: Option<String>,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
-pub struct EnterpriseUser {
-    pub id: Option<String>,
-    pub enterprise_id: Option<String>,
-    pub enterprise_name: Option<String>,
-    pub is_admin: Option<bool>,
-    pub is_owner: Option<bool>,
-    pub teams: Option<Vec<String>>,
-}
+// #[derive(Deserialize, Serialize, Debug)]
+// pub struct EnterpriseUser {
+//     pub id: Option<String>,
+//     pub enterprise_id: Option<String>,
+//     pub enterprise_name: Option<String>,
+//     pub is_admin: Option<bool>,
+//     pub is_owner: Option<bool>,
+//     pub teams: Option<Vec<String>>,
+// }

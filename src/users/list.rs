@@ -8,7 +8,7 @@ use crate::users::user::User;
 pub struct ListRequest {
     pub cursor: Option<String>,
     pub include_locale: Option<bool>,
-    pub limit: Option<i8>,
+    pub limit: Option<i32>,
     pub team_id: Option<String>,
 }
 
@@ -16,8 +16,8 @@ pub struct ListRequest {
 pub struct ListResponse {
     pub ok: bool,
     pub error: Option<String>,
-    pub members: Option<Box<User>>,
-    pub cache_ts: Option<i8>,
+    pub members: Option<Vec<User>>,
+    pub cache_ts: Option<i32>,
     pub response_metadata: Option<ResponseMetadata>,
 }
 
