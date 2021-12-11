@@ -8,7 +8,7 @@ trait Block {
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct Blocks {
-    pub block_set: Vec<Box<Block>>,
+    //pub block_set: Vec<Box<Block>>,
 }
 
 #[derive(Deserialize, Serialize, Debug)]
