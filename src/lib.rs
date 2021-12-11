@@ -1,5 +1,6 @@
 pub mod apps;
 pub mod attachments;
+pub mod auth;
 pub mod block;
 pub mod chat;
 pub mod error;
