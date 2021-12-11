@@ -6,7 +6,6 @@ use async_std::net::TcpStream;
 use async_tls::client::TlsStream;
 use async_tls::TlsConnector;
 use async_trait::async_trait;
-
 use async_tungstenite::tungstenite::Message;
 use async_tungstenite::{client_async, WebSocketStream};
 use futures_util::{SinkExt, StreamExt};
