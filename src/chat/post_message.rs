@@ -1,6 +1,5 @@
 use serde::{Deserialize, Serialize};
 
-use crate::chat::message::Message;
 use crate::error::Error;
 use crate::http_client::{get_slack_url, SlackWebAPIClient};
 
@@ -34,7 +33,7 @@ pub struct PostMessageResponse {
 pub async fn post_message<T>(
     client: &T,
     param: &PostMessageRequest,
-    bot_token: &String,
+    bot_token: &str,
 ) -> Result<PostMessageResponse, Error>
 where
     T: SlackWebAPIClient,

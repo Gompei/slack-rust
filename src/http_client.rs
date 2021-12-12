@@ -40,7 +40,7 @@ pub fn default_client() -> Client {
 impl SlackWebAPIClient for Client {
     /// Send a post request to the slack api.
     async fn post_json(&self, url: &str, body: &str, token: &str) -> Result<String, Error> {
-        let check_url = url::Url::parse(url.as_ref())?;
+        let check_url = url::Url::parse(url)?;
 
         Ok(self
             .post(check_url)
@@ -54,7 +54,7 @@ impl SlackWebAPIClient for Client {
 
     /// Send a post request to the slack api.
     async fn post(&self, url: &str, token: &str) -> Result<String, Error> {
-        let check_url = url::Url::parse(url.as_ref())?;
+        let check_url = url::Url::parse(url)?;
 
         Ok(self
             .post(check_url)

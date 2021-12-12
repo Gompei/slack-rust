@@ -1,6 +1,6 @@
 use crate::apps::connections_open::connections_open;
 use crate::error::Error;
-use crate::http_client::{Client, SlackWebAPIClient};
+use crate::http_client::SlackWebAPIClient;
 
 use async_std::net::TcpStream;
 use async_tls::client::TlsStream;
@@ -85,7 +85,7 @@ impl SocketMode {
 
         let (mut stream, _) = client_async(url, tls_stream).await?;
 
-        handler.on_connect();
+        handler.on_connect().await;
 
         loop {
             let next_stream = stream
@@ -144,7 +144,8 @@ impl SocketMode {
         }
     }
     pub async fn ack(envelope_id: String, stream: &mut WebSocketStream<TlsStream<TcpStream>>) {
-        stream.send(Message::Text(
+        // TODO
+        let _ = stream.send(Message::Text(
             serde_json::to_string(&AcknowledgeMessage { envelope_id })
                 .expect("send acknowledge message error"),
         ));
