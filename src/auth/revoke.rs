@@ -17,8 +17,8 @@ pub struct RevokeResponse {
 
 pub async fn revoke<T>(
     client: &T,
-    param: RevokeRequest,
-    bot_token: String,
+    param: &RevokeRequest,
+    bot_token: &str,
 ) -> Result<RevokeResponse, Error>
 where
     T: SlackWebAPIClient,
@@ -27,7 +27,7 @@ where
     let json = serde_json::to_string(&param)?;
 
     client
-        .post_json(url, json, bot_token)
+        .post_json(&url, &json, bot_token)
         .await
         .and_then(|result| {
             serde_json::from_str::<RevokeResponse>(&result).map_err(Error::SerdeJsonError)

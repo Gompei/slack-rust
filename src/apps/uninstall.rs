@@ -11,8 +11,8 @@ pub struct UninstallRequest {
 
 pub async fn uninstall<T>(
     client: &T,
-    param: UninstallRequest,
-    bot_token: String,
+    param: &UninstallRequest,
+    bot_token: &str,
 ) -> Result<DefaultResponse, Error>
 where
     T: SlackWebAPIClient,
@@ -21,7 +21,7 @@ where
     let json = serde_json::to_string(&param)?;
 
     client
-        .post_json(url, json, bot_token)
+        .post_json(&url, &json, &bot_token)
         .await
         .and_then(|result| {
             serde_json::from_str::<DefaultResponse>(&result).map_err(Error::SerdeJsonError)

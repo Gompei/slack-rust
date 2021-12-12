@@ -10,8 +10,8 @@ pub struct ArchiveRequest {
 
 pub async fn archive<T>(
     client: &T,
-    param: ArchiveRequest,
-    bot_token: String,
+    param: &ArchiveRequest,
+    bot_token: &str,
 ) -> Result<DefaultResponse, Error>
 where
     T: SlackWebAPIClient,
@@ -20,7 +20,7 @@ where
     let json = serde_json::to_string(&param)?;
 
     client
-        .post_json(url, json, bot_token)
+        .post_json(&url, &json, &bot_token)
         .await
         .and_then(|result| {
             serde_json::from_str::<DefaultResponse>(&result).map_err(Error::SerdeJsonError)

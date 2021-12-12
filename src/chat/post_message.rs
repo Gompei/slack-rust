@@ -33,8 +33,8 @@ pub struct PostMessageResponse {
 
 pub async fn post_message<T>(
     client: &T,
-    param: PostMessageRequest,
-    bot_token: String,
+    param: &PostMessageRequest,
+    bot_token: &String,
 ) -> Result<PostMessageResponse, Error>
 where
     T: SlackWebAPIClient,
@@ -43,7 +43,7 @@ where
     let json = serde_json::to_string(&param)?;
 
     client
-        .post_json(url, json, bot_token)
+        .post_json(&url, &json, bot_token)
         .await
         .and_then(|result| {
             serde_json::from_str::<PostMessageResponse>(&result).map_err(Error::SerdeJsonError)

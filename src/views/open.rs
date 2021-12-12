@@ -18,8 +18,8 @@ pub struct ViewOpenResponse {
 
 pub async fn open<T>(
     client: &T,
-    param: ViewOpenRequest,
-    bot_token: String,
+    param: &ViewOpenRequest,
+    bot_token: &str,
 ) -> Result<ViewOpenResponse, Error>
 where
     T: SlackWebAPIClient,
@@ -28,7 +28,7 @@ where
     let json = serde_json::to_string(&param)?;
 
     client
-        .post_json(url, json, bot_token)
+        .post_json(&url, &json, bot_token)
         .await
         .and_then(|result| {
             serde_json::from_str::<ViewOpenResponse>(&result).map_err(Error::SerdeJsonError)

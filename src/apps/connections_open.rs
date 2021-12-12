@@ -12,14 +12,14 @@ pub struct ConnectionsOpenResponse {
 
 pub async fn connections_open<T>(
     client: &T,
-    app_token: String,
+    app_token: &str,
 ) -> Result<ConnectionsOpenResponse, Error>
 where
     T: SlackWebAPIClient,
 {
     let url = get_slack_url("apps.connections.open");
 
-    client.post(url, app_token).await.and_then(|result| {
+    client.post(&url, app_token).await.and_then(|result| {
         serde_json::from_str::<ConnectionsOpenResponse>(&result).map_err(Error::SerdeJsonError)
     })
 }
