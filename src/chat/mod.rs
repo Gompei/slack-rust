@@ -5,5 +5,6 @@ pub mod me_message;
 pub mod message;
 pub mod post_message;
 pub mod schedule_message;
+pub mod scheduled_messages_list;
 pub mod unfurl;
 pub mod update;
