@@ -6,3 +6,4 @@ pub mod message;
 pub mod post_message;
 pub mod schedule_message;
 pub mod unfurl;
+pub mod update;
