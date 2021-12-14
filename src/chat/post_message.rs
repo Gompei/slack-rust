@@ -52,7 +52,7 @@ where
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::http_client::default_client;
+    
 
     #[test]
     fn convert_json_request() {
