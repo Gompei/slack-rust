@@ -2,6 +2,7 @@ pub mod apps;
 pub mod attachments;
 pub mod auth;
 pub mod block;
+pub mod channels;
 pub mod chat;
 pub mod conversations;
 pub mod dnd;
