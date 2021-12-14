@@ -11,3 +11,4 @@ pub mod invite_shared;
 pub mod join;
 pub mod kick;
 pub mod leave;
+pub mod list;
