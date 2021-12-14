@@ -7,3 +7,4 @@ pub mod decline_shared_invite;
 pub mod history;
 pub mod info;
 pub mod invite;
+pub mod invite_shared;
