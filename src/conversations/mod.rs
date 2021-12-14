@@ -12,3 +12,4 @@ pub mod join;
 pub mod kick;
 pub mod leave;
 pub mod list;
+pub mod mark;
