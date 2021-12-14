@@ -9,3 +9,4 @@ pub mod info;
 pub mod invite;
 pub mod invite_shared;
 pub mod join;
+pub mod kick;
