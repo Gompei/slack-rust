@@ -17,3 +17,4 @@ pub mod members;
 pub mod open;
 pub mod rename;
 pub mod replies;
+pub mod set_purpose;
