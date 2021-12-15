@@ -8,6 +8,7 @@ pub mod conversations;
 pub mod dnd;
 pub mod error;
 pub mod http_client;
+pub mod reactions;
 pub mod reminders;
 pub mod socket_mode;
 pub mod users;
