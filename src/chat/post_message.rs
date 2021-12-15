@@ -49,53 +49,52 @@ where
         })
 }
 
-#[cfg(test)]
-mod test {
-    use super::*;
-    
-
-    #[test]
-    fn convert_json_request() {
-        let request = PostMessageRequest {
-            channel: "test channel".to_string(),
-            text: "test text".to_string(),
-        };
-        let json = serde_json::to_string_pretty(&request).unwrap();
-        let expected = r#"{
-  "channel": "test channel",
-  "text": "test text"
-}"#;
-
-        assert_eq!(json, expected);
-    }
-
-    #[test]
-    fn convert_json_response() {
-        let response = PostMessageResponse {
-            ok: false,
-            channel: Some("test channel".to_string()),
-        };
-        let json = serde_json::to_string_pretty(&response).unwrap();
-        let expected = r#"{
-  "ok": false,
-  "channel": "test channel"
-}"#;
-
-        assert_eq!(json, expected);
-    }
-
-    #[async_std::test]
-    async fn test_post_message() {
-        // let param = PostMessageRequest {
-        //     channel: "test".to_string(),
-        //     text: "test".to_string(),
-        // };
-        // let slack_api_client = default_client();
-        //
-        // let response = post_message(slack_api_client, param, "".to_string())
-        //     .await
-        //     .expect("api call error");
-        //
-        assert_eq!(1, 1);
-    }
-}
+// #[cfg(test)]
+// mod test {
+//     use super::*;
+//
+//     #[test]
+//     fn convert_json_request() {
+//         let request = PostMessageRequest {
+//             channel: "test channel".to_string(),
+//             text: "test text".to_string(),
+//         };
+//         let json = serde_json::to_string_pretty(&request).unwrap();
+//         let expected = r#"{
+//   "channel": "test channel",
+//   "text": "test text"
+// }"#;
+//
+//         assert_eq!(json, expected);
+//     }
+//
+//     #[test]
+//     fn convert_json_response() {
+//         let response = PostMessageResponse {
+//             ok: false,
+//             channel: Some("test channel".to_string()),
+//         };
+//         let json = serde_json::to_string_pretty(&response).unwrap();
+//         let expected = r#"{
+//   "ok": false,
+//   "channel": "test channel"
+// }"#;
+//
+//         assert_eq!(json, expected);
+//     }
+//
+//     #[async_std::test]
+//     async fn test_post_message() {
+//         // let param = PostMessageRequest {
+//         //     channel: "test".to_string(),
+//         //     text: "test".to_string(),
+//         // };
+//         // let slack_api_client = default_client();
+//         //
+//         // let response = post_message(slack_api_client, param, "".to_string())
+//         //     .await
+//         //     .expect("api call error");
+//         //
+//         assert_eq!(1, 1);
+//     }
+// }
