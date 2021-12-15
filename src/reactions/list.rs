@@ -1,5 +1,5 @@
 use crate::error::Error;
-use crate::files::file::File;
+
 use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};
 use crate::items::item::Item;
 use serde::{Deserialize, Serialize};
