@@ -19,3 +19,4 @@ pub mod rename;
 pub mod replies;
 pub mod set_purpose;
 pub mod set_topic;
+pub mod unarchive;
