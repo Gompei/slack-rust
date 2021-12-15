@@ -15,3 +15,4 @@ pub mod list;
 pub mod mark;
 pub mod members;
 pub mod open;
+pub mod rename;
