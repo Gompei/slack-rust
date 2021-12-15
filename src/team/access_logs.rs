@@ -1,6 +1,6 @@
 use crate::error::Error;
 use crate::http_client::{get_slack_url, SlackWebAPIClient};
-use crate::reminders::add::Reminder;
+
 use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize, Debug)]
@@ -16,6 +16,7 @@ pub struct AccessLogsResponse {
     pub ok: bool,
     pub error: Option<String>,
     pub logins: Option<Vec<Login>>,
+    pub paging: Option<Paging>,
 }
 
 #[derive(Deserialize, Serialize, Debug)]
@@ -33,7 +34,7 @@ pub struct Login {
 }
 
 #[derive(Deserialize, Serialize, Debug)]
-pub struct paging {
+pub struct Paging {
     pub count: Option<i32>,
     pub total: Option<i32>,
     pub page: Option<i32>,
