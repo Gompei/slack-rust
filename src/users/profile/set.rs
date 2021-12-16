@@ -1,7 +1,7 @@
 use crate::error::Error;
-use crate::http_client::{get_slack_url, DefaultResponse, SlackWebAPIClient};
+use crate::http_client::{get_slack_url, SlackWebAPIClient};
 use crate::profiles::profile::Profile;
-use crate::users::user::User;
+
 use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize, Debug)]
@@ -30,6 +30,6 @@ where
         .post_json(&url, &json, bot_token)
         .await
         .and_then(|result| {
-            serde_json::from_str::<GetResponse>(&result).map_err(Error::SerdeJsonError)
+            serde_json::from_str::<SetResponse>(&result).map_err(Error::SerdeJsonError)
         })
 }
