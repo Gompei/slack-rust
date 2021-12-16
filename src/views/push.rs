@@ -4,34 +4,34 @@ use crate::views::view::View;
 use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize, Debug)]
-pub struct OpenRequest {
+pub struct PushRequest {
     pub trigger_id: String,
     pub view: View,
 }
 
 #[derive(Deserialize, Serialize, Debug)]
-pub struct OpenResponse {
+pub struct PushResponse {
     pub ok: bool,
     pub error: Option<String>,
     pub view: Option<View>,
     pub response_metadata: Option<ResponseMetadata>,
 }
 
-pub async fn open<T>(
+pub async fn push<T>(
     client: &T,
-    param: &OpenRequest,
+    param: &PushRequest,
     bot_token: &str,
-) -> Result<OpenResponse, Error>
+) -> Result<PushResponse, Error>
 where
     T: SlackWebAPIClient,
 {
-    let url = get_slack_url("views.open");
+    let url = get_slack_url("views.push");
     let json = serde_json::to_string(&param)?;
 
     client
         .post_json(&url, &json, bot_token)
         .await
         .and_then(|result| {
-            serde_json::from_str::<OpenResponse>(&result).map_err(Error::SerdeJsonError)
+            serde_json::from_str::<PushResponse>(&result).map_err(Error::SerdeJsonError)
         })
 }

@@ -13,6 +13,7 @@ pub struct PublishRequest {
 #[derive(Deserialize, Serialize, Debug)]
 pub struct PublishResponse {
     pub ok: bool,
+    pub error: Option<String>,
     pub view: Option<View>,
     pub response_metadata: Option<ResponseMetadata>,
 }
