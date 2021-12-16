@@ -1,5 +1,5 @@
 use crate::error::Error;
-use crate::http_client::{get_slack_url, DefaultResponse, ResponseMetadata, SlackWebAPIClient};
+use crate::http_client::{get_slack_url, DefaultResponse, SlackWebAPIClient};
 
 pub async fn delete_photo<T>(client: &T, bot_token: &str) -> Result<DefaultResponse, Error>
 where
