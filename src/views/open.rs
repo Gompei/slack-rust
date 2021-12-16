@@ -1,17 +1,16 @@
-use serde::{Deserialize, Serialize};
-
 use crate::error::Error;
 use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};
 use crate::views::view::View;
+use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize, Debug)]
-pub struct ViewOpenRequest {
+pub struct OpenRequest {
     pub trigger_id: String,
     pub view: View,
 }
 
 #[derive(Deserialize, Serialize, Debug)]
-pub struct ViewOpenResponse {
+pub struct OpenResponse {
     pub ok: bool,
     pub view: Option<View>,
     pub response_metadata: Option<ResponseMetadata>,
@@ -19,9 +18,9 @@ pub struct ViewOpenResponse {
 
 pub async fn open<T>(
     client: &T,
-    param: &ViewOpenRequest,
+    param: &OpenRequest,
     bot_token: &str,
-) -> Result<ViewOpenResponse, Error>
+) -> Result<OpenResponse, Error>
 where
     T: SlackWebAPIClient,
 {
@@ -32,6 +31,6 @@ where
         .post_json(&url, &json, bot_token)
         .await
         .and_then(|result| {
-            serde_json::from_str::<ViewOpenResponse>(&result).map_err(Error::SerdeJsonError)
+            serde_json::from_str::<OpenResponse>(&result).map_err(Error::SerdeJsonError)
         })
 }
