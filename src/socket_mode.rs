@@ -17,10 +17,10 @@ use url::Url;
 pub trait EventHandler {
     async fn on_close(&mut self) {}
     async fn on_connect(&mut self) {}
-    async fn on_disconnect(&mut self, s: &SocketMessage) {}
-    async fn on_events_api(&mut self, s: &SocketMessage) {}
-    async fn on_hello(&mut self, s: &SocketMessage) {}
-    async fn on_interactive(&mut self, s: &SocketMessage) {}
+    async fn on_disconnect(&mut self, _s: &SocketMessage) {}
+    async fn on_events_api(&mut self, _s: &SocketMessage) {}
+    async fn on_hello(&mut self, _s: &SocketMessage) {}
+    async fn on_interactive(&mut self, _s: &SocketMessage) {}
 }
 
 #[derive(Deserialize, Serialize, Debug)]

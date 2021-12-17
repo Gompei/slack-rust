@@ -1,6 +1,5 @@
-use serde::{Deserialize, Serialize};
-
 use crate::attachments::attachment::Attachment;
+use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct Message {

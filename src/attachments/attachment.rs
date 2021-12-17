@@ -1,6 +1,5 @@
-use serde::{Deserialize, Serialize};
-
 use crate::block::blocks::Blocks;
+use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct AttachmentField {
@@ -46,12 +45,12 @@ pub struct ConfirmationField {
     pub dismiss_text: Option<String>,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct Attachment {
     pub color: Option<String>,
     pub fallback: Option<String>,
     pub callback_id: Option<String>,
-    pub id: Option<String>,
+    pub id: Option<i8>,
     pub author_id: Option<String>,
     pub author_name: Option<String>,
     pub author_subname: Option<String>,
@@ -63,6 +62,8 @@ pub struct Attachment {
     pub text: Option<String>,
     pub image_url: Option<String>,
     pub thumb_url: Option<String>,
+    pub thumb_height: Option<i16>,
+    pub thumb_width: Option<i16>,
     pub service_name: Option<String>,
     pub service_icon: Option<String>,
     pub from_url: Option<String>,
@@ -73,5 +74,5 @@ pub struct Attachment {
     pub blocks: Option<Blocks>,
     pub footer: Option<String>,
     pub footer_icon: Option<String>,
-    pub ts: Option<String>,
+    pub ts: Option<i32>,
 }
