@@ -14,3 +14,13 @@ impl fmt::Debug for dyn BlockElement {
 
 #[derive(Deserialize, Serialize, Debug, Default)]
 pub struct BlockElements(Option<Vec<Box<dyn BlockElement>>>);
+
+#[derive(Deserialize, Serialize, Debug, Default)]
+pub struct SelectBlockElement {}
+
+#[typetag::serde]
+impl BlockElement for SelectBlockElement {
+    fn element_type(&self) -> &String {
+        &self.r#type
+    }
+}
