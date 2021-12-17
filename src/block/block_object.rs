@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct TextBlockObject {
     pub r#type: Option<String>,
     pub text: Option<String>,
@@ -8,7 +8,7 @@ pub struct TextBlockObject {
     pub verbatim: bool,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct OptionBlockObject {
     pub text: TextBlockObject,
     pub value: Option<String>,

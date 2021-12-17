@@ -1,14 +1,14 @@
 use crate::block::blocks::Blocks;
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct AttachmentField {
     pub title: Option<String>,
     pub value: Option<String>,
     pub short: Option<bool>,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct AttachmentAction {
     pub name: Option<String>,
     pub text: Option<String>,
@@ -24,20 +24,20 @@ pub struct AttachmentAction {
     pub url: Option<String>,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct AttachmentActionOption {
     pub text: Option<String>,
     pub value: Option<String>,
     pub description: Option<String>,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct AttachmentActionOptionGroup {
     pub text: Option<String>,
     pub options: Option<Vec<AttachmentActionOption>>,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct ConfirmationField {
     pub title: Option<String>,
     pub text: Option<String>,

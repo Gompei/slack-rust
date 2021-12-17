@@ -3,13 +3,13 @@ use crate::http_client::{get_slack_url, SlackWebAPIClient};
 use crate::reminders::add::Reminder;
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct InfoRequest {
     pub reminder: String,
     pub team_id: Option<String>,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct InfoResponse {
     pub ok: bool,
     pub error: Option<String>,

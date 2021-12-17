@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct UserProfile {
     pub first_name: Option<String>,
     pub last_name: Option<String>,
@@ -28,18 +28,18 @@ pub struct UserProfile {
     //pub fields: Option<UserProfileCustomFields>,
 }
 
-//#[derive(Deserialize, Serialize, Debug)]
+//#[derive(Deserialize, Serialize, Debug, Default)]
 // pub struct UserProfileCustomFields {
 //     pub fields: HashMap<String, UserProfileCustomField>,
 // }
 
-// #[derive(Deserialize, Serialize, Debug)]
+// #[derive(Deserialize, Serialize, Debug, Default)]
 // pub struct UserProfileCustomField {
 //     pub value: Option<String>,
 //     pub alt: Option<String>,
 //     pub label: Option<String>,
 // }
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct User {
     pub id: Option<String>,
     pub team_id: Option<String>,
@@ -68,7 +68,7 @@ pub struct User {
     pub enterprise_user: Option<String>,
 }
 
-// #[derive(Deserialize, Serialize, Debug)]
+// #[derive(Deserialize, Serialize, Debug, Default)]
 // pub struct EnterpriseUser {
 //     pub id: Option<String>,
 //     pub enterprise_id: Option<String>,

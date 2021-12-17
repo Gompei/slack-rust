@@ -4,7 +4,7 @@ use crate::error::Error;
 use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};
 use crate::users::user::User;
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct ListRequest {
     pub cursor: Option<String>,
     pub include_locale: Option<bool>,
@@ -12,7 +12,7 @@ pub struct ListRequest {
     pub team_id: Option<String>,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct ListResponse {
     pub ok: bool,
     pub error: Option<String>,

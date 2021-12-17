@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 // TODO
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct Channel {
     pub id: Option<String>,
     pub name: Option<String>,
@@ -35,7 +35,7 @@ pub struct Channel {
 }
 
 // TODO
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct Topic {
     pub value: Option<String>,
     pub creator: Option<String>,
@@ -43,7 +43,7 @@ pub struct Topic {
 }
 
 // TODO
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct Purpose {
     pub value: Option<String>,
     pub creator: Option<String>,

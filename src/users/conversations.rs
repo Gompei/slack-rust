@@ -3,7 +3,7 @@ use crate::error::Error;
 use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct ConversationsRequest {
     pub cursor: Option<String>,
     pub exclude_archived: Option<String>,
@@ -13,7 +13,7 @@ pub struct ConversationsRequest {
     pub user: Option<String>,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct ConversationsResponse {
     pub ok: bool,
     pub error: Option<String>,

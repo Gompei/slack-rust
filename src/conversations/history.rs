@@ -4,7 +4,7 @@ use crate::chat::message::Message;
 use crate::error::Error;
 use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct HistoryRequest {
     pub channel: String,
     pub cursor: Option<String>,
@@ -14,7 +14,7 @@ pub struct HistoryRequest {
     pub oldest: Option<String>,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct HistoryResponse {
     pub ok: bool,
     pub error: Option<String>,

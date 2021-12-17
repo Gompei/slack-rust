@@ -3,12 +3,12 @@ use crate::http_client::{get_slack_url, SlackWebAPIClient};
 use crate::users::user::User;
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct LookupByEmailRequest {
     pub email: String,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct LookupByEmailResponse {
     pub ok: bool,
     pub error: Option<String>,

@@ -3,7 +3,7 @@ use crate::http_client::{get_slack_url, DefaultResponse, SlackWebAPIClient};
 
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct SetPhotoRequest {
     pub crop_w: Option<String>,
     pub crop_x: Option<String>,

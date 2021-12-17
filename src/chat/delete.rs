@@ -3,14 +3,14 @@ use serde::{Deserialize, Serialize};
 use crate::error::Error;
 use crate::http_client::{get_slack_url, SlackWebAPIClient};
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct DeleteRequest {
     pub channel: String,
     pub ts: String,
     pub as_user: Option<bool>,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct DeleteResponse {
     pub ok: bool,
     pub error: Option<String>,

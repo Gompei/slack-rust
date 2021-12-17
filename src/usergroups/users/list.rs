@@ -3,14 +3,14 @@ use crate::http_client::{get_slack_url, SlackWebAPIClient};
 
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct ListRequest {
     pub usergroup: String,
     pub include_disabled: Option<bool>,
     pub team_id: Option<String>,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct ListResponse {
     pub ok: bool,
     pub error: Option<String>,

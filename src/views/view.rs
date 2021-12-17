@@ -4,12 +4,12 @@ use crate::block::blocks::BlockAction;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct ViewState {
     pub values: HashMap<String, HashMap<String, BlockAction>>,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct View {
     pub id: Option<String>,
     pub team_id: Option<String>,

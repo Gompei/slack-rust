@@ -2,13 +2,13 @@ use crate::error::Error;
 use crate::http_client::{get_slack_url, SlackWebAPIClient};
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct SetPurposeRequest {
     pub channel: String,
     pub purpose: String,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct SetPurposeResponse {
     pub ok: bool,
     pub error: Option<String>,

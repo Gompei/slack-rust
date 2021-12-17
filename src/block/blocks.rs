@@ -6,12 +6,12 @@ trait Block {
     fn block_type(&self) -> String;
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct Blocks {
     //pub block_set: Vec<Box<Block>>,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct BlockAction {
     pub action_id: Option<String>,
     pub block_id: Option<String>,

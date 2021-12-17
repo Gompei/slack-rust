@@ -3,7 +3,7 @@ use crate::error::Error;
 use crate::http_client::{get_slack_url, SlackWebAPIClient};
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct CreateRequest {
     pub channel_name: String,
     pub name: String,
@@ -11,7 +11,7 @@ pub struct CreateRequest {
     pub team_id: Option<String>,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct CreateResponse {
     pub ok: bool,
     pub error: Option<String>,

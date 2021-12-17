@@ -4,13 +4,13 @@ use crate::profiles::profile::Profile;
 
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct GetRequest {
     pub include_labels: Option<String>,
     pub user: Option<String>,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct GetResponse {
     pub ok: bool,
     pub error: Option<String>,

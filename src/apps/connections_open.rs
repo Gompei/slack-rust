@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use crate::error::Error;
 use crate::http_client::{get_slack_url, SlackWebAPIClient};
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct ConnectionsOpenResponse {
     pub ok: bool,
     pub url: Option<String>,

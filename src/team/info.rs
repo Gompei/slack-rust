@@ -3,19 +3,19 @@ use crate::http_client::{get_slack_url, SlackWebAPIClient};
 
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct InfoRequest {
     pub team: Option<String>,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct InfoResponse {
     pub ok: bool,
     pub error: Option<String>,
     pub team: Option<Team>,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct Team {
     pub id: Option<String>,
     pub name: Option<String>,
@@ -27,7 +27,7 @@ pub struct Team {
 }
 
 // TODO
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct Icon {
     pub image_34: Option<String>,
     pub image_44: Option<String>,

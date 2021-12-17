@@ -5,7 +5,7 @@ use crate::error::Error;
 use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct PostMessageRequest {
     pub channel: String,
     pub attachments: Option<Vec<Attachment>>,
@@ -24,7 +24,7 @@ pub struct PostMessageRequest {
     // pub username: Option<String>,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct PostMessageResponse {
     pub ok: bool,
     pub error: Option<String>,

@@ -3,7 +3,7 @@ use crate::comments::comment::Comment;
 use crate::files::file::File;
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct Item {
     pub r#type: Option<String>,
     pub channel: Option<String>,

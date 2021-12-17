@@ -5,7 +5,7 @@ use crate::block::blocks::Blocks;
 use crate::error::Error;
 use crate::http_client::{get_slack_url, SlackWebAPIClient};
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct PostEphemeralRequest {
     pub channel: String,
     pub text: String,
@@ -21,7 +21,7 @@ pub struct PostEphemeralRequest {
     pub username: Option<String>,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct PostEphemeralResponse {
     pub ok: bool,
     pub error: Option<String>,

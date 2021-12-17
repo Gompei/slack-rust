@@ -6,7 +6,7 @@ use crate::chat::message::Message;
 use crate::error::Error;
 use crate::http_client::{get_slack_url, SlackWebAPIClient};
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct ScheduledMessageRequest {
     pub channel: String,
     pub post_at: i32,
@@ -22,7 +22,7 @@ pub struct ScheduledMessageRequest {
     pub unfurl_media: Option<String>,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct ScheduledMessageResponse {
     pub ok: bool,
     pub error: Option<String>,

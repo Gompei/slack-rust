@@ -2,7 +2,7 @@ use crate::error::Error;
 use crate::http_client::{get_slack_url, DefaultResponse, SlackWebAPIClient};
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct CompleteRequest {
     pub reminder: String,
     pub team_id: Option<String>,

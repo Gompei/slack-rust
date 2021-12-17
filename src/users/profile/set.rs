@@ -4,7 +4,7 @@ use crate::profiles::profile::Profile;
 
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct SetRequest {
     pub name: Option<String>,
     pub profile: Option<Profile>,
@@ -12,7 +12,7 @@ pub struct SetRequest {
     pub value: Option<String>,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct SetResponse {
     pub ok: bool,
     pub error: Option<String>,

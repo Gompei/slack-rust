@@ -4,7 +4,7 @@ use crate::team::info::Team;
 use crate::users::user::User;
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct IdentityResponse {
     pub ok: bool,
     pub error: Option<String>,

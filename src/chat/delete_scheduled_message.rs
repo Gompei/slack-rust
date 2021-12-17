@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use crate::error::Error;
 use crate::http_client::{get_slack_url, DefaultResponse, SlackWebAPIClient};
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct DeleteScheduledMessageRequest {
     pub channel: String,
     pub scheduled_message_id: String,

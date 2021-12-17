@@ -4,7 +4,7 @@ use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};
 use crate::items::item::Item;
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct ListRequest {
     pub count: Option<i32>,
     pub cursor: Option<String>,
@@ -15,7 +15,7 @@ pub struct ListRequest {
     pub user: Option<String>,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct ListResponse {
     pub ok: bool,
     pub error: Option<String>,
