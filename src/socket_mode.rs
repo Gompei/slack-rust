@@ -15,27 +15,12 @@ use url::Url;
 /// Implement this trait in your code to handle slack events.
 #[async_trait]
 pub trait EventHandler {
-    async fn on_close(&mut self) {
-        println!("on_close function is not implemented.")
-    }
-    async fn on_connect(&mut self) {
-        println!("on_connect function is not implemented.")
-    }
-    async fn on_disconnect(&mut self, _s: &SocketMessage) {
-        println!("on_connect function is not implemented.")
-    }
-    async fn on_events_api(&mut self, _s: &SocketMessage) {
-        println!("on_events_api function is not implemented.")
-    }
-    async fn on_hello(&mut self, _s: &SocketMessage) {
-        println!("on_hello function is not implemented.")
-    }
-    async fn on_interactive(&mut self, _s: &SocketMessage) {
-        println!("on_interactive function is not implemented.")
-    }
-    async fn on_ping(&mut self, _ping: Vec<u8>) {
-        println!("on_ping function is not implemented.")
-    }
+    async fn on_close(&mut self) {}
+    async fn on_connect(&mut self) {}
+    async fn on_disconnect(&mut self, s: &SocketMessage) {}
+    async fn on_events_api(&mut self, s: &SocketMessage) {}
+    async fn on_hello(&mut self, s: &SocketMessage) {}
+    async fn on_interactive(&mut self, s: &SocketMessage) {}
 }
 
 #[derive(Deserialize, Serialize, Debug)]
@@ -133,15 +118,16 @@ impl SocketMode {
                                 .await
                         }
                     },
-                    Err(e) => println!("unknown text frame: {} {:?}", t, e),
+                    Err(e) => log::error!("unknown text frame: {} {:?}", t, e),
                 },
-                Message::Ping(p) => handler.on_ping(p).await,
-                Message::Close(_) => handler.on_close().await,
+                Message::Ping(p) => log::info!("ping: {:?}", p),
+                Message::Close(_) => break,
                 m => {
-                    println!("unsupported web socket message: {:?}", m);
+                    log::warn!("unsupported web socket message: {:?}", m);
                 }
             }
         }
+        Ok(())
     }
     pub async fn ack(envelope_id: String, stream: &mut WebSocketStream<TlsStream<TcpStream>>) {
         // TODO

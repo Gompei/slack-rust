@@ -5,6 +5,8 @@ use std::env;
 
 #[async_std::main]
 async fn main() {
+    env_logger::init();
+
     let slack_app_token =
         env::var("SLACK_APP_TOKEN").unwrap_or_else(|_| panic!("slack app token is not set."));
 
