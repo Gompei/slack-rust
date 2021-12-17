@@ -9,6 +9,7 @@ pub struct ActionBlock {
     pub elements: Option<BlockElements>,
 }
 
+#[typetag::serde]
 impl Block for ActionBlock {
     fn block_type(&self) -> &String {
         &self.r#type

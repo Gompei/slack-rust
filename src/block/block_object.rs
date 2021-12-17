@@ -18,8 +18,8 @@ pub struct OptionBlockObject {
 
 #[derive(Deserialize, Serialize, Debug, Default)]
 pub struct OptionGroupBlockObject {
-    pub label: Option<ioTextBlockObject>,
-    pub Options: Option<Vec<OptionBlockObject>>,
+    pub label: Option<TextBlockObject>,
+    pub options: Option<Vec<OptionBlockObject>>,
 }
 
 #[derive(Deserialize, Serialize, Debug, Default)]
