@@ -1,6 +1,6 @@
 use crate::error::Error;
 use crate::http_client::{get_slack_url, SlackWebAPIClient};
-use crate::usergroups::usergroup::Usergroup;
+
 use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize, Debug)]
