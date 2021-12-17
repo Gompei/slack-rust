@@ -1,3 +1,6 @@
+use crate::block::block_object::{
+    ConfirmationBlockObject, OptionBlockObject, OptionGroupBlockObject, TextBlockObject,
+};
 use serde::{Deserialize, Serialize};
 use std::fmt;
 
@@ -16,7 +19,21 @@ impl fmt::Debug for dyn BlockElement {
 pub struct BlockElements(Option<Vec<Box<dyn BlockElement>>>);
 
 #[derive(Deserialize, Serialize, Debug, Default)]
-pub struct SelectBlockElement {}
+pub struct SelectBlockElement {
+    pub r#type: String,
+    pub placeholder: TextBlockObject,
+    pub action_id: String,
+    pub options: Vec<OptionBlockObject>,
+    pub option_groups: Option<Vec<OptionGroupBlockObject>>,
+    pub initial_option: Option<OptionBlockObject>,
+    pub initial_users: Option<Vec<String>>,
+    pub initial_conversations: Option<Vec<String>>,
+    pub initial_channels: Option<Vec<String>>,
+    pub confirm: Option<ConfirmationBlockObject>,
+    pub min_query_length: Option<i32>,
+    pub max_selected_items: Option<i32>,
+    pub focus_on_load: Option<bool>,
+}
 
 #[typetag::serde]
 impl BlockElement for SelectBlockElement {
