@@ -1,4 +1,4 @@
-use crate::block::blocks::Blocks;
+use crate::block::blocks::{Blocks};
 use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize, Debug, Default)]

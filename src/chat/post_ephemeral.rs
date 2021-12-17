@@ -12,7 +12,7 @@ pub struct PostEphemeralRequest {
     pub user: String,
     pub as_user: Option<String>,
     pub attachments: Option<Vec<Attachment>>,
-    pub blocks: Option<Vec<Blocks>>,
+    pub blocks: Option<Blocks>,
     pub icon_emoji: Option<String>,
     pub icon_url: Option<String>,
     pub link_names: Option<bool>,

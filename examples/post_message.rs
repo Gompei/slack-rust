@@ -36,6 +36,7 @@ async fn main() {
             ts: Some(123456789),
             ..Default::default()
         }]),
+        ..Default::default()
     };
 
     let response =

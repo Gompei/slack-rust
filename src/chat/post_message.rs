@@ -1,5 +1,5 @@
 use crate::attachments::attachment::Attachment;
-
+use crate::block::blocks::Blocks;
 use crate::chat::message::Message;
 use crate::error::Error;
 use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};
@@ -9,7 +9,7 @@ use serde::{Deserialize, Serialize};
 pub struct PostMessageRequest {
     pub channel: String,
     pub attachments: Option<Vec<Attachment>>,
-    // pub blocks: Option<Blocks>,
+    pub blocks: Option<Blocks>,
     // pub text: Option<String>,
     // pub as_user: Option<String>,
     // pub icon_emoji: Option<String>,
