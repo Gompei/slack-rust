@@ -145,7 +145,7 @@ pub struct MultiSelectBlockElement {
 }
 
 #[typetag::serde]
-impl BlockElement for MultiSelectBlockElemen {
+impl BlockElement for MultiSelectBlockElement {
     fn element_type(&self) -> &String {
         &self.r#type
     }
