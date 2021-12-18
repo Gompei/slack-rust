@@ -1,5 +1,6 @@
-use crate::block::blocks::{Blocks};
+use crate::block::blocks::Block;
 use serde::{Deserialize, Serialize};
+use serde_with::skip_serializing_none;
 
 #[derive(Deserialize, Serialize, Debug, Default)]
 pub struct AttachmentField {
@@ -45,6 +46,7 @@ pub struct ConfirmationField {
     pub dismiss_text: Option<String>,
 }
 
+#[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default)]
 pub struct Attachment {
     pub color: Option<String>,
@@ -71,7 +73,7 @@ pub struct Attachment {
     pub fields: Option<Vec<AttachmentField>>,
     pub actions: Option<Vec<AttachmentAction>>,
     pub mrkdwn_in: Option<Vec<String>>,
-    pub blocks: Option<Blocks>,
+    pub blocks: Option<Vec<Box<dyn Block>>>,
     pub footer: Option<String>,
     pub footer_icon: Option<String>,
     pub ts: Option<i32>,

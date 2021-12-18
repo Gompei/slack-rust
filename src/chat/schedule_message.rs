@@ -1,10 +1,9 @@
-use serde::{Deserialize, Serialize};
-
 use crate::attachments::attachment::Attachment;
-use crate::block::blocks::Blocks;
+use crate::block::blocks::Block;
 use crate::chat::message::Message;
 use crate::error::Error;
 use crate::http_client::{get_slack_url, SlackWebAPIClient};
+use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize, Debug, Default)]
 pub struct ScheduledMessageRequest {
@@ -13,7 +12,7 @@ pub struct ScheduledMessageRequest {
     pub text: String,
     pub as_user: Option<bool>,
     pub attachments: Option<Vec<Attachment>>,
-    pub blocks: Option<Vec<Blocks>>,
+    pub blocks: Option<Vec<Box<dyn Block>>>,
     pub link_names: Option<bool>,
     pub parse: Option<String>,
     pub reply_broadcast: Option<String>,

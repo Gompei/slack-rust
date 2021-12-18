@@ -3,81 +3,19 @@ use crate::block::block_object::{
     TextBlockObject,
 };
 use serde::{Deserialize, Serialize};
-use std::fmt;
+use serde_with::{skip_serializing_none};
 
-#[typetag::serde]
-pub trait BlockElement {
-    fn element_type(&self) -> &String;
-}
+use std::fmt::Debug;
 
-impl fmt::Debug for dyn BlockElement {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.element_type())
-    }
-}
+#[typetag::serde(tag = "type")]
+pub trait BlockElement: Debug {}
 
-#[derive(Deserialize, Serialize, Debug, Default)]
-pub struct BlockElements(Option<Vec<Box<dyn BlockElement>>>);
+#[typetag::serde(tag = "type")]
+pub trait MixedElement: Debug {}
 
-#[typetag::serde]
-pub trait MixedElement {
-    fn mixed_element_type(&self) -> &String;
-}
-
-impl fmt::Debug for dyn MixedElement {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.mixed_element_type())
-    }
-}
-
-#[derive(Deserialize, Serialize, Debug, Default)]
-pub struct SelectBlockElement {
-    pub r#type: String,
-    pub placeholder: TextBlockObject,
-    pub action_id: String,
-    pub options: Vec<OptionBlockObject>,
-    pub option_groups: Option<Vec<OptionGroupBlockObject>>,
-    pub initial_option: Option<OptionBlockObject>,
-    pub initial_users: Option<Vec<String>>,
-    pub initial_conversations: Option<Vec<String>>,
-    pub initial_channels: Option<Vec<String>>,
-    pub confirm: Option<ConfirmationBlockObject>,
-    pub min_query_length: Option<i32>,
-    pub max_selected_items: Option<i32>,
-    pub focus_on_load: Option<bool>,
-}
-
-#[typetag::serde]
-impl BlockElement for SelectBlockElement {
-    fn element_type(&self) -> &String {
-        &self.r#type
-    }
-}
-
-#[derive(Deserialize, Serialize, Debug, Default)]
-pub struct ImageBlockElement {
-    pub r#type: String,
-    pub image_url: String,
-    pub alt_text: String,
-}
-
-#[typetag::serde]
-impl BlockElement for ImageBlockElement {
-    fn element_type(&self) -> &String {
-        &self.r#type
-    }
-}
-
-#[typetag::serde]
-impl MixedElement for ImageBlockElement {
-    fn mixed_element_type(&self) -> &String {
-        &self.r#type
-    }
-}
-
+#[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default)]
 pub struct ButtonElement {
-    pub r#type: String,
     pub text: TextBlockObject,
     pub action_id: String,
     pub url: Option<String>,
@@ -86,16 +24,12 @@ pub struct ButtonElement {
     pub confirm: Option<ConfirmationBlockObject>,
 }
 
-#[typetag::serde]
-impl BlockElement for ButtonElement {
-    fn element_type(&self) -> &String {
-        &self.r#type
-    }
-}
+#[typetag::serde(name = "button")]
+impl BlockElement for ButtonElement {}
 
+#[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default)]
 pub struct CheckboxGroupsBlockElement {
-    pub r#type: String,
     pub action_id: String,
     pub options: Vec<OptionBlockObject>,
     pub initial_options: Option<Vec<OptionBlockObject>>,
@@ -103,16 +37,12 @@ pub struct CheckboxGroupsBlockElement {
     pub focus_on_load: Option<bool>,
 }
 
-#[typetag::serde]
-impl BlockElement for CheckboxGroupsBlockElement {
-    fn element_type(&self) -> &String {
-        &self.r#type
-    }
-}
+#[typetag::serde(name = "checkboxes")]
+impl BlockElement for CheckboxGroupsBlockElement {}
 
+#[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default)]
 pub struct DatePickerBlockElement {
-    pub r#type: String,
     pub action_id: String,
     pub placeholder: Option<TextBlockObject>,
     pub initial_date: Option<String>,
@@ -120,16 +50,24 @@ pub struct DatePickerBlockElement {
     pub focus_on_load: Option<bool>,
 }
 
-#[typetag::serde]
-impl BlockElement for DatePickerBlockElement {
-    fn element_type(&self) -> &String {
-        &self.r#type
-    }
-}
+#[typetag::serde(name = "datepicker")]
+impl BlockElement for DatePickerBlockElement {}
 
 #[derive(Deserialize, Serialize, Debug, Default)]
+pub struct ImageBlockElement {
+    pub image_url: String,
+    pub alt_text: String,
+}
+
+#[typetag::serde(name = "image")]
+impl BlockElement for ImageBlockElement {}
+
+#[typetag::serde(name = "image")]
+impl MixedElement for ImageBlockElement {}
+
+#[skip_serializing_none]
+#[derive(Deserialize, Serialize, Debug, Default)]
 pub struct MultiSelectBlockElement {
-    pub r#type: String,
     pub placeholder: TextBlockObject,
     pub action_id: String,
     pub options: Vec<OptionBlockObject>,
@@ -144,31 +82,23 @@ pub struct MultiSelectBlockElement {
     pub focus_on_load: Option<bool>,
 }
 
-#[typetag::serde]
-impl BlockElement for MultiSelectBlockElement {
-    fn element_type(&self) -> &String {
-        &self.r#type
-    }
-}
+#[typetag::serde(name = "multi_static_select")]
+impl BlockElement for MultiSelectBlockElement {}
 
+#[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default)]
 pub struct OverflowBlockElement {
-    pub r#type: String,
     pub action_id: String,
     pub options: Vec<OptionBlockObject>,
     pub confirm: Option<ConfirmationBlockObject>,
 }
 
-#[typetag::serde]
-impl BlockElement for OverflowBlockElement {
-    fn element_type(&self) -> &String {
-        &self.r#type
-    }
-}
+#[typetag::serde(name = "overflow")]
+impl BlockElement for OverflowBlockElement {}
 
+#[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default)]
 pub struct PlainTextInputBlockElement {
-    pub r#type: String,
     pub action_id: String,
     pub placeholder: Option<TextBlockObject>,
     pub initial_value: Option<String>,
@@ -179,41 +109,48 @@ pub struct PlainTextInputBlockElement {
     pub focus_on_load: Option<bool>,
 }
 
-#[typetag::serde]
-impl BlockElement for PlainTextInputBlockElement {
-    fn element_type(&self) -> &String {
-        &self.r#type
-    }
-}
+#[typetag::serde(name = "plain_text_input")]
+impl BlockElement for PlainTextInputBlockElement {}
 
 #[derive(Deserialize, Serialize, Debug, Default)]
 pub struct RadioButtonsBlockElement {
-    pub r#type: String,
     pub action_id: String,
     pub options: Vec<OptionBlockObject>,
     pub initial_option: Option<OptionBlockObject>,
     pub confirm: Option<ConfirmationBlockObject>,
 }
 
-#[typetag::serde]
-impl BlockElement for RadioButtonsBlockElement {
-    fn element_type(&self) -> &String {
-        &self.r#type
-    }
+#[typetag::serde(name = "radio_buttons")]
+impl BlockElement for RadioButtonsBlockElement {}
+
+#[skip_serializing_none]
+#[derive(Deserialize, Serialize, Debug, Default)]
+pub struct SelectBlockElement {
+    pub placeholder: TextBlockObject,
+    pub action_id: String,
+    pub options: Vec<OptionBlockObject>,
+    pub option_groups: Option<Vec<OptionGroupBlockObject>>,
+    pub initial_option: Option<OptionBlockObject>,
+    pub initial_users: Option<Vec<String>>,
+    pub initial_conversations: Option<Vec<String>>,
+    pub initial_channels: Option<Vec<String>>,
+    pub confirm: Option<ConfirmationBlockObject>,
+    pub min_query_length: Option<i32>,
+    pub max_selected_items: Option<i32>,
+    pub focus_on_load: Option<bool>,
 }
 
+#[typetag::serde(name = "static_select")]
+impl BlockElement for SelectBlockElement {}
+
+#[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default)]
 pub struct TimePickerBlockElement {
-    pub r#type: String,
     pub action_id: String,
     pub placeholder: Option<TextBlockObject>,
     pub initial_time: Option<String>,
     pub confirm: Option<ConfirmationBlockObject>,
 }
 
-#[typetag::serde]
-impl BlockElement for TimePickerBlockElement {
-    fn element_type(&self) -> &String {
-        &self.r#type
-    }
-}
+#[typetag::serde(name = "timepicker")]
+impl BlockElement for TimePickerBlockElement {}

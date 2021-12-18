@@ -1,26 +1,15 @@
 use crate::block::block_object::{OptionBlockObject, TextBlockObject};
 use serde::{Deserialize, Serialize};
-use std::fmt;
 
-#[typetag::serde]
-pub trait Block {
-    fn block_type(&self) -> &String;
-}
+use std::fmt::Debug;
 
-impl fmt::Debug for dyn Block {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.block_type())
-    }
-}
-
-#[derive(Deserialize, Serialize, Debug, Default)]
-pub struct Blocks(Option<Vec<Box<dyn Block>>>);
+#[typetag::serde(tag = "type")]
+pub trait Block: Debug {}
 
 #[derive(Deserialize, Serialize, Debug, Default)]
 pub struct BlockAction {
     pub action_id: Option<String>,
     pub block_id: Option<String>,
-    pub r#type: String,
     pub text: TextBlockObject,
     pub value: Option<String>,
     pub actions_ts: Option<String>,
@@ -42,9 +31,5 @@ pub struct BlockAction {
     pub initial_time: Option<String>,
 }
 
-#[typetag::serde]
-impl Block for BlockAction {
-    fn block_type(&self) -> &String {
-        &self.r#type
-    }
-}
+#[typetag::serde(name = "actions")]
+impl Block for BlockAction {}

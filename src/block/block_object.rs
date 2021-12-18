@@ -1,6 +1,8 @@
 use crate::block::block_elements::MixedElement;
 use serde::{Deserialize, Serialize};
+use serde_with::skip_serializing_none;
 
+#[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default)]
 pub struct TextBlockObject {
     pub r#type: String,
@@ -10,26 +12,25 @@ pub struct TextBlockObject {
 }
 
 #[typetag::serde]
-impl MixedElement for TextBlockObject {
-    fn mixed_element_type(&self) -> &String {
-        &self.r#type
-    }
-}
+impl MixedElement for TextBlockObject {}
 
+#[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default)]
 pub struct OptionBlockObject {
     pub text: TextBlockObject,
     pub value: Option<String>,
-    pub description: TextBlockObject,
+    pub description: Option<TextBlockObject>,
     pub url: Option<String>,
 }
 
+#[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default)]
 pub struct OptionGroupBlockObject {
     pub label: Option<TextBlockObject>,
     pub options: Option<Vec<OptionBlockObject>>,
 }
 
+#[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default)]
 pub struct ConfirmationBlockObject {
     pub title: TextBlockObject,
@@ -39,11 +40,13 @@ pub struct ConfirmationBlockObject {
     pub style: Option<String>,
 }
 
+#[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default)]
 pub struct DispatchActionConfig {
     pub trigger_actions_on: Option<Vec<String>>,
 }
 
+#[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default)]
 pub struct SelectBlockElementFilter {
     pub include: Option<Vec<String>>,

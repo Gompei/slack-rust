@@ -1,23 +1,24 @@
 use crate::attachments::attachment::Attachment;
-use crate::block::blocks::Blocks;
+use crate::block::blocks::Block;
 use crate::chat::message::Message;
 use crate::error::Error;
 use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};
 use serde::{Deserialize, Serialize};
+use serde_with::skip_serializing_none;
 
+#[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default)]
 pub struct PostMessageRequest {
     pub channel: String,
     pub attachments: Option<Vec<Attachment>>,
-    pub blocks: Option<Blocks>,
+    pub blocks: Option<Vec<Box<dyn Block>>>,
     pub text: Option<String>,
-    pub as_user: Option<String>,
     pub icon_emoji: Option<String>,
     pub icon_url: Option<String>,
-    pub link_names: Option<i32>,
+    pub link_names: Option<bool>,
     pub mrkdwn: Option<bool>,
     pub parse: Option<String>,
-    pub reply_broadcast: Option<String>,
+    pub reply_broadcast: Option<bool>,
     pub thread_ts: Option<String>,
     pub unfurl_links: Option<bool>,
     pub unfurl_media: Option<bool>,

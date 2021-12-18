@@ -1,9 +1,8 @@
-use serde::{Deserialize, Serialize};
-
 use crate::attachments::attachment::Attachment;
-use crate::block::blocks::Blocks;
+use crate::block::blocks::Block;
 use crate::error::Error;
 use crate::http_client::{get_slack_url, SlackWebAPIClient};
+use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize, Debug, Default)]
 pub struct PostEphemeralRequest {
@@ -12,7 +11,7 @@ pub struct PostEphemeralRequest {
     pub user: String,
     pub as_user: Option<String>,
     pub attachments: Option<Vec<Attachment>>,
-    pub blocks: Option<Blocks>,
+    pub blocks: Option<Vec<Box<dyn Block>>>,
     pub icon_emoji: Option<String>,
     pub icon_url: Option<String>,
     pub link_names: Option<bool>,

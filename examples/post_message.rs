@@ -1,5 +1,9 @@
 use slack::attachments::attachment::Attachment;
 use slack::attachments::attachment::AttachmentField;
+use slack::block::block_actions::ActionBlock;
+use slack::block::block_elements::SelectBlockElement;
+use slack::block::block_object::OptionBlockObject;
+use slack::block::block_object::TextBlockObject;
 use slack_rust as slack;
 use std::env;
 
@@ -13,6 +17,7 @@ async fn main() {
     let slack_api_client = slack::http_client::default_client();
     let param = slack::chat::post_message::PostMessageRequest {
         channel: slack_channel_id,
+        text: Some("Hello world".to_string()),
         attachments: Some(vec![Attachment {
             color: Some("#36a64f".to_string()),
             author_name: Some("slack-rust".to_string()),
@@ -36,6 +41,51 @@ async fn main() {
             ts: Some(123456789),
             ..Default::default()
         }]),
+        blocks: Some(vec![Box::new(ActionBlock {
+            elements: vec![
+                Box::new(
+                SelectBlockElement {
+                        placeholder: TextBlockObject {
+                            r#type: "plain_text".to_string(),
+                            text: "Which witch is the witchiest witch?".to_string(),
+                            ..Default::default()
+                        },
+                        action_id: "select_2".to_string(),
+                        options: vec![
+                            OptionBlockObject{
+                                text: TextBlockObject {
+                                    r#type: "plain_text".to_string(),
+                                    text: "Matilda".to_string(),
+                                    ..Default::default()
+                                },
+                                value: Some("matilda".to_string()),
+                                ..Default::default()
+                            },
+                            OptionBlockObject{
+                                text: TextBlockObject {
+                                    r#type: "plain_text".to_string(),
+                                    text: "Glinda".to_string(),
+                                    ..Default::default()
+                                },
+                                value: Some("glinda".to_string()),
+                                ..Default::default()
+                            },
+                            OptionBlockObject{
+                                text: TextBlockObject {
+                                    r#type: "plain_text".to_string(),
+                                    text: "grannyWeatherwax".to_string(),
+                                    ..Default::default()
+                                },
+                                value: Some("grannyWeatherwax".to_string()),
+                                ..Default::default()
+                            },
+                        ],
+                        ..Default::default()
+                    }
+                )
+            ],
+            block_id: Some("actions1".to_string()),
+        })]),
         ..Default::default()
     };
 
