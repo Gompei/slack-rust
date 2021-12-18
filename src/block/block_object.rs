@@ -9,13 +9,6 @@ pub struct TextBlockObject {
     pub verbatim: Option<bool>,
 }
 
-#[typetag::serde]
-impl MixedElement for TextBlockObject {
-    fn mixed_element_type(&self) -> &String {
-        &self.r#type
-    }
-}
-
 #[derive(Deserialize, Serialize, Debug, Default)]
 pub struct OptionBlockObject {
     pub text: TextBlockObject,
@@ -37,4 +30,16 @@ pub struct ConfirmationBlockObject {
     pub confirm: TextBlockObject,
     pub deny: TextBlockObject,
     pub style: Option<String>,
+}
+
+#[derive(Deserialize, Serialize, Debug, Default)]
+pub struct DispatchActionConfig {
+    pub trigger_actions_on: Option<Vec<String>>,
+}
+
+#[derive(Deserialize, Serialize, Debug, Default)]
+pub struct SelectBlockElementFilter {
+    pub include: Option<Vec<String>>,
+    pub exclude_external_shared_channel: Option<bool>,
+    pub exclude_bot_users: Option<bool>,
 }
