@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 pub struct ContextBlock {
     pub r#type: String,
     pub block_id: Option<String>,
-    pub elements: Option<BlockElements>,
+    pub elements: Option<ContextElements>,
 }
 
 #[typetag::serde]

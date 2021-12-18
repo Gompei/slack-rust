@@ -16,14 +16,19 @@ impl fmt::Debug for dyn BlockElement {
     }
 }
 
-// impl Default for BlockElement {
-//     fn default() -> Box<Self> {
-//         Box::new(dyn)
-//     }
-// }
-
 #[derive(Deserialize, Serialize, Debug, Default)]
 pub struct BlockElements(Option<Vec<Box<dyn BlockElement>>>);
+
+#[typetag::serde]
+pub trait MixedElement {
+    fn mixed_element_type(&self) -> &String;
+}
+
+impl fmt::Debug for dyn MixedElement {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.mixed_element_type())
+    }
+}
 
 #[derive(Deserialize, Serialize, Debug, Default)]
 pub struct SelectBlockElement {
@@ -59,6 +64,13 @@ pub struct ImageBlockElement {
 #[typetag::serde]
 impl BlockElement for ImageBlockElement {
     fn element_type(&self) -> &String {
+        &self.r#type
+    }
+}
+
+#[typetag::serde]
+impl MixedElement for ImageBlockElement {
+    fn mixed_element_type(&self) -> &String {
         &self.r#type
     }
 }
