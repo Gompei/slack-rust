@@ -8,9 +8,9 @@ pub struct SectionBlock {
     pub r#type: String,
     pub block_id: Option<String>,
     pub text: TextBlockObject,
-    pub element: BlockElement,
+    // pub element: Box<BlockElement>,
     pub fields: Option<Vec<TextBlockObject>>,
-    pub accessory: Option<BlockElement>,
+    pub accessory: Option<Box<dyn BlockElement>>,
 }
 
 #[typetag::serde]

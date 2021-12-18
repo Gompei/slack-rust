@@ -15,6 +15,12 @@ impl fmt::Debug for dyn BlockElement {
     }
 }
 
+// impl Default for BlockElement {
+//     fn default() -> Box<Self> {
+//         Box::new(dyn)
+//     }
+// }
+
 #[derive(Deserialize, Serialize, Debug, Default)]
 pub struct BlockElements(Option<Vec<Box<dyn BlockElement>>>);
 
@@ -42,17 +48,6 @@ impl BlockElement for SelectBlockElement {
     }
 }
 
-#[typetag::serde]
-pub trait MixedElement {
-    fn mixed_element_type(&self) -> &String;
-}
-
-impl fmt::Debug for dyn MixedElement {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.mixed_element_type())
-    }
-}
-
 #[derive(Deserialize, Serialize, Debug, Default)]
 pub struct ImageBlockElement {
     pub r#type: String,
@@ -60,8 +55,27 @@ pub struct ImageBlockElement {
     pub alt_text: String,
 }
 
-impl MixedElement for ImageBlockElement {
-    fn mixed_element_type(&self) -> &String {
+#[typetag::serde]
+impl BlockElement for ImageBlockElement {
+    fn element_type(&self) -> &String {
+        &self.r#type
+    }
+}
+
+#[derive(Deserialize, Serialize, Debug, Default)]
+pub struct ButtonElement {
+    pub r#type: String,
+    pub text: TextBlockObject,
+    pub action_id: String,
+    pub url: Option<String>,
+    pub value: Option<String>,
+    pub style: Option<String>,
+    pub confirm: Option<ConfirmationBlockObject>,
+}
+
+#[typetag::serde]
+impl BlockElement for ButtonElement {
+    fn element_type(&self) -> &String {
         &self.r#type
     }
 }

@@ -9,6 +9,7 @@ pub struct TextBlockObject {
     pub verbatim: Option<bool>,
 }
 
+#[typetag::serde]
 impl MixedElement for TextBlockObject {
     fn mixed_element_type(&self) -> &String {
         &self.r#type
