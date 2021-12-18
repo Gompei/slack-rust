@@ -41,3 +41,27 @@ impl BlockElement for SelectBlockElement {
         &self.r#type
     }
 }
+
+#[typetag::serde]
+pub trait MixedElement {
+    fn mixed_element_type(&self) -> &String;
+}
+
+impl fmt::Debug for dyn MixedElement {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.mixed_element_type())
+    }
+}
+
+#[derive(Deserialize, Serialize, Debug, Default)]
+pub struct ImageBlockElement {
+    pub r#type: String,
+    pub image_url: String,
+    pub alt_text: String,
+}
+
+impl MixedElement for ImageBlockElement {
+    fn mixed_element_type(&self) -> &String {
+        &self.r#type
+    }
+}
