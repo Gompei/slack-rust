@@ -1,6 +1,7 @@
 use slack::attachments::attachment::Attachment;
 use slack::attachments::attachment::AttachmentField;
 use slack::block::block_actions::ActionBlock;
+use slack::block::block_elements::ButtonElement;
 use slack::block::block_elements::SelectBlockElement;
 use slack::block::block_object::OptionBlockObject;
 use slack::block::block_object::TextBlockObject;
@@ -82,7 +83,19 @@ async fn main() {
                         ],
                         ..Default::default()
                     }
-                )
+                ),
+                Box::new(
+                    ButtonElement {
+                        text: TextBlockObject {
+                            r#type: "plain_text".to_string(),
+                            text: "Cancel".to_string(),
+                            ..Default::default()
+                        },
+                        action_id: "button_1".to_string(),
+                        value: Some("cancel".to_string()),
+                        ..Default::default()
+                    }
+                ),
             ],
             block_id: Some("actions1".to_string()),
         })]),
