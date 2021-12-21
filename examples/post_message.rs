@@ -3,8 +3,11 @@ use slack::attachments::attachment::AttachmentField;
 use slack::block::block_actions::ActionBlock;
 use slack::block::block_elements::ButtonElement;
 use slack::block::block_elements::SelectBlockElement;
+use slack::block::block_elements::{BlockElement, BlockElementType};
 use slack::block::block_object::OptionBlockObject;
 use slack::block::block_object::TextBlockObject;
+use slack::block::block_object::TextBlockType;
+use slack::block::blocks::{Block, BlockType};
 use slack_rust as slack;
 use std::env;
 
@@ -42,63 +45,52 @@ async fn main() {
             ts: Some(123456789),
             ..Default::default()
         }]),
-        blocks: Some(vec![Box::new(ActionBlock {
-            elements: vec![
-                Box::new(
-                SelectBlockElement {
+        blocks: Some(vec![
+            Block::ActionBlock(ActionBlock {
+                type_filed: BlockType::Actions,
+                elements: vec![
+                    BlockElement::SelectBlockElement(SelectBlockElement{
+                        type_filed: BlockElementType::StaticSelect,
                         placeholder: TextBlockObject {
-                            r#type: "plain_text".to_string(),
-                            text: "Which witch is the witchiest witch?".to_string(),
+                            type_filed: TextBlockType::PlainText,
+                            text: "select".to_string(),
                             ..Default::default()
                         },
-                        action_id: "select_2".to_string(),
+                        action_id: "select".to_string(),
                         options: vec![
                             OptionBlockObject{
                                 text: TextBlockObject {
-                                    r#type: "plain_text".to_string(),
-                                    text: "Matilda".to_string(),
+                                    type_filed: TextBlockType::PlainText,
+                                    text: "Select1".to_string(),
                                     ..Default::default()
                                 },
-                                value: Some("matilda".to_string()),
                                 ..Default::default()
                             },
                             OptionBlockObject{
                                 text: TextBlockObject {
-                                    r#type: "plain_text".to_string(),
-                                    text: "Glinda".to_string(),
+                                    type_filed: TextBlockType::PlainText,
+                                    text: "Select2".to_string(),
                                     ..Default::default()
                                 },
-                                value: Some("glinda".to_string()),
-                                ..Default::default()
-                            },
-                            OptionBlockObject{
-                                text: TextBlockObject {
-                                    r#type: "plain_text".to_string(),
-                                    text: "grannyWeatherwax".to_string(),
-                                    ..Default::default()
-                                },
-                                value: Some("grannyWeatherwax".to_string()),
                                 ..Default::default()
                             },
                         ],
                         ..Default::default()
-                    }
-                ),
-                Box::new(
-                    ButtonElement {
+                    }),
+                    BlockElement::ButtonElement(ButtonElement{
+                        type_filed: BlockElementType::Button,
                         text: TextBlockObject {
-                            r#type: "plain_text".to_string(),
-                            text: "Cancel".to_string(),
+                            type_filed: TextBlockType::PlainText,
+                            text: "Submit".to_string(),
                             ..Default::default()
                         },
-                        action_id: "button_1".to_string(),
-                        value: Some("cancel".to_string()),
+                        action_id: "button".to_string(),
                         ..Default::default()
-                    }
-                ),
-            ],
-            block_id: Some("actions1".to_string()),
-        })]),
+                    }),
+                ],
+                ..Default::default()
+            }),
+        ]),
         ..Default::default()
     };
 

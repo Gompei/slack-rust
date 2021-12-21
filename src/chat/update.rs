@@ -11,7 +11,7 @@ pub struct UpdateRequest {
     pub ts: String,
     pub as_user: Option<bool>,
     pub attachments: Option<Vec<Attachment>>,
-    pub blocks: Option<Vec<Box<dyn Block>>>,
+    pub blocks: Option<Vec<Block>>,
     pub file_ids: Option<Vec<String>>,
     pub link_names: Option<bool>,
     pub parse: Option<String>,

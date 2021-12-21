@@ -11,7 +11,7 @@ use serde_with::skip_serializing_none;
 pub struct PostMessageRequest {
     pub channel: String,
     pub attachments: Option<Vec<Attachment>>,
-    pub blocks: Option<Vec<Box<dyn Block>>>,
+    pub blocks: Option<Vec<Block>>,
     pub text: Option<String>,
     pub icon_emoji: Option<String>,
     pub icon_url: Option<String>,

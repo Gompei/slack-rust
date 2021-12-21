@@ -1,6 +1,5 @@
 use crate::block::block_object::TextBlockObject;
-use crate::block::blocks::BlockAction;
-
+use crate::block::blocks::{Block, BlockAction};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
@@ -17,7 +16,7 @@ pub struct View {
     pub title: TextBlockObject,
     pub close: TextBlockObject,
     pub submit: TextBlockObject,
-    //pub blocks: Blocks,
+    pub blocks: Vec<Block>,
     pub private_metadata: Option<String>,
     pub callback_id: Option<String>,
     pub hash: Option<String>,

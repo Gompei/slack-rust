@@ -1,21 +1,130 @@
 use crate::block::block_object::{
     ConfirmationBlockObject, DispatchActionConfig, OptionBlockObject, OptionGroupBlockObject,
-    TextBlockObject,
+    TextBlockObject, TextBlockType,
 };
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 
-use std::fmt::Debug;
+#[derive(Deserialize, Serialize, Debug)]
+#[serde(untagged)]
+pub enum BlockElement {
+    ButtonElement(ButtonElement),
+    CheckboxGroupsBlockElement(CheckboxGroupsBlockElement),
+    DatePickerBlockElement(DatePickerBlockElement),
+    ImageBlockElement(ImageBlockElement),
+    MultiSelectBlockElement(MultiSelectBlockElement),
+    OverflowBlockElement(OverflowBlockElement),
+    PlainTextInputBlockElement(PlainTextInputBlockElement),
+    RadioButtonsBlockElement(RadioButtonsBlockElement),
+    SelectBlockElement(SelectBlockElement),
+    TimePickerBlockElement(TimePickerBlockElement),
+    None,
+}
 
-#[typetag::serde(tag = "type")]
-pub trait BlockElement: Debug {}
+impl BlockElement {
+    pub fn block_type(&self) -> BlockElementType {
+        match self {
+            BlockElement::ButtonElement(ButtonElement { .. }) => BlockElementType::Button,
+            BlockElement::CheckboxGroupsBlockElement(CheckboxGroupsBlockElement { .. }) => {
+                BlockElementType::Checkboxes
+            }
+            BlockElement::DatePickerBlockElement(DatePickerBlockElement { .. }) => {
+                BlockElementType::Datepicker
+            }
+            BlockElement::ImageBlockElement(ImageBlockElement { .. }) => BlockElementType::Image,
+            BlockElement::MultiSelectBlockElement(MultiSelectBlockElement { .. }) => {
+                BlockElementType::MultiStaticSelect
+            }
+            BlockElement::OverflowBlockElement(OverflowBlockElement { .. }) => {
+                BlockElementType::Overflow
+            }
+            BlockElement::PlainTextInputBlockElement(PlainTextInputBlockElement { .. }) => {
+                BlockElementType::PlainTextInput
+            }
+            BlockElement::RadioButtonsBlockElement(RadioButtonsBlockElement { .. }) => {
+                BlockElementType::RadioButtons
+            }
+            BlockElement::SelectBlockElement(SelectBlockElement { .. }) => {
+                BlockElementType::StaticSelect
+            }
+            BlockElement::TimePickerBlockElement(TimePickerBlockElement { .. }) => {
+                BlockElementType::Timepicker
+            }
+            BlockElement::None => BlockElementType::None,
+        }
+    }
+}
 
-#[typetag::serde(tag = "type")]
-pub trait MixedElement: Debug {}
+impl Default for BlockElement {
+    fn default() -> Self {
+        BlockElement::None
+    }
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+#[serde(untagged)]
+pub enum MixedElement {
+    ImageBlockElement(ImageBlockElement),
+    TextBlockObject(TextBlockObject),
+    None,
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+#[serde(rename_all = "snake_case")]
+pub enum MixedElementType {
+    Image,
+    PlainText,
+    Mrkdwn,
+    None,
+}
+
+impl MixedElement {
+    pub fn block_type(&self) -> MixedElementType {
+        match self {
+            MixedElement::ImageBlockElement(ImageBlockElement { .. }) => MixedElementType::Image,
+            MixedElement::TextBlockObject(TextBlockObject { type_filed, .. }) => match type_filed {
+                TextBlockType::PlainText => MixedElementType::PlainText,
+                TextBlockType::Mrkdwn => MixedElementType::Mrkdwn,
+                TextBlockType::None => MixedElementType::None,
+            },
+            MixedElement::None => MixedElementType::None,
+        }
+    }
+}
+
+impl Default for MixedElement {
+    fn default() -> Self {
+        MixedElement::None
+    }
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+#[serde(rename_all = "snake_case")]
+pub enum BlockElementType {
+    Button,
+    Checkboxes,
+    Datepicker,
+    Image,
+    MultiStaticSelect,
+    Overflow,
+    PlainTextInput,
+    RadioButtons,
+    StaticSelect,
+    Timepicker,
+    None,
+}
+
+impl Default for BlockElementType {
+    fn default() -> Self {
+        BlockElementType::None
+    }
+}
 
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default)]
 pub struct ButtonElement {
+    #[serde(rename = "type")]
+    pub type_filed: BlockElementType,
     pub text: TextBlockObject,
     pub action_id: String,
     pub url: Option<String>,
@@ -23,9 +132,6 @@ pub struct ButtonElement {
     pub style: Option<String>,
     pub confirm: Option<ConfirmationBlockObject>,
 }
-
-#[typetag::serde(name = "button")]
-impl BlockElement for ButtonElement {}
 
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default)]
@@ -37,12 +143,11 @@ pub struct CheckboxGroupsBlockElement {
     pub focus_on_load: Option<bool>,
 }
 
-#[typetag::serde(name = "checkboxes")]
-impl BlockElement for CheckboxGroupsBlockElement {}
-
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default)]
 pub struct DatePickerBlockElement {
+    #[serde(rename = "type")]
+    pub type_filed: BlockElementType,
     pub action_id: String,
     pub placeholder: Option<TextBlockObject>,
     pub initial_date: Option<String>,
@@ -50,24 +155,19 @@ pub struct DatePickerBlockElement {
     pub focus_on_load: Option<bool>,
 }
 
-#[typetag::serde(name = "datepicker")]
-impl BlockElement for DatePickerBlockElement {}
-
 #[derive(Deserialize, Serialize, Debug, Default)]
 pub struct ImageBlockElement {
+    #[serde(rename = "type")]
+    pub type_filed: BlockElementType,
     pub image_url: String,
     pub alt_text: String,
 }
 
-#[typetag::serde(name = "image")]
-impl BlockElement for ImageBlockElement {}
-
-#[typetag::serde(name = "image")]
-impl MixedElement for ImageBlockElement {}
-
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default)]
 pub struct MultiSelectBlockElement {
+    #[serde(rename = "type")]
+    pub type_filed: BlockElementType,
     pub placeholder: TextBlockObject,
     pub action_id: String,
     pub options: Vec<OptionBlockObject>,
@@ -82,23 +182,21 @@ pub struct MultiSelectBlockElement {
     pub focus_on_load: Option<bool>,
 }
 
-#[typetag::serde(name = "multi_static_select")]
-impl BlockElement for MultiSelectBlockElement {}
-
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default)]
 pub struct OverflowBlockElement {
+    #[serde(rename = "type")]
+    pub type_filed: BlockElementType,
     pub action_id: String,
     pub options: Vec<OptionBlockObject>,
     pub confirm: Option<ConfirmationBlockObject>,
 }
 
-#[typetag::serde(name = "overflow")]
-impl BlockElement for OverflowBlockElement {}
-
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default)]
 pub struct PlainTextInputBlockElement {
+    #[serde(rename = "type")]
+    pub type_filed: BlockElementType,
     pub action_id: String,
     pub placeholder: Option<TextBlockObject>,
     pub initial_value: Option<String>,
@@ -109,23 +207,21 @@ pub struct PlainTextInputBlockElement {
     pub focus_on_load: Option<bool>,
 }
 
-#[typetag::serde(name = "plain_text_input")]
-impl BlockElement for PlainTextInputBlockElement {}
-
 #[derive(Deserialize, Serialize, Debug, Default)]
 pub struct RadioButtonsBlockElement {
+    #[serde(rename = "type")]
+    pub type_filed: BlockElementType,
     pub action_id: String,
     pub options: Vec<OptionBlockObject>,
     pub initial_option: Option<OptionBlockObject>,
     pub confirm: Option<ConfirmationBlockObject>,
 }
 
-#[typetag::serde(name = "radio_buttons")]
-impl BlockElement for RadioButtonsBlockElement {}
-
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default)]
 pub struct SelectBlockElement {
+    #[serde(rename = "type")]
+    pub type_filed: BlockElementType,
     pub placeholder: TextBlockObject,
     pub action_id: String,
     pub options: Vec<OptionBlockObject>,
@@ -140,17 +236,13 @@ pub struct SelectBlockElement {
     pub focus_on_load: Option<bool>,
 }
 
-#[typetag::serde(name = "static_select")]
-impl BlockElement for SelectBlockElement {}
-
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default)]
 pub struct TimePickerBlockElement {
+    #[serde(rename = "type")]
+    pub type_filed: BlockElementType,
     pub action_id: String,
     pub placeholder: Option<TextBlockObject>,
     pub initial_time: Option<String>,
     pub confirm: Option<ConfirmationBlockObject>,
 }
-
-#[typetag::serde(name = "timepicker")]
-impl BlockElement for TimePickerBlockElement {}

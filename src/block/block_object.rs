@@ -1,18 +1,29 @@
-use crate::block::block_elements::MixedElement;
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default)]
 pub struct TextBlockObject {
-    pub r#type: String,
+    #[serde(rename = "type")]
+    pub type_filed: TextBlockType,
     pub text: String,
     pub emoji: Option<bool>,
     pub verbatim: Option<bool>,
 }
 
-#[typetag::serde]
-impl MixedElement for TextBlockObject {}
+#[derive(Deserialize, Serialize, Debug)]
+#[serde(rename_all = "snake_case")]
+pub enum TextBlockType {
+    PlainText,
+    Mrkdwn,
+    None,
+}
+
+impl Default for TextBlockType {
+    fn default() -> Self {
+        TextBlockType::None
+    }
+}
 
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default)]

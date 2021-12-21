@@ -1,11 +1,72 @@
+use crate::block::block_actions::ActionBlock;
+use crate::block::block_context::ContextBlock;
+use crate::block::block_divider::DividerBlock;
+use crate::block::block_file::FileBlock;
+use crate::block::block_header::HeaderBlock;
+use crate::block::block_image::ImageBlock;
+use crate::block::block_input::InputBlock;
 use crate::block::block_object::{OptionBlockObject, TextBlockObject};
+use crate::block::block_section::SectionBlock;
 use serde::{Deserialize, Serialize};
+use serde_with::skip_serializing_none;
 
-use std::fmt::Debug;
+#[derive(Deserialize, Serialize, Debug)]
+#[serde(untagged)]
+pub enum Block {
+    ActionBlock(ActionBlock),
+    ContextBlock(ContextBlock),
+    DividerBlock(DividerBlock),
+    FileBlock(FileBlock),
+    HeaderBlock(HeaderBlock),
+    ImageBlock(ImageBlock),
+    InputBlock(InputBlock),
+    SectionBlock(SectionBlock),
+    None,
+}
 
-#[typetag::serde(tag = "type")]
-pub trait Block: Debug {}
+impl Block {
+    pub fn block_type(&self) -> BlockType {
+        match self {
+            Block::ActionBlock(ActionBlock { .. }) => BlockType::Actions,
+            Block::ContextBlock(ContextBlock { .. }) => BlockType::Context,
+            Block::DividerBlock(DividerBlock { .. }) => BlockType::Divider,
+            Block::FileBlock(FileBlock { .. }) => BlockType::File,
+            Block::HeaderBlock(HeaderBlock { .. }) => BlockType::Header,
+            Block::ImageBlock(ImageBlock { .. }) => BlockType::Image,
+            Block::InputBlock(InputBlock { .. }) => BlockType::Input,
+            Block::SectionBlock(SectionBlock { .. }) => BlockType::Section,
+            Block::None => BlockType::None,
+        }
+    }
+}
 
+impl Default for Block {
+    fn default() -> Self {
+        Block::None
+    }
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+#[serde(rename_all = "snake_case")]
+pub enum BlockType {
+    Actions,
+    Context,
+    Divider,
+    File,
+    Header,
+    Image,
+    Input,
+    Section,
+    None,
+}
+
+impl Default for BlockType {
+    fn default() -> Self {
+        BlockType::None
+    }
+}
+
+#[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default)]
 pub struct BlockAction {
     pub action_id: Option<String>,
@@ -30,6 +91,3 @@ pub struct BlockAction {
     pub initial_date: Option<String>,
     pub initial_time: Option<String>,
 }
-
-#[typetag::serde(name = "actions")]
-impl Block for BlockAction {}
