@@ -10,7 +10,7 @@ use crate::block::block_section::SectionBlock;
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
 #[serde(untagged)]
 pub enum Block {
     ActionBlock(ActionBlock),
@@ -46,7 +46,7 @@ impl Default for Block {
     }
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub enum BlockType {
     Actions,
@@ -67,7 +67,7 @@ impl Default for BlockType {
 }
 
 #[skip_serializing_none]
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct BlockAction {
     pub action_id: Option<String>,
     pub block_id: Option<String>,

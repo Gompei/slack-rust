@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 
 #[skip_serializing_none]
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct PostMessageRequest {
     pub channel: String,
     pub attachments: Option<Vec<Attachment>>,
@@ -25,7 +25,7 @@ pub struct PostMessageRequest {
     pub username: Option<String>,
 }
 
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct PostMessageResponse {
     pub ok: bool,
     pub error: Option<String>,
@@ -142,8 +142,7 @@ mod test {
             ]),
             ..Default::default()
         };
-        let json = serde_json::to_string_pretty(&request).unwrap();
-        let expected = r##"{
+        let json = r##"{
   "channel": "test",
   "attachments": [
     {
@@ -211,6 +210,10 @@ mod test {
   "text": "Hello world"
 }"##;
 
-        assert_eq!(json, expected);
+        let j = serde_json::to_string_pretty(&request).unwrap();
+        assert_eq!(json, j);
+
+        let s = serde_json::from_str::<PostMessageRequest>(&json).unwrap();
+        assert_eq!(request, s);
     }
 }

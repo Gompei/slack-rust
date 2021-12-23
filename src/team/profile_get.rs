@@ -3,12 +3,12 @@ use crate::http_client::{get_slack_url, SlackWebAPIClient};
 use crate::profiles::profile::Profile;
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct ProfileGetRequest {
     pub visibility: Option<String>,
 }
 
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct ProfileGetResponse {
     pub ok: bool,
     pub error: Option<String>,

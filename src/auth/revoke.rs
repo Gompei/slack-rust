@@ -3,12 +3,12 @@ use serde::{Deserialize, Serialize};
 use crate::error::Error;
 use crate::http_client::{get_slack_url, SlackWebAPIClient};
 
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct RevokeRequest {
     pub test: Option<bool>,
 }
 
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct RevokeResponse {
     pub ok: bool,
     pub error: Option<String>,

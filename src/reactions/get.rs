@@ -3,7 +3,7 @@ use crate::files::file::File;
 use crate::http_client::{get_slack_url, SlackWebAPIClient};
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct GetRequest {
     pub channel: Option<String>,
     pub file: Option<String>,
@@ -12,7 +12,7 @@ pub struct GetRequest {
     pub timestamp: Option<String>,
 }
 
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct GetResponse {
     pub ok: bool,
     pub error: Option<String>,

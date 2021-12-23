@@ -2,7 +2,7 @@ use crate::error::Error;
 use crate::http_client::{get_slack_url, SlackWebAPIClient};
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct GetPresenceRequest {
     pub cursor: Option<String>,
     pub exclude_archived: Option<String>,
@@ -12,7 +12,7 @@ pub struct GetPresenceRequest {
     pub user: Option<String>,
 }
 
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct GetPresenceResponse {
     pub ok: bool,
     pub error: Option<String>,

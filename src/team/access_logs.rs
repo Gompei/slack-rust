@@ -3,7 +3,7 @@ use crate::http_client::{get_slack_url, SlackWebAPIClient};
 
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct AccessLogsRequest {
     pub before: Option<String>,
     pub count: Option<String>,
@@ -11,7 +11,7 @@ pub struct AccessLogsRequest {
     pub team_id: Option<String>,
 }
 
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct AccessLogsResponse {
     pub ok: bool,
     pub error: Option<String>,
@@ -19,7 +19,7 @@ pub struct AccessLogsResponse {
     pub paging: Option<Paging>,
 }
 
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct Login {
     pub user_id: Option<String>,
     pub username: Option<String>,
@@ -33,7 +33,7 @@ pub struct Login {
     pub region: Option<String>,
 }
 
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct Paging {
     pub count: Option<i32>,
     pub total: Option<i32>,

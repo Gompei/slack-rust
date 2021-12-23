@@ -1,7 +1,7 @@
 use crate::reactions::reaction::Reaction;
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct File {
     pub channels: Option<Vec<String>>,
     pub comments_count: Option<i32>,

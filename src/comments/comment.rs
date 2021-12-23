@@ -1,7 +1,7 @@
 use crate::reactions::reaction::Reaction;
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct Comment {
     pub r#type: Option<String>,
     pub comment: Option<String>,

@@ -23,14 +23,14 @@ pub trait EventHandler {
     async fn on_interactive(&mut self, _s: &SocketMessage) {}
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
 pub struct SocketMessage {
     pub envelope_id: Option<String>,
     #[serde(rename = "type")]
     pub message_type: SocketEventType,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub enum SocketEventType {
     Hello,
@@ -39,7 +39,7 @@ pub enum SocketEventType {
     Interactive,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
 pub struct AcknowledgeMessage {
     pub envelope_id: String,
 }

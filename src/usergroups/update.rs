@@ -3,7 +3,7 @@ use crate::http_client::{get_slack_url, SlackWebAPIClient};
 use crate::usergroups::usergroup::Usergroup;
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct UpdateRequest {
     pub usergroup: String,
     pub channels: Option<String>,
@@ -14,7 +14,7 @@ pub struct UpdateRequest {
     pub team_id: Option<String>,
 }
 
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct UpdateResponse {
     pub ok: bool,
     pub error: Option<String>,

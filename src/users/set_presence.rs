@@ -3,7 +3,7 @@ use crate::http_client::{get_slack_url, DefaultResponse, SlackWebAPIClient};
 
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct SetPresenceRequest {
     pub presence: String,
 }

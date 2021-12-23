@@ -2,7 +2,7 @@ use crate::attachments::attachment::Attachment;
 use crate::block::blocks::Block;
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct Message {
     pub text: Option<String>,
     pub username: Option<String>,

@@ -3,13 +3,13 @@ use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};
 use crate::views::view::View;
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct OpenRequest {
     pub trigger_id: String,
     pub view: View,
 }
 
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct OpenResponse {
     pub ok: bool,
     pub error: Option<String>,

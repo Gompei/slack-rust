@@ -3,7 +3,7 @@ use crate::http_client::{get_slack_url, SlackWebAPIClient};
 use crate::views::view::View;
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct UpdateRequest {
     pub trigger_id: String,
     pub view: View,
@@ -12,7 +12,7 @@ pub struct UpdateRequest {
     pub hash: Option<String>,
 }
 
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct UpdateResponse {
     pub ok: bool,
     pub error: Option<String>,

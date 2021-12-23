@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use crate::error::Error;
 use crate::http_client::{get_slack_url, SlackWebAPIClient};
 
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct AcceptSharedInviteRequest {
     pub channel_name: String,
     pub channel_id: Option<String>,
@@ -13,7 +13,7 @@ pub struct AcceptSharedInviteRequest {
     pub team_id: Option<String>,
 }
 
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct AcceptSharedInviteResponse {
     pub ok: bool,
     pub error: Option<String>,

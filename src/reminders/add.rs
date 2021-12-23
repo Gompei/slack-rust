@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use crate::error::Error;
 use crate::http_client::{get_slack_url, SlackWebAPIClient};
 
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct AddRequest {
     pub text: String,
     pub time: String,
@@ -12,14 +12,14 @@ pub struct AddRequest {
     pub user: Option<String>,
 }
 
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct Recurrence {
     // TODO: https://api.slack.com/methods/reminders.add
     pub frequency: Option<String>,
     pub weekdays: Option<Vec<String>>,
 }
 
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct AddResponse {
     pub ok: bool,
     pub error: Option<String>,
@@ -27,7 +27,7 @@ pub struct AddResponse {
 }
 
 // TODO: https://api.slack.com/methods/reminders.add
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct Reminder {
     pub id: String,
     pub creator: String,

@@ -3,13 +3,13 @@ use crate::http_client::{get_slack_url, SlackWebAPIClient};
 
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct BillableInfoRequest {
     pub team_id: Option<String>,
     pub user: Option<String>,
 }
 
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct BillableInfoResponse {
     pub ok: bool,
     pub error: Option<String>,
@@ -18,7 +18,7 @@ pub struct BillableInfoResponse {
 
 // TODO
 // https://github.com/serde-rs/serde/issues/1387
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct BillableInfo {}
 
 pub async fn billable_info<T>(

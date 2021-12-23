@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct Usergroup {
     pub id: Option<String>,
     pub team_id: Option<String>,
@@ -20,7 +20,7 @@ pub struct Usergroup {
     pub user_count: Option<i32>,
 }
 
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct Pref {
     pub channels: Option<Vec<String>>,
     pub groups: Option<Vec<String>>,

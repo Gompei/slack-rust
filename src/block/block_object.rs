@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 
 #[skip_serializing_none]
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct TextBlockObject {
     #[serde(rename = "type")]
     pub type_filed: TextBlockType,
@@ -11,7 +11,7 @@ pub struct TextBlockObject {
     pub verbatim: Option<bool>,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub enum TextBlockType {
     PlainText,
@@ -26,7 +26,7 @@ impl Default for TextBlockType {
 }
 
 #[skip_serializing_none]
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct OptionBlockObject {
     pub text: TextBlockObject,
     pub value: Option<String>,
@@ -35,14 +35,14 @@ pub struct OptionBlockObject {
 }
 
 #[skip_serializing_none]
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct OptionGroupBlockObject {
     pub label: Option<TextBlockObject>,
     pub options: Option<Vec<OptionBlockObject>>,
 }
 
 #[skip_serializing_none]
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct ConfirmationBlockObject {
     pub title: TextBlockObject,
     pub text: TextBlockObject,
@@ -52,13 +52,13 @@ pub struct ConfirmationBlockObject {
 }
 
 #[skip_serializing_none]
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct DispatchActionConfig {
     pub trigger_actions_on: Option<Vec<String>>,
 }
 
 #[skip_serializing_none]
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct SelectBlockElementFilter {
     pub include: Option<Vec<String>>,
     pub exclude_external_shared_channel: Option<bool>,

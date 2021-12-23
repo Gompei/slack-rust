@@ -2,7 +2,7 @@ use crate::error::Error;
 use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct ScheduledMessagesListRequest {
     pub channel: Option<String>,
     pub cursor: Option<String>,
@@ -12,7 +12,7 @@ pub struct ScheduledMessagesListRequest {
     pub team_id: Option<String>,
 }
 
-#[derive(Deserialize, Serialize, Debug, Default)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct ScheduledMessagesListResponse {
     pub ok: bool,
     pub error: Option<String>,
