@@ -1,13 +1,13 @@
 use slack::attachments::attachment::Attachment;
 use slack::attachments::attachment::AttachmentField;
 use slack::block::block_actions::ActionBlock;
+use slack::block::block_elements::BlockElement;
 use slack::block::block_elements::ButtonElement;
 use slack::block::block_elements::SelectBlockElement;
-use slack::block::block_elements::{BlockElement};
 use slack::block::block_object::OptionBlockObject;
 use slack::block::block_object::TextBlockObject;
 use slack::block::block_object::TextBlockType;
-use slack::block::blocks::{Block};
+use slack::block::blocks::Block;
 use slack::chat::post_message::{post_message, PostMessageRequest};
 use slack_rust as slack;
 use std::env;

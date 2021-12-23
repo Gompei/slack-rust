@@ -29,6 +29,7 @@ pub enum Block {
     InputBlock(InputBlock),
     #[serde(rename = "section")]
     SectionBlock(SectionBlock),
+    #[serde(skip)]
     None,
 }
 
@@ -65,6 +66,7 @@ pub enum BlockType {
     Image,
     Input,
     Section,
+    #[serde(skip)]
     None,
 }
 

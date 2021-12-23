@@ -16,6 +16,7 @@ pub struct TextBlockObject {
 pub enum TextBlockType {
     PlainText,
     Mrkdwn,
+    #[serde(skip)]
     None,
 }
 

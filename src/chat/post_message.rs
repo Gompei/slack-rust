@@ -25,6 +25,7 @@ pub struct PostMessageRequest {
     pub username: Option<String>,
 }
 
+#[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct PostMessageResponse {
     pub ok: bool,
@@ -59,15 +60,13 @@ mod test {
     use super::*;
     use crate::attachments::attachment::AttachmentField;
     use crate::block::block_actions::ActionBlock;
-    use crate::block::block_elements::{
-        BlockElement, ButtonElement, SelectBlockElement,
-    };
+    use crate::block::block_elements::{BlockElement, ButtonElement, SelectBlockElement};
     use crate::block::block_object::{OptionBlockObject, TextBlockObject, TextBlockType};
-    
     use crate::chat::post_message::PostMessageRequest;
+    use crate::http_client::MockSlackWebAPIClient;
 
     #[test]
-    fn convert_struct_to_json() {
+    fn convert_request() {
         let request = PostMessageRequest {
             channel: "test".to_string(),
             text: Some("Hello world".to_string()),
@@ -212,5 +211,142 @@ mod test {
 
         let s = serde_json::from_str::<PostMessageRequest>(json).unwrap();
         assert_eq!(request, s);
+    }
+
+    #[test]
+    fn convert_response() {
+        let response = PostMessageResponse {
+            ok: true,
+            channel: Some("C02H7UK23GB".to_string()),
+            ts: Some("1640258472.000200".to_string()),
+            message: Some(Message {
+                bot_id: Some("B02H2MCBRL6".to_string()),
+                type_file: Some("message".to_string()),
+                text: Some("Hello world".to_string()),
+                user: Some("U02GUNSESDD".to_string()),
+                ts: Some("1640258472.000200".to_string()),
+                team: Some("T02H7RHQNL9".to_string()),
+                blocks: Some(vec![Block::ActionBlock(ActionBlock {
+                    block_id: Some("Zf2/".to_string()),
+                    elements: vec![
+                        BlockElement::SelectBlockElement(SelectBlockElement {
+                            action_id: "select".to_string(),
+                            placeholder: TextBlockObject {
+                                type_filed: TextBlockType::PlainText,
+                                text: "select".to_string(),
+                                ..Default::default()
+                            },
+                            options: vec![OptionBlockObject {
+                                text: TextBlockObject {
+                                    type_filed: TextBlockType::PlainText,
+                                    text: "Select1".to_string(),
+                                    ..Default::default()
+                                },
+                                ..Default::default()
+                            }],
+                            ..Default::default()
+                        }),
+                        BlockElement::ButtonElement(ButtonElement {
+                            text: TextBlockObject {
+                                type_filed: TextBlockType::PlainText,
+                                text: "Submit".to_string(),
+                                ..Default::default()
+                            },
+                            action_id: "button".to_string(),
+                            ..Default::default()
+                        }),
+                    ],
+                })]),
+                ..Default::default()
+            }),
+            ..Default::default()
+        };
+        let json = r##"{
+  "ok": true,
+  "channel": "C02H7UK23GB",
+  "ts": "1640258472.000200",
+  "message": {
+    "bot_id": "B02H2MCBRL6",
+    "type": "message",
+    "text": "Hello world",
+    "user": "U02GUNSESDD",
+    "ts": "1640258472.000200",
+    "team": "T02H7RHQNL9",
+    "blocks": [
+      {
+        "type": "actions",
+        "elements": [
+          {
+            "type": "static_select",
+            "placeholder": {
+              "type": "plain_text",
+              "text": "select"
+            },
+            "action_id": "select",
+            "options": [
+              {
+                "text": {
+                  "type": "plain_text",
+                  "text": "Select1"
+                }
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "text": {
+              "type": "plain_text",
+              "text": "Submit"
+            },
+            "action_id": "button"
+          }
+        ],
+        "block_id": "Zf2/"
+      }
+    ]
+  }
+}"##;
+
+        let j = serde_json::to_string_pretty(&response).unwrap();
+        assert_eq!(json, j);
+
+        let s = serde_json::from_str::<PostMessageResponse>(json).unwrap();
+        assert_eq!(response, s);
+    }
+
+    #[async_std::test]
+    async fn test_post_message() {
+        let param = PostMessageRequest {
+            channel: "test".to_string(),
+            text: Some("test".to_string()),
+            ..Default::default()
+        };
+
+        let mut mock = MockSlackWebAPIClient::new();
+        mock.expect_post_json().returning(|_, _, _| {
+            Ok(r##"{
+  "ok": true,
+  "channel": "test",
+  "message": {
+    "text": "test"
+  }
+}"##
+            .to_string())
+        });
+
+        let response = post_message(&mock, &param, &"test_token".to_string())
+            .await
+            .unwrap();
+        let expect = PostMessageResponse {
+            ok: true,
+            channel: Some("test".to_string()),
+            message: Some(Message {
+                text: Some("test".to_string()),
+                ..Default::default()
+            }),
+            ..Default::default()
+        };
+
+        assert_eq!(expect, response);
     }
 }

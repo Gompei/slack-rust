@@ -28,6 +28,7 @@ pub enum BlockElement {
     SelectBlockElement(SelectBlockElement),
     #[serde(rename = "timepicker")]
     TimePickerBlockElement(TimePickerBlockElement),
+    #[serde(skip)]
     None,
 }
 
@@ -88,6 +89,7 @@ pub enum MixedElement {
         emoji: Option<bool>,
         verbatim: Option<bool>,
     },
+    #[serde(skip)]
     None,
 }
 
@@ -130,6 +132,7 @@ pub enum BlockElementType {
     RadioButtons,
     StaticSelect,
     Timepicker,
+    #[serde(skip)]
     None,
 }
 

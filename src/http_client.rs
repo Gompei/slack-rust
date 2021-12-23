@@ -1,7 +1,9 @@
 use crate::error::Error;
 use async_trait::async_trait;
+use mockall::*;
 use serde::{Deserialize, Serialize};
 
+#[automock]
 #[async_trait]
 pub trait SlackWebAPIClient {
     async fn post_multipart_forms(
