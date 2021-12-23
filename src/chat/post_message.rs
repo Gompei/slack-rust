@@ -60,10 +60,10 @@ mod test {
     use crate::attachments::attachment::AttachmentField;
     use crate::block::block_actions::ActionBlock;
     use crate::block::block_elements::{
-        BlockElement, BlockElementType, ButtonElement, SelectBlockElement,
+        BlockElement, ButtonElement, SelectBlockElement,
     };
     use crate::block::block_object::{OptionBlockObject, TextBlockObject, TextBlockType};
-    use crate::block::blocks::BlockType;
+    
     use crate::chat::post_message::PostMessageRequest;
 
     #[test]
@@ -96,10 +96,8 @@ mod test {
             }]),
             blocks: Some(vec![
                 Block::ActionBlock(ActionBlock {
-                    type_filed: BlockType::Actions,
                     elements: vec![
                         BlockElement::SelectBlockElement(SelectBlockElement{
-                            type_filed: BlockElementType::StaticSelect,
                             placeholder: TextBlockObject {
                                 type_filed: TextBlockType::PlainText,
                                 text: "select".to_string(),
@@ -127,7 +125,6 @@ mod test {
                             ..Default::default()
                         }),
                         BlockElement::ButtonElement(ButtonElement{
-                            type_filed: BlockElementType::Button,
                             text: TextBlockObject {
                                 type_filed: TextBlockType::PlainText,
                                 text: "Submit".to_string(),
@@ -213,7 +210,7 @@ mod test {
         let j = serde_json::to_string_pretty(&request).unwrap();
         assert_eq!(json, j);
 
-        let s = serde_json::from_str::<PostMessageRequest>(&json).unwrap();
+        let s = serde_json::from_str::<PostMessageRequest>(json).unwrap();
         assert_eq!(request, s);
     }
 }

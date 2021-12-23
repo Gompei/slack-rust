@@ -11,15 +11,23 @@ use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
-#[serde(untagged)]
+#[serde(tag = "type")]
 pub enum Block {
+    #[serde(rename = "actions")]
     ActionBlock(ActionBlock),
+    #[serde(rename = "context")]
     ContextBlock(ContextBlock),
+    #[serde(rename = "divider")]
     DividerBlock(DividerBlock),
+    #[serde(rename = "file")]
     FileBlock(FileBlock),
+    #[serde(rename = "header")]
     HeaderBlock(HeaderBlock),
+    #[serde(rename = "image")]
     ImageBlock(ImageBlock),
+    #[serde(rename = "input")]
     InputBlock(InputBlock),
+    #[serde(rename = "section")]
     SectionBlock(SectionBlock),
     None,
 }

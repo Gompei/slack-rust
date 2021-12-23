@@ -3,11 +3,11 @@ use slack::attachments::attachment::AttachmentField;
 use slack::block::block_actions::ActionBlock;
 use slack::block::block_elements::ButtonElement;
 use slack::block::block_elements::SelectBlockElement;
-use slack::block::block_elements::{BlockElement, BlockElementType};
+use slack::block::block_elements::{BlockElement};
 use slack::block::block_object::OptionBlockObject;
 use slack::block::block_object::TextBlockObject;
 use slack::block::block_object::TextBlockType;
-use slack::block::blocks::{Block, BlockType};
+use slack::block::blocks::{Block};
 use slack::chat::post_message::{post_message, PostMessageRequest};
 use slack_rust as slack;
 use std::env;
@@ -48,10 +48,8 @@ async fn main() {
         }]),
         blocks: Some(vec![
             Block::ActionBlock(ActionBlock {
-                type_filed: BlockType::Actions,
                 elements: vec![
                     BlockElement::SelectBlockElement(SelectBlockElement{
-                        type_filed: BlockElementType::StaticSelect,
                         placeholder: TextBlockObject {
                             type_filed: TextBlockType::PlainText,
                             text: "select".to_string(),
@@ -79,7 +77,6 @@ async fn main() {
                         ..Default::default()
                     }),
                     BlockElement::ButtonElement(ButtonElement{
-                        type_filed: BlockElementType::Button,
                         text: TextBlockObject {
                             type_filed: TextBlockType::PlainText,
                             text: "Submit".to_string(),

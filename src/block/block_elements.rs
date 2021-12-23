@@ -1,22 +1,32 @@
 use crate::block::block_object::{
     ConfirmationBlockObject, DispatchActionConfig, OptionBlockObject, OptionGroupBlockObject,
-    TextBlockObject, TextBlockType,
+    TextBlockObject,
 };
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
-#[serde(untagged)]
+#[serde(tag = "type")]
 pub enum BlockElement {
+    #[serde(rename = "button")]
     ButtonElement(ButtonElement),
+    #[serde(rename = "checkboxes")]
     CheckboxGroupsBlockElement(CheckboxGroupsBlockElement),
+    #[serde(rename = "datepicker")]
     DatePickerBlockElement(DatePickerBlockElement),
+    #[serde(rename = "image")]
     ImageBlockElement(ImageBlockElement),
+    #[serde(rename = "multi_static_select")]
     MultiSelectBlockElement(MultiSelectBlockElement),
+    #[serde(rename = "overflow")]
     OverflowBlockElement(OverflowBlockElement),
+    #[serde(rename = "plain_text_input")]
     PlainTextInputBlockElement(PlainTextInputBlockElement),
+    #[serde(rename = "radio_buttons")]
     RadioButtonsBlockElement(RadioButtonsBlockElement),
+    #[serde(rename = "static_select")]
     SelectBlockElement(SelectBlockElement),
+    #[serde(rename = "timepicker")]
     TimePickerBlockElement(TimePickerBlockElement),
     None,
 }
@@ -62,10 +72,22 @@ impl Default for BlockElement {
 }
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
-#[serde(untagged)]
+#[serde(tag = "type")]
 pub enum MixedElement {
+    #[serde(rename = "image")]
     ImageBlockElement(ImageBlockElement),
-    TextBlockObject(TextBlockObject),
+    #[serde(rename = "plain_text")]
+    PlainTextBlockObject {
+        text: String,
+        emoji: Option<bool>,
+        verbatim: Option<bool>,
+    },
+    #[serde(rename = "mrkdwn")]
+    MarkdownBlockObject {
+        text: String,
+        emoji: Option<bool>,
+        verbatim: Option<bool>,
+    },
     None,
 }
 
@@ -82,11 +104,8 @@ impl MixedElement {
     pub fn block_type(&self) -> MixedElementType {
         match self {
             MixedElement::ImageBlockElement(ImageBlockElement { .. }) => MixedElementType::Image,
-            MixedElement::TextBlockObject(TextBlockObject { type_filed, .. }) => match type_filed {
-                TextBlockType::PlainText => MixedElementType::PlainText,
-                TextBlockType::Mrkdwn => MixedElementType::Mrkdwn,
-                TextBlockType::None => MixedElementType::None,
-            },
+            MixedElement::PlainTextBlockObject { .. } => MixedElementType::PlainText,
+            MixedElement::MarkdownBlockObject { .. } => MixedElementType::Mrkdwn,
             MixedElement::None => MixedElementType::None,
         }
     }
@@ -123,8 +142,6 @@ impl Default for BlockElementType {
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct ButtonElement {
-    #[serde(rename = "type")]
-    pub type_filed: BlockElementType,
     pub text: TextBlockObject,
     pub action_id: String,
     pub url: Option<String>,
@@ -146,8 +163,6 @@ pub struct CheckboxGroupsBlockElement {
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct DatePickerBlockElement {
-    #[serde(rename = "type")]
-    pub type_filed: BlockElementType,
     pub action_id: String,
     pub placeholder: Option<TextBlockObject>,
     pub initial_date: Option<String>,
@@ -157,8 +172,6 @@ pub struct DatePickerBlockElement {
 
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct ImageBlockElement {
-    #[serde(rename = "type")]
-    pub type_filed: BlockElementType,
     pub image_url: String,
     pub alt_text: String,
 }
@@ -166,8 +179,6 @@ pub struct ImageBlockElement {
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct MultiSelectBlockElement {
-    #[serde(rename = "type")]
-    pub type_filed: BlockElementType,
     pub placeholder: TextBlockObject,
     pub action_id: String,
     pub options: Vec<OptionBlockObject>,
@@ -185,8 +196,6 @@ pub struct MultiSelectBlockElement {
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct OverflowBlockElement {
-    #[serde(rename = "type")]
-    pub type_filed: BlockElementType,
     pub action_id: String,
     pub options: Vec<OptionBlockObject>,
     pub confirm: Option<ConfirmationBlockObject>,
@@ -195,8 +204,6 @@ pub struct OverflowBlockElement {
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct PlainTextInputBlockElement {
-    #[serde(rename = "type")]
-    pub type_filed: BlockElementType,
     pub action_id: String,
     pub placeholder: Option<TextBlockObject>,
     pub initial_value: Option<String>,
@@ -209,8 +216,6 @@ pub struct PlainTextInputBlockElement {
 
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct RadioButtonsBlockElement {
-    #[serde(rename = "type")]
-    pub type_filed: BlockElementType,
     pub action_id: String,
     pub options: Vec<OptionBlockObject>,
     pub initial_option: Option<OptionBlockObject>,
@@ -220,8 +225,6 @@ pub struct RadioButtonsBlockElement {
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct SelectBlockElement {
-    #[serde(rename = "type")]
-    pub type_filed: BlockElementType,
     pub placeholder: TextBlockObject,
     pub action_id: String,
     pub options: Vec<OptionBlockObject>,
@@ -239,8 +242,6 @@ pub struct SelectBlockElement {
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct TimePickerBlockElement {
-    #[serde(rename = "type")]
-    pub type_filed: BlockElementType,
     pub action_id: String,
     pub placeholder: Option<TextBlockObject>,
     pub initial_time: Option<String>,
