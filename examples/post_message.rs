@@ -8,6 +8,7 @@ use slack::block::block_object::OptionBlockObject;
 use slack::block::block_object::TextBlockObject;
 use slack::block::block_object::TextBlockType;
 use slack::block::blocks::{Block, BlockType};
+use slack::chat::post_message::{post_message, PostMessageRequest};
 use slack_rust as slack;
 use std::env;
 
@@ -19,7 +20,7 @@ async fn main() {
         env::var("SLACK_CHANNEL_ID").unwrap_or_else(|_| panic!("slack channel id is not set."));
 
     let slack_api_client = slack::http_client::default_client();
-    let param = slack::chat::post_message::PostMessageRequest {
+    let param = PostMessageRequest {
         channel: slack_channel_id,
         text: Some("Hello world".to_string()),
         attachments: Some(vec![Attachment {
@@ -94,9 +95,8 @@ async fn main() {
         ..Default::default()
     };
 
-    let response =
-        slack::chat::post_message::post_message(&slack_api_client, &param, &slack_bot_token)
-            .await
-            .expect("api call error");
+    let response = post_message(&slack_api_client, &param, &slack_bot_token)
+        .await
+        .expect("api call error");
     println!("{:?}", response);
 }
