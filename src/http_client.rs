@@ -2,6 +2,7 @@ use crate::error::Error;
 use async_trait::async_trait;
 use mockall::*;
 use serde::{Deserialize, Serialize};
+use serde_with::skip_serializing_none;
 
 #[automock]
 #[async_trait]
@@ -19,6 +20,7 @@ pub trait SlackWebAPIClient {
 pub type Client = surf::Client;
 
 /// Slack default response.
+#[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
 pub struct DefaultResponse {
     pub ok: bool,
@@ -27,6 +29,7 @@ pub struct DefaultResponse {
 }
 
 /// Metadata.
+#[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
 pub struct ResponseMetadata {
     pub next_cursor: Option<String>,

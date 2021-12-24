@@ -1,5 +1,7 @@
 use serde::{Deserialize, Serialize};
+use serde_with::skip_serializing_none;
 
+#[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct UserProfile {
     pub first_name: Option<String>,
@@ -23,22 +25,13 @@ pub struct UserProfile {
     pub api_app_id: Option<String>,
     pub status_text: Option<String>,
     pub status_emoji: Option<String>,
-    pub status_expiration: Option<i8>,
+    pub status_expiration: Option<i32>,
     pub team: Option<String>,
-    //pub fields: Option<UserProfileCustomFields>,
+    pub always_active: Option<bool>,
+    pub status_text_canonical: Option<String>,
 }
 
-//#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
-// pub struct UserProfileCustomFields {
-//     pub fields: HashMap<String, UserProfileCustomField>,
-// }
-
-// #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
-// pub struct UserProfileCustomField {
-//     pub value: Option<String>,
-//     pub alt: Option<String>,
-//     pub label: Option<String>,
-// }
+#[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct User {
     pub id: Option<String>,
@@ -49,8 +42,8 @@ pub struct User {
     pub real_name: Option<String>,
     pub tz: Option<String>,
     pub tz_label: Option<String>,
-    pub tz_offset: Option<i16>,
-    //pub profile: Option<UserProfile>,
+    pub tz_offset: Option<i32>,
+    pub profile: Option<UserProfile>,
     pub is_bot: Option<bool>,
     pub is_admin: Option<bool>,
     pub is_owner: Option<bool>,
@@ -60,20 +53,7 @@ pub struct User {
     pub is_stranger: Option<bool>,
     pub is_app_user: Option<bool>,
     pub is_invited_user: Option<bool>,
-    pub has_2fa: Option<bool>,
-    pub has_files: Option<bool>,
-    pub presence: Option<String>,
-    pub locale: Option<String>,
     pub updated: Option<i32>,
-    pub enterprise_user: Option<String>,
+    pub is_email_confirmed: Option<bool>,
+    pub who_can_share_contact_card: Option<String>,
 }
-
-// #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
-// pub struct EnterpriseUser {
-//     pub id: Option<String>,
-//     pub enterprise_id: Option<String>,
-//     pub enterprise_name: Option<String>,
-//     pub is_admin: Option<bool>,
-//     pub is_owner: Option<bool>,
-//     pub teams: Option<Vec<String>>,
-// }
