@@ -11,6 +11,7 @@ pub mod error;
 pub mod files;
 pub mod http_client;
 pub mod items;
+pub mod payloads;
 pub mod profiles;
 pub mod reactions;
 pub mod reminders;

@@ -1,3 +1,4 @@
+use crate::payloads::interactive::SlashPayload;
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 
@@ -12,6 +13,8 @@ pub enum SocketModeEvent {
     EventsAPI(EventsAPI),
     #[serde(rename = "interactive")]
     InteractiveEvent(InteractiveEvent),
+    #[serde(rename = "slash_commands")]
+    SlashCommandsEvent(SlashCommandsEvent),
 }
 
 impl SocketModeEvent {
@@ -25,6 +28,9 @@ impl SocketModeEvent {
             SocketModeEvent::InteractiveEvent(InteractiveEvent { .. }) => {
                 SocketModeEventType::Interactive
             }
+            SocketModeEvent::SlashCommandsEvent(SlashCommandsEvent { .. }) => {
+                SocketModeEventType::SlashCommands
+            }
         }
     }
 }
@@ -36,6 +42,7 @@ pub enum SocketModeEventType {
     Disconnect,
     EventsAPI,
     Interactive,
+    SlashCommands,
 }
 
 #[skip_serializing_none]
@@ -88,6 +95,14 @@ pub struct EventsAPI {
 pub struct InteractiveEvent {
     pub envelope_id: String,
     pub accepts_response_payload: bool,
+}
+
+#[skip_serializing_none]
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
+pub struct SlashCommandsEvent {
+    pub envelope_id: String,
+    pub accepts_response_payload: bool,
+    pub payload: SlashPayload,
 }
 
 #[skip_serializing_none]

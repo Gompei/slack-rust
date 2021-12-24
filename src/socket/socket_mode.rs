@@ -2,7 +2,8 @@ use crate::apps::connections_open::connections_open;
 use crate::error::Error;
 use crate::http_client::SlackWebAPIClient;
 use crate::socket::event::{
-    AcknowledgeMessage, DisconnectEvent, EventsAPI, HelloEvent, InteractiveEvent, SocketModeEvent,
+    AcknowledgeMessage, DisconnectEvent, EventsAPI, HelloEvent, InteractiveEvent,
+    SlashCommandsEvent, SocketModeEvent,
 };
 use async_std::net::TcpStream;
 use async_tls::client::TlsStream;
@@ -33,6 +34,9 @@ pub trait EventHandler {
     }
     async fn on_interactive(&mut self, s: &InteractiveEvent) {
         log::info!("on_interactive: {:?}", s);
+    }
+    async fn on_slash_commands(&mut self, s: &SlashCommandsEvent) {
+        log::info!("on_slash_commands: {:?}", s);
     }
 }
 
@@ -78,6 +82,9 @@ impl SocketMode {
                         SocketModeEvent::DisconnectEvent(e) => handler.on_disconnect(&e).await,
                         SocketModeEvent::EventsAPI(e) => handler.on_events_api(&e).await,
                         SocketModeEvent::InteractiveEvent(e) => handler.on_interactive(&e).await,
+                        SocketModeEvent::SlashCommandsEvent(e) => {
+                            handler.on_slash_commands(&e).await
+                        }
                     }
                 }
                 Message::Ping(p) => log::info!("ping: {:?}", p),
