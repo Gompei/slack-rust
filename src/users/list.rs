@@ -45,13 +45,9 @@ where
 #[cfg(test)]
 mod test {
     use super::*;
-    
-    
-    
-    
-    
+
     use crate::http_client::MockSlackWebAPIClient;
-    
+
     use crate::users::user::UserProfile;
 
     #[test]
