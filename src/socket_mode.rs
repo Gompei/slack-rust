@@ -1,7 +1,6 @@
 use crate::apps::connections_open::connections_open;
 use crate::error::Error;
 use crate::http_client::SlackWebAPIClient;
-
 use async_std::net::TcpStream;
 use async_tls::client::TlsStream;
 use async_tls::TlsConnector;
@@ -15,12 +14,24 @@ use url::Url;
 /// Implement this trait in your code to handle slack events.
 #[async_trait]
 pub trait EventHandler {
-    async fn on_close(&mut self) {}
-    async fn on_connect(&mut self) {}
-    async fn on_disconnect(&mut self, _s: &SocketMessage) {}
-    async fn on_events_api(&mut self, _s: &SocketMessage) {}
-    async fn on_hello(&mut self, _s: &SocketMessage) {}
-    async fn on_interactive(&mut self, _s: &SocketMessage) {}
+    async fn on_close(&mut self) {
+        log::info!("on_close");
+    }
+    async fn on_connect(&mut self) {
+        log::info!("on_connect");
+    }
+    async fn on_disconnect(&mut self, s: &SocketMessage) {
+        log::info!("on_disconnect: {:?}", s);
+    }
+    async fn on_events_api(&mut self, s: &SocketMessage) {
+        log::info!("on_events_api: {:?}", s);
+    }
+    async fn on_hello(&mut self, s: &SocketMessage) {
+        log::info!("on_hello: {:?}", s);
+    }
+    async fn on_interactive(&mut self, s: &SocketMessage) {
+        log::info!("on_interactive: {:?}", s);
+    }
 }
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
@@ -122,18 +133,19 @@ impl SocketMode {
                 },
                 Message::Ping(p) => log::info!("ping: {:?}", p),
                 Message::Close(_) => break,
-                m => {
-                    log::warn!("unsupported web socket message: {:?}", m);
-                }
+                m => log::warn!("unsupported web socket message: {:?}", m),
             }
         }
         Ok(())
     }
-    pub async fn ack(envelope_id: String, stream: &mut WebSocketStream<TlsStream<TcpStream>>) {
-        // TODO
-        let _ = stream.send(Message::Text(
-            serde_json::to_string(&AcknowledgeMessage { envelope_id })
-                .expect("send acknowledge message error"),
-        ));
+    pub async fn ack(
+        envelope_id: String,
+        stream: &mut WebSocketStream<TlsStream<TcpStream>>,
+    ) -> Result<(), Error> {
+        let json = serde_json::to_string(&AcknowledgeMessage { envelope_id })?;
+        stream
+            .send(Message::Text(json))
+            .await
+            .map_err(Error::WebSocketError)
     }
 }
