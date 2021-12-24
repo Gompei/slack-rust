@@ -13,7 +13,7 @@ async fn main() {
 
     let slack_api_client = default_client();
 
-    SocketMode::run(&slack_api_client, &slack_app_token, &mut EventHandler)
+    SocketMode::run(&slack_api_client, &slack_app_token, &mut Handler)
         .await
         .unwrap_or_else(|_| panic!("socket mode run error."));
 }
