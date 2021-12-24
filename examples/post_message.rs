@@ -1,14 +1,10 @@
-use slack::attachments::attachment::Attachment;
-use slack::attachments::attachment::AttachmentField;
+use slack::attachments::attachment::{Attachment, AttachmentField};
 use slack::block::block_actions::ActionBlock;
-use slack::block::block_elements::BlockElement;
-use slack::block::block_elements::ButtonElement;
-use slack::block::block_elements::SelectBlockElement;
-use slack::block::block_object::OptionBlockObject;
-use slack::block::block_object::TextBlockObject;
-use slack::block::block_object::TextBlockType;
+use slack::block::block_elements::{BlockElement, ButtonElement, SelectBlockElement};
+use slack::block::block_object::{OptionBlockObject, TextBlockObject, TextBlockType};
 use slack::block::blocks::Block;
 use slack::chat::post_message::{post_message, PostMessageRequest};
+use slack::http_client::default_client;
 use slack_rust as slack;
 use std::env;
 
@@ -19,7 +15,7 @@ async fn main() {
     let slack_channel_id =
         env::var("SLACK_CHANNEL_ID").unwrap_or_else(|_| panic!("slack channel id is not set."));
 
-    let slack_api_client = slack::http_client::default_client();
+    let slack_api_client = default_client();
     let param = PostMessageRequest {
         channel: slack_channel_id,
         text: Some("Hello world".to_string()),
