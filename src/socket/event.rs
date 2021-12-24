@@ -1,4 +1,4 @@
-use crate::payloads::interactive::SlashPayload;
+use crate::payloads::interactive::{InteractivePayload, SlashPayload};
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 
@@ -95,6 +95,7 @@ pub struct EventsAPI {
 pub struct InteractiveEvent {
     pub envelope_id: String,
     pub accepts_response_payload: bool,
+    pub payload: InteractivePayload,
 }
 
 #[skip_serializing_none]

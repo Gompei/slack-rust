@@ -13,7 +13,6 @@ pub struct Message {
     pub user: Option<String>,
     pub ts: Option<String>,
     pub team: Option<String>,
-    // pub bot_profile:
     pub attachments: Option<Vec<Attachment>>,
     pub blocks: Option<Vec<Block>>,
     pub subtype: Option<String>,

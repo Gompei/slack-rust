@@ -1,3 +1,8 @@
+use crate::block::block_object::TextBlockObject;
+use crate::channels::channel::Channel;
+use crate::chat::message::Message;
+use crate::team::info::Team;
+use crate::users::user::User;
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 
@@ -15,4 +20,45 @@ pub struct SlashPayload {
     pub text: Option<String>,
     pub response_url: Option<String>,
     pub trigger_id: Option<String>,
+}
+
+#[skip_serializing_none]
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
+pub struct InteractivePayload {
+    #[serde(rename = "type")]
+    pub type_filed: String,
+    pub team: Option<Team>,
+    pub user: Option<User>,
+    pub api_app_id: Option<String>,
+    pub token: Option<String>,
+    pub container: Option<Container>,
+    pub trigger_id: Option<String>,
+    pub channel: Option<Channel>,
+    pub message: Option<Message>,
+    pub response_url: Option<String>,
+    pub actions: Option<Vec<Action>>,
+}
+
+#[skip_serializing_none]
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
+pub struct Container {
+    #[serde(rename = "type")]
+    pub type_filed: String,
+    pub message_ts: Option<String>,
+    pub attachment_id: Option<i32>,
+    pub channel_id: Option<String>,
+    pub is_ephemeral: Option<bool>,
+    pub is_app_unfurl: Option<bool>,
+}
+
+#[skip_serializing_none]
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
+pub struct Action {
+    #[serde(rename = "type")]
+    pub type_filed: String,
+    pub action_id: Option<String>,
+    pub block_id: Option<String>,
+    pub text: Option<TextBlockObject>,
+    pub value: Option<String>,
+    pub action_ts: Option<String>,
 }
