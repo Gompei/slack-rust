@@ -108,6 +108,6 @@ pub struct SlashCommandsEvent {
 
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
-pub struct AcknowledgeMessage {
-    pub envelope_id: String,
+pub struct AcknowledgeMessage<'s> {
+    pub envelope_id: &'s str,
 }

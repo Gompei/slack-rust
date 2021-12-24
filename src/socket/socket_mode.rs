@@ -14,6 +14,8 @@ use async_tungstenite::{client_async, WebSocketStream};
 use futures_util::{SinkExt, StreamExt};
 use url::Url;
 
+pub type Stream = WebSocketStream<TlsStream<TcpStream>>;
+
 /// Implement this trait in your code to handle slack events.
 #[async_trait]
 pub trait EventHandler {
@@ -23,20 +25,20 @@ pub trait EventHandler {
     async fn on_connect(&mut self) {
         log::info!("on_connect");
     }
-    async fn on_hello(&mut self, s: &HelloEvent) {
-        log::info!("on_hello: {:?}", s);
+    async fn on_hello(&mut self, e: &HelloEvent) {
+        log::info!("on_hello: {:?}", e);
     }
-    async fn on_disconnect(&mut self, s: &DisconnectEvent) {
-        log::info!("on_disconnect: {:?}", s);
+    async fn on_disconnect(&mut self, e: &DisconnectEvent) {
+        log::info!("on_disconnect: {:?}", e);
     }
-    async fn on_events_api(&mut self, s: &EventsAPI) {
-        log::info!("on_events_api: {:?}", s);
+    async fn on_events_api(&mut self, e: &EventsAPI, s: &mut Stream) {
+        log::info!("on_events_api: {:?} {:?}", e, s);
     }
-    async fn on_interactive(&mut self, s: &InteractiveEvent) {
-        log::info!("on_interactive: {:?}", s);
+    async fn on_interactive(&mut self, e: &InteractiveEvent, s: &mut Stream) {
+        log::info!("on_interactive: {:?} {:?}", e, s);
     }
-    async fn on_slash_commands(&mut self, s: &SlashCommandsEvent) {
-        log::info!("on_slash_commands: {:?}", s);
+    async fn on_slash_commands(&mut self, e: &SlashCommandsEvent, s: &mut Stream) {
+        log::info!("on_slash_commands: {:?} {:?}", e, s);
     }
 }
 
@@ -69,21 +71,25 @@ impl SocketMode {
         handler.on_connect().await;
 
         loop {
-            let next_stream = stream
+            let message = stream
                 .next()
                 .await
                 .ok_or_else(|| Error::OptionError("web socket stream error".to_string()))?;
 
-            match next_stream? {
+            match message? {
                 Message::Text(t) => {
                     let event = serde_json::from_str::<SocketModeEvent>(&t)?;
                     match event {
                         SocketModeEvent::HelloEvent(e) => handler.on_hello(&e).await,
                         SocketModeEvent::DisconnectEvent(e) => handler.on_disconnect(&e).await,
-                        SocketModeEvent::EventsAPI(e) => handler.on_events_api(&e).await,
-                        SocketModeEvent::InteractiveEvent(e) => handler.on_interactive(&e).await,
+                        SocketModeEvent::EventsAPI(e) => {
+                            handler.on_events_api(&e, &mut stream).await
+                        }
+                        SocketModeEvent::InteractiveEvent(e) => {
+                            handler.on_interactive(&e, &mut stream).await
+                        }
                         SocketModeEvent::SlashCommandsEvent(e) => {
-                            handler.on_slash_commands(&e).await
+                            handler.on_slash_commands(&e, &mut stream).await
                         }
                     }
                 }
@@ -95,7 +101,7 @@ impl SocketMode {
         Ok(())
     }
     pub async fn ack(
-        envelope_id: String,
+        envelope_id: &String,
         stream: &mut WebSocketStream<TlsStream<TcpStream>>,
     ) -> Result<(), Error> {
         let json = serde_json::to_string(&AcknowledgeMessage { envelope_id })?;
