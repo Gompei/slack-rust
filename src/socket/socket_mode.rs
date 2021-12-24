@@ -20,30 +20,30 @@ pub type Stream = WebSocketStream<TlsStream<TcpStream>>;
 #[async_trait]
 pub trait EventHandler {
     async fn on_close(&mut self, _client: &Client) {
-        log::info!("on_close");
+        log::info!("websocket close");
     }
     async fn on_connect(&mut self, _client: &Client) {
-        log::info!("on_connect");
+        log::info!("websocket connect");
     }
     async fn on_hello(&mut self, _client: &Client, e: &HelloEvent) {
-        log::info!("on_hello: {:?}", e);
+        log::info!("hello event: {:?}", e);
     }
     async fn on_disconnect(&mut self, _client: &Client, e: &DisconnectEvent) {
-        log::info!("on_disconnect: {:?}", e);
+        log::info!("disconnect event: {:?}", e);
     }
-    async fn on_events_api(&mut self, _client: &Client, e: &EventsAPI, s: &mut Stream) {
-        log::info!("on_events_api: {:?} {:?}", e, s);
+    async fn on_events_api(&mut self, _client: &Client, e: &EventsAPI, _s: &mut Stream) {
+        log::info!("events api event: {:?}", e);
     }
-    async fn on_interactive(&mut self, _client: &Client, e: &InteractiveEvent, s: &mut Stream) {
-        log::info!("on_interactive: {:?} {:?}", e, s);
+    async fn on_interactive(&mut self, _client: &Client, e: &InteractiveEvent, _s: &mut Stream) {
+        log::info!("interactive event: {:?}", e);
     }
     async fn on_slash_commands(
         &mut self,
         _client: &Client,
         e: &SlashCommandsEvent,
-        s: &mut Stream,
+        _s: &mut Stream,
     ) {
-        log::info!("on_slash_commands: {:?} {:?}", e, s);
+        log::info!("slash commands event: {:?}", e);
     }
 }
 
