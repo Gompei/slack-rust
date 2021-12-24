@@ -1,10 +1,8 @@
 use async_trait::async_trait;
 use slack::http_client::default_client;
-use slack::socket::event::HelloEvent;
-
+use slack::socket::event::{HelloEvent, InteractiveEvent};
 use slack::socket::socket_mode::{EventHandler, SocketMode};
 use slack_rust as slack;
-use slack_rust::socket::event::CommonEvent;
 use std::env;
 
 #[async_std::main]
@@ -31,7 +29,7 @@ impl EventHandler for Handler {
     async fn on_hello(&mut self, s: &HelloEvent) {
         log::info!("hello event: {:?}", s);
     }
-    async fn on_interactive(&mut self, s: &CommonEvent) {
+    async fn on_interactive(&mut self, s: &InteractiveEvent) {
         log::info!("interactive event: {:?}", s);
     }
 }

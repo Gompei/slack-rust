@@ -8,10 +8,10 @@ pub enum SocketModeEvent {
     HelloEvent(HelloEvent),
     #[serde(rename = "disconnect")]
     DisconnectEvent(DisconnectEvent),
-    #[serde(rename = "event_api")]
-    APIEvent(CommonEvent),
+    #[serde(rename = "events_api")]
+    EventsAPI(EventsAPI),
     #[serde(rename = "interactive")]
-    InteractiveEvent(CommonEvent),
+    InteractiveEvent(InteractiveEvent),
 }
 
 impl SocketModeEvent {
@@ -21,8 +21,8 @@ impl SocketModeEvent {
             SocketModeEvent::DisconnectEvent(DisconnectEvent { .. }) => {
                 SocketModeEventType::Disconnect
             }
-            SocketModeEvent::APIEvent(CommonEvent { .. }) => SocketModeEventType::EventApi,
-            SocketModeEvent::InteractiveEvent(CommonEvent { .. }) => {
+            SocketModeEvent::EventsAPI(EventsAPI { .. }) => SocketModeEventType::EventsAPI,
+            SocketModeEvent::InteractiveEvent(InteractiveEvent { .. }) => {
                 SocketModeEventType::Interactive
             }
         }
@@ -34,7 +34,7 @@ impl SocketModeEvent {
 pub enum SocketModeEventType {
     Hello,
     Disconnect,
-    EventApi,
+    EventsAPI,
     Interactive,
 }
 
@@ -78,7 +78,17 @@ pub enum DisconnectReason {
 
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
-pub struct CommonEvent {}
+pub struct EventsAPI {
+    pub envelope_id: String,
+    pub accepts_response_payload: bool,
+}
+
+#[skip_serializing_none]
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
+pub struct InteractiveEvent {
+    pub envelope_id: String,
+    pub accepts_response_payload: bool,
+}
 
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
