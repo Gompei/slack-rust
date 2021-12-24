@@ -76,9 +76,7 @@ impl SlackWebAPIClient for Client {
         Ok(self
             .post(check_url)
             .header("Authorization", format!("Bearer {}", token))
-            // TODO
             .header("Content-type", "application/json; charset=utf-8")
-            //.content_type(surf::http::mime::JSON)
             .body(body)
             .await?
             .body_string()
