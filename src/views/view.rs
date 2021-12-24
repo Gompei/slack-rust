@@ -1,13 +1,16 @@
 use crate::block::block_object::TextBlockObject;
 use crate::block::blocks::{Block, BlockAction};
 use serde::{Deserialize, Serialize};
+use serde_with::skip_serializing_none;
 use std::collections::HashMap;
 
+#[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct ViewState {
     pub values: HashMap<String, HashMap<String, BlockAction>>,
 }
 
+#[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct View {
     pub id: Option<String>,
@@ -27,4 +30,5 @@ pub struct View {
     pub app_id: Option<String>,
     pub external_id: Option<String>,
     pub bot_id: Option<String>,
+    pub state: Option<ViewState>,
 }

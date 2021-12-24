@@ -3,6 +3,7 @@ use crate::channels::channel::Channel;
 use crate::chat::message::Message;
 use crate::team::info::Team;
 use crate::users::user::User;
+use crate::views::view::View;
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 
@@ -37,6 +38,11 @@ pub struct InteractivePayload {
     pub message: Option<Message>,
     pub response_url: Option<String>,
     pub actions: Option<Vec<Action>>,
+    pub view: Option<View>,
+    pub hash: Option<String>,
+    pub block_id: Option<String>,
+    pub action_id: Option<String>,
+    pub value: Option<String>,
 }
 
 #[skip_serializing_none]
