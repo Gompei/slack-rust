@@ -43,6 +43,8 @@ pub struct InteractivePayload {
     pub block_id: Option<String>,
     pub action_id: Option<String>,
     pub value: Option<String>,
+    pub is_enterprise_install: Option<bool>,
+    pub callback_id: Option<String>,
 }
 
 #[skip_serializing_none]
