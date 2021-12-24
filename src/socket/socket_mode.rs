@@ -1,7 +1,9 @@
 use crate::apps::connections_open::connections_open;
 use crate::error::Error;
 use crate::http_client::SlackWebAPIClient;
-use crate::socket::event::{AcknowledgeMessage, SocketModeEvent, SocketModeEventType};
+use crate::socket::event::{
+    AcknowledgeMessage, CommonEvent, DisconnectEvent, HelloEvent, SocketModeEvent,
+};
 use async_std::net::TcpStream;
 use async_tls::client::TlsStream;
 use async_tls::TlsConnector;
@@ -20,16 +22,16 @@ pub trait EventHandler {
     async fn on_connect(&mut self) {
         log::info!("on_connect");
     }
-    async fn on_disconnect(&mut self, s: &SocketModeEvent) {
-        log::info!("on_disconnect: {:?}", s);
-    }
-    async fn on_events_api(&mut self, s: &SocketModeEvent) {
-        log::info!("on_events_api: {:?}", s);
-    }
-    async fn on_hello(&mut self, s: &SocketModeEvent) {
+    async fn on_hello(&mut self, s: &HelloEvent) {
         log::info!("on_hello: {:?}", s);
     }
-    async fn on_interactive(&mut self, s: &SocketModeEvent) {
+    async fn on_disconnect(&mut self, s: &DisconnectEvent) {
+        log::info!("on_disconnect: {:?}", s);
+    }
+    async fn on_events_api(&mut self, s: &CommonEvent) {
+        log::info!("on_events_api: {:?}", s);
+    }
+    async fn on_interactive(&mut self, s: &CommonEvent) {
         log::info!("on_interactive: {:?}", s);
     }
 }
@@ -71,11 +73,11 @@ impl SocketMode {
             match next_stream? {
                 Message::Text(t) => {
                     let event = serde_json::from_str::<SocketModeEvent>(&t)?;
-                    match event.event_type() {
-                        SocketModeEventType::Hello => handler.on_hello(&event).await,
-                        SocketModeEventType::Disconnect => handler.on_disconnect(&event).await,
-                        SocketModeEventType::EventApi => handler.on_events_api(&event).await,
-                        SocketModeEventType::Interactive => handler.on_interactive(&event).await,
+                    match event {
+                        SocketModeEvent::HelloEvent(e) => handler.on_hello(&e).await,
+                        SocketModeEvent::DisconnectEvent(e) => handler.on_disconnect(&e).await,
+                        SocketModeEvent::APIEvent(e) => handler.on_events_api(&e).await,
+                        SocketModeEvent::InteractiveEvent(e) => handler.on_interactive(&e).await,
                     }
                 }
                 Message::Ping(p) => log::info!("ping: {:?}", p),
