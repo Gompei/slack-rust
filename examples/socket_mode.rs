@@ -1,6 +1,7 @@
 use async_trait::async_trait;
 use slack::http_client::default_client;
-use slack::socket_mode::{EventHandler, SocketMessage, SocketMode};
+use slack::socket::event::SocketModeEvent;
+use slack::socket::socket_mode::{EventHandler, SocketMode};
 use slack_rust as slack;
 use std::env;
 
@@ -22,7 +23,10 @@ pub struct Handler;
 
 #[async_trait]
 impl EventHandler for Handler {
-    async fn on_hello(&mut self, s: &SocketMessage) {
-        println!("{:?}", s);
+    async fn on_connect(&mut self) {
+        log::info!("start socket mode...");
+    }
+    async fn on_hello(&mut self, s: &SocketModeEvent) {
+        log::info!("hello event: {:?}", s);
     }
 }

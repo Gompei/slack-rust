@@ -14,7 +14,7 @@ pub mod items;
 pub mod profiles;
 pub mod reactions;
 pub mod reminders;
-pub mod socket_mode;
+pub mod socket;
 pub mod team;
 pub mod usergroups;
 pub mod users;

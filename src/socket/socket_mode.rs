@@ -1,6 +1,7 @@
 use crate::apps::connections_open::connections_open;
 use crate::error::Error;
 use crate::http_client::SlackWebAPIClient;
+use crate::socket::event::{AcknowledgeMessage, SocketModeEvent, SocketModeEventType};
 use async_std::net::TcpStream;
 use async_tls::client::TlsStream;
 use async_tls::TlsConnector;
@@ -8,7 +9,6 @@ use async_trait::async_trait;
 use async_tungstenite::tungstenite::Message;
 use async_tungstenite::{client_async, WebSocketStream};
 use futures_util::{SinkExt, StreamExt};
-use serde::{Deserialize, Serialize};
 use url::Url;
 
 /// Implement this trait in your code to handle slack events.
@@ -20,39 +20,18 @@ pub trait EventHandler {
     async fn on_connect(&mut self) {
         log::info!("on_connect");
     }
-    async fn on_disconnect(&mut self, s: &SocketMessage) {
+    async fn on_disconnect(&mut self, s: &SocketModeEvent) {
         log::info!("on_disconnect: {:?}", s);
     }
-    async fn on_events_api(&mut self, s: &SocketMessage) {
+    async fn on_events_api(&mut self, s: &SocketModeEvent) {
         log::info!("on_events_api: {:?}", s);
     }
-    async fn on_hello(&mut self, s: &SocketMessage) {
+    async fn on_hello(&mut self, s: &SocketModeEvent) {
         log::info!("on_hello: {:?}", s);
     }
-    async fn on_interactive(&mut self, s: &SocketMessage) {
+    async fn on_interactive(&mut self, s: &SocketModeEvent) {
         log::info!("on_interactive: {:?}", s);
     }
-}
-
-#[derive(Deserialize, Serialize, Debug, PartialEq)]
-pub struct SocketMessage {
-    pub envelope_id: Option<String>,
-    #[serde(rename = "type")]
-    pub message_type: SocketEventType,
-}
-
-#[derive(Deserialize, Serialize, Debug, PartialEq)]
-#[serde(rename_all = "snake_case")]
-pub enum SocketEventType {
-    Hello,
-    Disconnect,
-    EventApi,
-    Interactive,
-}
-
-#[derive(Deserialize, Serialize, Debug, PartialEq)]
-pub struct AcknowledgeMessage {
-    pub envelope_id: String,
 }
 
 /// The socket mode client.
@@ -90,47 +69,15 @@ impl SocketMode {
                 .ok_or_else(|| Error::OptionError("web socket stream error".to_string()))?;
 
             match next_stream? {
-                Message::Text(t) => match serde_json::from_str(&t) {
-                    Ok(SocketMessage {
-                        envelope_id,
-                        message_type: socket_event_type,
-                        ..
-                    }) => match socket_event_type {
-                        SocketEventType::Disconnect => {
-                            handler
-                                .on_disconnect(&SocketMessage {
-                                    envelope_id,
-                                    message_type: socket_event_type,
-                                })
-                                .await
-                        }
-                        SocketEventType::EventApi => {
-                            handler
-                                .on_events_api(&SocketMessage {
-                                    envelope_id,
-                                    message_type: socket_event_type,
-                                })
-                                .await
-                        }
-                        SocketEventType::Hello => {
-                            handler
-                                .on_hello(&SocketMessage {
-                                    envelope_id,
-                                    message_type: socket_event_type,
-                                })
-                                .await
-                        }
-                        SocketEventType::Interactive => {
-                            handler
-                                .on_interactive(&SocketMessage {
-                                    envelope_id,
-                                    message_type: socket_event_type,
-                                })
-                                .await
-                        }
-                    },
-                    Err(e) => log::error!("unknown text frame: {} {:?}", t, e),
-                },
+                Message::Text(t) => {
+                    let event = serde_json::from_str::<SocketModeEvent>(&t)?;
+                    match event.event_type() {
+                        SocketModeEventType::Hello => handler.on_hello(&event).await,
+                        SocketModeEventType::Disconnect => handler.on_disconnect(&event).await,
+                        SocketModeEventType::EventApi => handler.on_events_api(&event).await,
+                        SocketModeEventType::Interactive => handler.on_interactive(&event).await,
+                    }
+                }
                 Message::Ping(p) => log::info!("ping: {:?}", p),
                 Message::Close(_) => break,
                 m => log::warn!("unsupported web socket message: {:?}", m),
