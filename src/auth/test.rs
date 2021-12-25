@@ -1,12 +1,13 @@
 use serde::{Deserialize, Serialize};
 
 use crate::error::Error;
-use crate::http_client::{get_slack_url, SlackWebAPIClient};
+use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};
 
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct TestResponse {
     pub ok: bool,
     pub error: Option<String>,
+    pub response_metadata: Option<ResponseMetadata>,
     pub url: Option<String>,
     pub team: Option<String>,
     pub user: Option<String>,

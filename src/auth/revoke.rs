@@ -1,5 +1,5 @@
 use crate::error::Error;
-use crate::http_client::{get_slack_url, SlackWebAPIClient};
+use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 
@@ -14,6 +14,7 @@ pub struct RevokeRequest {
 pub struct RevokeResponse {
     pub ok: bool,
     pub error: Option<String>,
+    pub response_metadata: Option<ResponseMetadata>,
     pub revoked: Option<bool>,
 }
 

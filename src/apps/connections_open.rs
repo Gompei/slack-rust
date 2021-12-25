@@ -1,5 +1,5 @@
 use crate::error::Error;
-use crate::http_client::{get_slack_url, SlackWebAPIClient};
+use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 
@@ -7,8 +7,9 @@ use serde_with::skip_serializing_none;
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct ConnectionsOpenResponse {
     pub ok: bool,
-    pub url: Option<String>,
     pub error: Option<String>,
+    pub response_metadata: Option<ResponseMetadata>,
+    pub url: Option<String>,
 }
 
 pub async fn connections_open<T>(
