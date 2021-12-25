@@ -17,12 +17,13 @@ pub struct View {
     pub team_id: Option<String>,
     #[serde(rename = "type")]
     pub type_filed: Option<ViewType>,
-    pub title: Option<TextBlockObject>,
-    pub close: Option<TextBlockObject>,
-    pub submit: Option<TextBlockObject>,
     pub blocks: Option<Vec<Block>>,
     pub private_metadata: Option<String>,
     pub callback_id: Option<String>,
+    pub state: Option<ViewState>,
+    pub title: Option<TextBlockObject>,
+    pub close: Option<TextBlockObject>,
+    pub submit: Option<TextBlockObject>,
     pub hash: Option<String>,
     pub clear_on_close: Option<bool>,
     pub notify_on_close: Option<bool>,
@@ -31,7 +32,6 @@ pub struct View {
     pub app_id: Option<String>,
     pub external_id: Option<String>,
     pub bot_id: Option<String>,
-    pub state: Option<ViewState>,
 }
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
