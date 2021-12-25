@@ -99,6 +99,7 @@ pub enum MixedElementType {
     Image,
     PlainText,
     Mrkdwn,
+    #[serde(skip)]
     None,
 }
 
@@ -217,6 +218,7 @@ pub struct PlainTextInputBlockElement {
     pub focus_on_load: Option<bool>,
 }
 
+#[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct RadioButtonsBlockElement {
     pub action_id: String,

@@ -1,6 +1,5 @@
 use crate::block::block_elements::BlockElement;
 use crate::block::block_object::TextBlockObject;
-
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 

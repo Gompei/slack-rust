@@ -1,5 +1,4 @@
 use crate::block::block_elements::MixedElement;
-
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 
