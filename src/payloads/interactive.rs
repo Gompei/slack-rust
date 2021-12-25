@@ -38,7 +38,8 @@ pub struct InteractivePayload {
     pub message: Option<Message>,
     pub response_url: Option<String>,
     pub actions: Option<Vec<Action>>,
-    pub view: Option<View>,
+    // TODO
+    // pub view: Option<View>,
     pub hash: Option<String>,
     pub block_id: Option<String>,
     pub action_id: Option<String>,
