@@ -125,7 +125,10 @@ impl SocketMode {
                     }
                 }
                 Message::Ping(p) => log::info!("ping: {:?}", p),
-                Message::Close(_) => break,
+                Message::Close(_) => {
+                    handler.on_close(&self).await;
+                    break;
+                }
                 m => log::warn!("unsupported web socket message: {:?}", m),
             }
         }
