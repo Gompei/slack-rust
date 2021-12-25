@@ -1,7 +1,9 @@
 use crate::error::Error;
 use crate::http_client::{get_slack_url, DefaultResponse, SlackWebAPIClient};
 use serde::{Deserialize, Serialize};
+use serde_with::skip_serializing_none;
 
+#[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct DeleteScheduledMessageRequest {
     pub channel: String,
@@ -26,4 +28,57 @@ where
         .and_then(|result| {
             serde_json::from_str::<DefaultResponse>(&result).map_err(Error::SerdeJsonError)
         })
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use crate::http_client::MockSlackWebAPIClient;
+
+    #[test]
+    fn convert_request() {
+        let request = DeleteScheduledMessageRequest {
+            channel: "C123456789".to_string(),
+            scheduled_message_id: "Q1234ABCD".to_string(),
+            as_user: Some(true),
+        };
+        let json = r##"{
+  "channel": "C123456789",
+  "scheduled_message_id": "Q1234ABCD",
+  "as_user": true
+}"##;
+
+        let j = serde_json::to_string_pretty(&request).unwrap();
+        assert_eq!(json, j);
+
+        let s = serde_json::from_str::<DeleteScheduledMessageRequest>(json).unwrap();
+        assert_eq!(request, s);
+    }
+
+    #[async_std::test]
+    async fn test_delete_scheduled_message() {
+        let param = DeleteScheduledMessageRequest {
+            channel: "C123456789".to_string(),
+            scheduled_message_id: "Q1234ABCD".to_string(),
+            as_user: Some(true),
+        };
+
+        let mut mock = MockSlackWebAPIClient::new();
+        mock.expect_post_json().returning(|_, _, _| {
+            Ok(r##"{
+  "ok": true
+}"##
+            .to_string())
+        });
+
+        let response = delete_scheduled_message(&mock, &param, &"test_token".to_string())
+            .await
+            .unwrap();
+        let expect = DefaultResponse {
+            ok: true,
+            ..Default::default()
+        };
+
+        assert_eq!(expect, response);
+    }
 }
