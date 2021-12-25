@@ -1,7 +1,7 @@
 use crate::block::block_object::TextBlockObject;
-use crate::channel::channel::Channel;
+use crate::channels::channel::Channel;
 use crate::chat::message::Message;
-use crate::team::team::Team;
+use crate::team::teams::Team;
 use crate::users::user::User;
 use crate::views::view::View;
 use serde::{Deserialize, Serialize};

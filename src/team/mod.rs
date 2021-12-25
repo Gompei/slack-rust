@@ -5,4 +5,4 @@ pub mod info;
 pub mod integration_logs;
 pub mod preferences_list;
 pub mod profile_get;
-pub mod team;
+pub mod teams;
