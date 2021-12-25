@@ -21,7 +21,7 @@ pub type Client = surf::Client;
 
 /// Slack default response.
 #[skip_serializing_none]
-#[derive(Deserialize, Serialize, Debug, PartialEq)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct DefaultResponse {
     pub ok: bool,
     pub error: Option<String>,
@@ -30,7 +30,7 @@ pub struct DefaultResponse {
 
 /// Metadata.
 #[skip_serializing_none]
-#[derive(Deserialize, Serialize, Debug, PartialEq)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct ResponseMetadata {
     pub next_cursor: Option<String>,
     pub messages: Option<Vec<String>>,
