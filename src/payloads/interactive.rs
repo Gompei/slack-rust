@@ -1,5 +1,5 @@
 use crate::block::block_object::TextBlockObject;
-use crate::channels::channel::Channel;
+use crate::channel::channel::Channel;
 use crate::chat::message::Message;
 use crate::team::team::Team;
 use crate::users::user::User;
