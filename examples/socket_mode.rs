@@ -1,7 +1,15 @@
 use async_trait::async_trait;
+use slack::block::block_actions::ActionBlock;
+use slack::block::block_elements::{
+    BlockElement, ButtonElement, MultiSelectBlockElement, PlainTextInputBlockElement,
+};
+use slack::block::block_input::InputBlock;
+use slack::block::block_object::{OptionBlockObject, TextBlockObject, TextBlockType};
+use slack::block::blocks::Block;
 use slack::socket::event::{HelloEvent, InteractiveEvent};
 use slack::socket::socket_mode::{EventHandler, SocketMode, Stream};
 use slack::views::open::{open, OpenRequest};
+use slack::views::view::View;
 use slack_rust as slack;
 use std::env;
 
@@ -47,11 +55,85 @@ impl EventHandler for Handler {
                 .trigger_id
                 .as_ref()
                 .map_or("".to_string(), |r| r.to_string()),
-            ..Default::default()
+            view: View {
+                type_filed: Some("modal".to_string()),
+                title: Some(TextBlockObject {
+                    type_filed: TextBlockType::PlainText,
+                    text: "Slack Rust Example Modal".to_string(),
+                    ..Default::default()
+                }),
+                submit: Some(TextBlockObject {
+                    type_filed: TextBlockType::PlainText,
+                    text: "Submit".to_string(),
+                    ..Default::default()
+                }),
+                blocks: Some(vec![
+                    Block::InputBlock(InputBlock {
+                        label: TextBlockObject {
+                            type_filed: TextBlockType::PlainText,
+                            text: "Title".to_string(),
+                            ..Default::default()
+                        },
+                        element: Some(BlockElement::PlainTextInputBlockElement(
+                            PlainTextInputBlockElement {
+                                action_id: "title".to_string(),
+                                placeholder: Some(TextBlockObject {
+                                    type_filed: TextBlockType::PlainText,
+                                    text: "What do you want to ask of the world?".to_string(),
+                                    ..Default::default()
+                                }),
+                                ..Default::default()
+                            },
+                        )),
+                        ..Default::default()
+                    }),
+                    Block::InputBlock(InputBlock {
+                        label: TextBlockObject {
+                            type_filed: TextBlockType::PlainText,
+                            text: "Channel(s)".to_string(),
+                            ..Default::default()
+                        },
+                        element: Some(BlockElement::MultiSelectBlockElement(
+                            MultiSelectBlockElement {
+                                action_id: "title".to_string(),
+                                placeholder: TextBlockObject {
+                                    type_filed: TextBlockType::PlainText,
+                                    text: "Where should the poll be sent?".to_string(),
+                                    ..Default::default()
+                                },
+                                options: vec![OptionBlockObject {
+                                    text: TextBlockObject {
+                                        type_filed: TextBlockType::PlainText,
+                                        text: "*this is plain_text text*".to_string(),
+                                        ..Default::default()
+                                    },
+                                    value: Some("value-0".to_string()),
+                                    ..Default::default()
+                                }],
+                                ..Default::default()
+                            },
+                        )),
+                        ..Default::default()
+                    }),
+                    Block::ActionBlock(ActionBlock {
+                        elements: vec![BlockElement::ButtonElement(ButtonElement {
+                            action_id: "add_option".to_string(),
+                            text: TextBlockObject {
+                                type_filed: TextBlockType::PlainText,
+                                text: "Add another option".to_string(),
+                                ..Default::default()
+                            },
+                            ..Default::default()
+                        })],
+                        ..Default::default()
+                    }),
+                ]),
+                ..Default::default()
+            },
         };
-
-        open(&socket_mode.client, &request, &socket_mode.token.bot_token)
+        let response = open(&socket_mode.client, &request, &socket_mode.token.bot_token)
             .await
             .expect("view open api error.");
+        log::info!("view open api response: {:?}", response);
     }
 }
