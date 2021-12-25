@@ -2,6 +2,7 @@ use crate::block::blocks::Block;
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 
+#[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct AttachmentField {
     pub title: Option<String>,
@@ -9,12 +10,14 @@ pub struct AttachmentField {
     pub short: Option<bool>,
 }
 
+#[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct AttachmentAction {
     pub name: Option<String>,
     pub text: Option<String>,
     pub style: Option<String>,
-    pub r#type: Option<String>,
+    #[serde(rename = "type")]
+    pub type_filed: Option<String>,
     pub value: Option<String>,
     pub data_source: Option<String>,
     pub min_query_length: Option<i32>,
@@ -25,6 +28,7 @@ pub struct AttachmentAction {
     pub url: Option<String>,
 }
 
+#[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct AttachmentActionOption {
     pub text: Option<String>,
@@ -32,12 +36,14 @@ pub struct AttachmentActionOption {
     pub description: Option<String>,
 }
 
+#[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct AttachmentActionOptionGroup {
     pub text: Option<String>,
     pub options: Option<Vec<AttachmentActionOption>>,
 }
 
+#[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct ConfirmationField {
     pub title: Option<String>,
