@@ -56,8 +56,7 @@ where
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::block::block_object::{TextBlockObject, TextBlockType};
-    use crate::block::block_section::SectionBlock;
+
     use crate::http_client::MockSlackWebAPIClient;
 
     #[test]
