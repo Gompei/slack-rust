@@ -131,7 +131,7 @@ impl SocketMode {
         }
         Ok(())
     }
-    pub async fn ack(envelope_id: &String, stream: &mut Stream) -> Result<(), Error> {
+    pub async fn ack(envelope_id: &str, stream: &mut Stream) -> Result<(), Error> {
         let json = serde_json::to_string(&AcknowledgeMessage { envelope_id })?;
         stream
             .send(Message::Text(json))
