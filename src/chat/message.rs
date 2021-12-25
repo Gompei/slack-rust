@@ -1,4 +1,4 @@
-use crate::attachments::attachment::Attachment;
+use crate::attachment::attachment::Attachment;
 use crate::block::blocks::Block;
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;

@@ -1,4 +1,4 @@
-use slack::attachments::attachment::{Attachment, AttachmentField};
+use slack::attachment::attachment::{Attachment, AttachmentField};
 use slack::block::block_actions::ActionBlock;
 use slack::block::block_elements::{BlockElement, ButtonElement, SelectBlockElement};
 use slack::block::block_object::{OptionBlockObject, TextBlockObject, TextBlockType};

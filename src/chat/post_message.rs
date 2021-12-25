@@ -1,4 +1,4 @@
-use crate::attachments::attachment::Attachment;
+use crate::attachment::attachment::Attachment;
 use crate::block::blocks::Block;
 use crate::chat::message::Message;
 use crate::error::Error;
@@ -58,7 +58,7 @@ where
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::attachments::attachment::AttachmentField;
+    use crate::attachment::attachment::AttachmentField;
     use crate::block::block_actions::ActionBlock;
     use crate::block::block_elements::{BlockElement, ButtonElement, SelectBlockElement};
     use crate::block::block_object::{OptionBlockObject, TextBlockObject, TextBlockType};

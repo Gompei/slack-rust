@@ -1,4 +1,4 @@
-use crate::attachments::attachment::Attachment;
+use crate::attachment::attachment::Attachment;
 use crate::block::blocks::Block;
 use crate::error::Error;
 use crate::http_client::{get_slack_url, SlackWebAPIClient};

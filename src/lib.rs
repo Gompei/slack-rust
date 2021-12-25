@@ -1,5 +1,5 @@
 pub mod apps;
-pub mod attachments;
+pub mod attachment;
 pub mod auth;
 pub mod block;
 pub mod channels;

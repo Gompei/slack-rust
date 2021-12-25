@@ -1,4 +1,4 @@
-use crate::attachments::attachment::Attachment;
+use crate::attachment::attachment::Attachment;
 use crate::block::blocks::Block;
 use crate::chat::message::Message;
 use crate::error::Error;
