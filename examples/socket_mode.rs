@@ -23,8 +23,12 @@ async fn main() {
         env::var("SLACK_APP_TOKEN").unwrap_or_else(|_| panic!("slack app token is not set."));
     let slack_bot_token =
         env::var("SLACK_BOT_TOKEN").unwrap_or_else(|_| panic!("slack bot token is not set."));
+    let slack_channel_id =
+        env::var("SLACK_CHANNEL_ID").unwrap_or_else(|_| panic!("slack channel id is not set."));
 
     SocketMode::new(slack_app_token, slack_bot_token)
+        // TODO
+        .option_parameter("SLACK_CHANNEL_ID".to_string(), slack_channel_id)
         .run(&mut Handler)
         .await
         .unwrap_or_else(|_| panic!("socket mode run error."));
@@ -53,11 +57,13 @@ impl EventHandler for Handler {
 
         match e.payload.type_filed {
             InteractiveEventType::ViewSubmission => {
-                let slack_channel_id = env::var("SLACK_CHANNEL_ID")
-                    .unwrap_or_else(|_| panic!("slack channel id is not set."));
-
                 let request = PostMessageRequest {
-                    channel: slack_channel_id,
+                    // TODO
+                    channel: socket_mode
+                        .option_parameters
+                        .get("SLACK_CHANNEL_ID")
+                        .unwrap()
+                        .to_string(),
                     text: Some("Message received!!".to_string()),
                     ..Default::default()
                 };

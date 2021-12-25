@@ -12,6 +12,7 @@ use async_trait::async_trait;
 use async_tungstenite::tungstenite::Message;
 use async_tungstenite::{client_async, WebSocketStream};
 use futures_util::{SinkExt, StreamExt};
+use std::collections::HashMap;
 use url::Url;
 
 pub type Stream = WebSocketStream<TlsStream<TcpStream>>;
@@ -56,6 +57,7 @@ pub trait EventHandler {
 pub struct SocketMode {
     pub client: Client,
     pub token: Token,
+    pub option_parameters: HashMap<String, String>,
 }
 
 impl SocketMode {
@@ -66,10 +68,16 @@ impl SocketMode {
                 app_token,
                 bot_token,
             },
+            option_parameters: HashMap::new(),
         }
     }
+    // TODO
+    pub fn option_parameter(mut self, key: String, value: String) -> SocketMode {
+        self.option_parameters.insert(key, value);
+        self
+    }
     /// Run slack and websocket communication.
-    pub async fn run<T>(&self, handler: &mut T) -> Result<(), Error>
+    pub async fn run<T>(self, handler: &mut T) -> Result<(), Error>
     where
         T: EventHandler + std::marker::Send,
     {
@@ -89,7 +97,7 @@ impl SocketMode {
 
         let (mut stream, _) = client_async(url, tls_stream).await?;
 
-        handler.on_connect(self).await;
+        handler.on_connect(&self).await;
 
         loop {
             let message = stream
@@ -101,18 +109,18 @@ impl SocketMode {
                 Message::Text(t) => {
                     let event = serde_json::from_str::<SocketModeEvent>(&t)?;
                     match event {
-                        SocketModeEvent::HelloEvent(e) => handler.on_hello(self, &e).await,
+                        SocketModeEvent::HelloEvent(e) => handler.on_hello(&self, &e).await,
                         SocketModeEvent::DisconnectEvent(e) => {
-                            handler.on_disconnect(self, &e).await
+                            handler.on_disconnect(&self, &e).await
                         }
                         SocketModeEvent::EventsAPI(e) => {
-                            handler.on_events_api(self, &e, &mut stream).await
+                            handler.on_events_api(&self, &e, &mut stream).await
                         }
                         SocketModeEvent::InteractiveEvent(e) => {
-                            handler.on_interactive(self, &e, &mut stream).await
+                            handler.on_interactive(&self, &e, &mut stream).await
                         }
                         SocketModeEvent::SlashCommandsEvent(e) => {
-                            handler.on_slash_commands(self, &e, &mut stream).await
+                            handler.on_slash_commands(&self, &e, &mut stream).await
                         }
                     }
                 }
