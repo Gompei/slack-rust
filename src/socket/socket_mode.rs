@@ -89,7 +89,7 @@ impl SocketMode {
 
         let (mut stream, _) = client_async(url, tls_stream).await?;
 
-        handler.on_connect(&self).await;
+        handler.on_connect(self).await;
 
         loop {
             let message = stream
@@ -101,18 +101,18 @@ impl SocketMode {
                 Message::Text(t) => {
                     let event = serde_json::from_str::<SocketModeEvent>(&t)?;
                     match event {
-                        SocketModeEvent::HelloEvent(e) => handler.on_hello(&self, &e).await,
+                        SocketModeEvent::HelloEvent(e) => handler.on_hello(self, &e).await,
                         SocketModeEvent::DisconnectEvent(e) => {
-                            handler.on_disconnect(&self, &e).await
+                            handler.on_disconnect(self, &e).await
                         }
                         SocketModeEvent::EventsAPI(e) => {
-                            handler.on_events_api(&self, &e, &mut stream).await
+                            handler.on_events_api(self, &e, &mut stream).await
                         }
                         SocketModeEvent::InteractiveEvent(e) => {
-                            handler.on_interactive(&self, &e, &mut stream).await
+                            handler.on_interactive(self, &e, &mut stream).await
                         }
                         SocketModeEvent::SlashCommandsEvent(e) => {
-                            handler.on_slash_commands(&self, &e, &mut stream).await
+                            handler.on_slash_commands(self, &e, &mut stream).await
                         }
                     }
                 }
