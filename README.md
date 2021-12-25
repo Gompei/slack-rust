@@ -14,3 +14,7 @@ This is a Slack library for Rust that I'm working on, inspired by [slack-go/slac
 
 - [slack-rs/slack-rs](https://github.com/slack-rs/slack-rs)
 - [Pctg-x8/slack-socket-mode-client](https://github.com/Pctg-x8/slack-socket-mode-client)
+
+## License
+
+This project is licensed under the Apache License Version 2.0.
