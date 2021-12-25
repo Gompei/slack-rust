@@ -27,7 +27,7 @@ pub struct SlashPayload {
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
 pub struct InteractivePayload {
     #[serde(rename = "type")]
-    pub type_filed: String,
+    pub type_filed: InteractiveEventType,
     pub team: Option<Team>,
     pub user: Option<User>,
     pub api_app_id: Option<String>,
@@ -45,6 +45,21 @@ pub struct InteractivePayload {
     pub value: Option<String>,
     pub is_enterprise_install: Option<bool>,
     pub callback_id: Option<String>,
+}
+
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
+#[serde(rename_all = "snake_case")]
+pub enum InteractiveEventType {
+    DialogCancellation,
+    DialogSubmission,
+    DialogSuggestion,
+    InteractionMessage,
+    MessageAction,
+    BlockActions,
+    BlockSuggestion,
+    ViewSubmission,
+    ViewClosed,
+    Shortcut,
 }
 
 #[skip_serializing_none]
