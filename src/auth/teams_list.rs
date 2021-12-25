@@ -89,11 +89,11 @@ mod test {
     {
       "id": "T12345678",
       "name": "Shinichi's workspace"
-     },
-     {
-       "id": "T12345679",
-       "name": "Migi's workspace"
-     }
+    },
+    {
+      "id": "T12345679",
+      "name": "Migi's workspace"
+    }
   ]
 }"##;
 
