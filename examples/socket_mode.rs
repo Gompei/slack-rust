@@ -7,12 +7,12 @@ use slack::block::block_input::InputBlock;
 use slack::block::block_object::{OptionBlockObject, TextBlockObject, TextBlockType};
 use slack::block::blocks::Block;
 use slack::chat::post_message::{post_message, PostMessageRequest};
+use slack::payloads::interactive::InteractiveEventType;
 use slack::socket::event::{HelloEvent, InteractiveEvent};
 use slack::socket::socket_mode::{EventHandler, SocketMode, Stream};
 use slack::views::open::{open, OpenRequest};
-use slack::views::view::View;
+use slack::views::view::{View, ViewType};
 use slack_rust as slack;
-use slack_rust::payloads::interactive::InteractiveEventType;
 use std::env;
 
 #[async_std::main]
@@ -79,7 +79,7 @@ impl EventHandler for Handler {
                                     .as_ref()
                                     .map_or("".to_string(), |r| r.to_string()),
                                 view: View {
-                                    type_filed: Some("modal".to_string()),
+                                    type_filed: Some(ViewType::Modal),
                                     title: Some(TextBlockObject {
                                         type_filed: TextBlockType::PlainText,
                                         text: "Slack Rust Example Modal".to_string(),

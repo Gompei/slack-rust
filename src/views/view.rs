@@ -16,7 +16,7 @@ pub struct View {
     pub id: Option<String>,
     pub team_id: Option<String>,
     #[serde(rename = "type")]
-    pub type_filed: Option<String>,
+    pub type_filed: Option<ViewType>,
     pub title: Option<TextBlockObject>,
     pub close: Option<TextBlockObject>,
     pub submit: Option<TextBlockObject>,
@@ -32,4 +32,11 @@ pub struct View {
     pub external_id: Option<String>,
     pub bot_id: Option<String>,
     pub state: Option<ViewState>,
+}
+
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
+#[serde(rename_all = "snake_case")]
+pub enum ViewType {
+    Modal,
+    Home,
 }
