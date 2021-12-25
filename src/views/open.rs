@@ -2,6 +2,7 @@ use crate::error::Error;
 use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};
 use crate::views::view::View;
 use serde::{Deserialize, Serialize};
+use serde_with::skip_serializing_none;
 
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct OpenRequest {
@@ -9,6 +10,7 @@ pub struct OpenRequest {
     pub view: View,
 }
 
+#[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct OpenResponse {
     pub ok: bool,

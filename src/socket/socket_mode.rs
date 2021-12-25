@@ -89,7 +89,7 @@ impl SocketMode {
 
         let (mut stream, _) = client_async(url, tls_stream).await?;
 
-        handler.on_connect(&self, token).await;
+        handler.on_connect(&self).await;
 
         loop {
             let message = stream
