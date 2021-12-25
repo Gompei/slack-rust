@@ -1,6 +1,7 @@
 # Slack API in Rust
 
-[![ci](https://github.com/Gompei/slack-rust/actions/workflows/ci.yml/badge.svg)](https://github.com/Gompei/slack-rust/actions/workflows/ci.yml)
+[<img alt="github" src="https://img.shields.io/badge/github-Gompei/slack_rust-6ba5dd?style=for-the-badge&logo=github" height="20">](https://github.com/Gompei/slack-rust)
+[<img alt="ci status" src="https://img.shields.io/github/workflow/status/Gompei/slack-rust/ci/main?style=for-the-badge" height="20">](https://github.com/Gompei/slack-rust/actions)
 
 This is a Slack library for Rust that I'm working on, inspired by [slack-go/slack](https://github.com/slack-go/slack).
 
