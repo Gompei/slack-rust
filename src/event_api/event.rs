@@ -1,4 +1,6 @@
-use crate::event_api::app::{AppHomeOpenedEvent, AppMentionEvent, AppRateLimitedEvent};
+use crate::event_api::app::{
+    AppHomeOpenedEvent, AppMentionEvent, AppRateLimitedEvent, AppRequestedEvent,
+};
 use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
@@ -15,6 +17,9 @@ pub enum Event {
     ///
     #[serde(rename = "app_rate_limited")]
     AppRateLimited(AppRateLimitedEvent),
+    ///
+    #[serde(rename = "app_requested")]
+    AppRequested(AppRequestedEvent),
     /// ChannelCreated is sent when a new channel is created.
     ChannelCreated,
     /// ChannelDeleted is sent when a channel is deleted.
