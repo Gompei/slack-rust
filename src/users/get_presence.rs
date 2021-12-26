@@ -46,7 +46,6 @@ where
 mod test {
     use super::*;
     use crate::http_client::MockSlackWebAPIClient;
-    use crate::usergroups::usergroup::Pref;
 
     #[test]
     fn convert_request() {

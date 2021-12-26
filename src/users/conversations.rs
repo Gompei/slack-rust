@@ -49,7 +49,6 @@ mod test {
     use super::*;
     use crate::channels::channel::{Purpose, Topic};
     use crate::http_client::MockSlackWebAPIClient;
-    use crate::usergroups::usergroup::Pref;
 
     #[test]
     fn convert_request() {
