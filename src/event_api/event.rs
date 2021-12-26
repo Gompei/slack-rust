@@ -5,7 +5,8 @@ use serde::{Deserialize, Serialize};
 #[serde(tag = "type")]
 pub enum Event {
     /// AppMention is an Events API subscribable event
-    AppMention,
+    #[serde(rename = "app_mention")]
+    AppMention(AppMentionEvent),
     /// AppHomeOpened Your Slack app home was opened
     AppHomeOpened,
     /// AppUninstalled Your Slack app was uninstalled.
