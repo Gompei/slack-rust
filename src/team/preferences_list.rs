@@ -63,7 +63,7 @@ mod test {
     }
 
     #[async_std::test]
-    async fn test_info() {
+    async fn test_preferences_list() {
         let mut mock = MockSlackWebAPIClient::new();
         mock.expect_post().returning(|_, _| {
             Ok(r##"{

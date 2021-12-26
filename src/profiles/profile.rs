@@ -18,7 +18,7 @@ pub struct Field {
     pub type_filed: Option<String>,
     pub possible_values: Option<Vec<String>>,
     pub options: Option<Options>,
-    pub is_hidden: Option<bool>,
+    pub is_hidden: Option<i32>,
 }
 
 #[skip_serializing_none]
