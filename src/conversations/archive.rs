@@ -1,7 +1,6 @@
-use serde::{Deserialize, Serialize};
-
 use crate::error::Error;
 use crate::http_client::{get_slack_url, DefaultResponse, SlackWebAPIClient};
+use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct ArchiveRequest {
@@ -25,4 +24,51 @@ where
         .and_then(|result| {
             serde_json::from_str::<DefaultResponse>(&result).map_err(Error::SerdeJsonError)
         })
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use crate::http_client::MockSlackWebAPIClient;
+
+    #[test]
+    fn convert_request() {
+        let request = ArchiveRequest {
+            channel: "C1234567890".to_string(),
+        };
+        let json = r##"{
+  "channel": "C1234567890"
+}"##;
+
+        let j = serde_json::to_string_pretty(&request).unwrap();
+        assert_eq!(json, j);
+
+        let s = serde_json::from_str::<ArchiveRequest>(json).unwrap();
+        assert_eq!(request, s);
+    }
+
+    #[async_std::test]
+    async fn test_archive() {
+        let param = ArchiveRequest {
+            channel: "C1234567890".to_string(),
+        };
+
+        let mut mock = MockSlackWebAPIClient::new();
+        mock.expect_post_json().returning(|_, _, _| {
+            Ok(r##"{
+  "ok": true
+}"##
+            .to_string())
+        });
+
+        let response = archive(&mock, &param, &"test_token".to_string())
+            .await
+            .unwrap();
+        let expect = DefaultResponse {
+            ok: true,
+            ..Default::default()
+        };
+
+        assert_eq!(expect, response);
+    }
 }
