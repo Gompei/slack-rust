@@ -8,6 +8,7 @@ pub mod comments;
 pub mod conversations;
 pub mod dnd;
 pub mod error;
+pub mod event_api;
 pub mod files;
 pub mod http_client;
 pub mod items;
