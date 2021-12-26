@@ -7,7 +7,7 @@ use serde_with::skip_serializing_none;
 
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
-pub struct ChannelArchiveEvent {
+pub struct ChannelEvent {
     pub channel: Option<String>,
     pub user: Option<String>,
 }
