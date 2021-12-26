@@ -1,4 +1,4 @@
-use crate::event_api::app::{AppHomeOpenedEvent, AppMentionEvent};
+use crate::event_api::app::{AppHomeOpenedEvent, AppMentionEvent, AppRateLimitedEvent};
 use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
@@ -12,6 +12,9 @@ pub enum Event {
     AppHomeOpened(AppHomeOpenedEvent),
     /// AppUninstalled Your Slack app was uninstalled.
     AppUninstalled,
+    ///
+    #[serde(rename = "app_rate_limited")]
+    AppRateLimited(AppRateLimitedEvent),
     /// ChannelCreated is sent when a new channel is created.
     ChannelCreated,
     /// ChannelDeleted is sent when a channel is deleted.
