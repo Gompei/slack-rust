@@ -8,7 +8,8 @@ pub enum Event {
     #[serde(rename = "app_mention")]
     AppMention(AppMentionEvent),
     /// AppHomeOpened Your Slack app home was opened
-    AppHomeOpened,
+    #[serde(rename = "app_home_opened")]
+    AppHomeOpened(AppHomeOpenedEvent),
     /// AppUninstalled Your Slack app was uninstalled.
     AppUninstalled,
     /// ChannelCreated is sent when a new channel is created.
