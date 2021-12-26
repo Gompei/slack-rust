@@ -1,6 +1,7 @@
 use crate::event_api::app::{
     AppHomeOpenedEvent, AppMentionEvent, AppRateLimitedEvent, AppRequestedEvent,
 };
+use crate::event_api::channel::ChannelArchiveEvent;
 use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
@@ -25,7 +26,8 @@ pub enum Event {
     /// ChannelDeleted is sent when a channel is deleted.
     ChannelDeleted,
     /// ChannelArchive is sent when a channel is archived.
-    ChannelArchive,
+    #[serde(rename = "channel_archive")]
+    ChannelArchive(ChannelArchiveEvent),
     /// ChannelUnarchive is sent when a channel is unarchived.
     ChannelUnarchive,
     /// ChannelLeft is sent when a channel is left.
