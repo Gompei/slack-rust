@@ -182,8 +182,8 @@ mod test {
         let expect = UpdateResponse {
             ok: true,
             usergroup: Some(Usergroup {
-                id: Some("S0615G0KT".to_string()),
-                team_id: Some("T060RNRCH".to_string()),
+                id: Some("S0604QSJC".to_string()),
+                team_id: Some("T1234567890".to_string()),
                 is_usergroup: Some(true),
                 name: Some("Marketing Team".to_string()),
                 description: Some("xxxxxxxxxxx".to_string()),
