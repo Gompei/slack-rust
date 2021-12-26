@@ -42,7 +42,6 @@ where
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::auth::revoke::RevokeResponse;
     use crate::http_client::MockSlackWebAPIClient;
 
     #[test]
