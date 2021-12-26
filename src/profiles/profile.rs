@@ -1,10 +1,13 @@
 use serde::{Deserialize, Serialize};
+use serde_with::skip_serializing_none;
 
+#[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct Profile {
     pub fields: Option<Vec<Field>>,
 }
 
+#[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct Field {
     pub id: Option<String>,
@@ -17,6 +20,7 @@ pub struct Field {
     pub is_hidden: Option<bool>,
 }
 
+#[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct Options {
     pub is_protected: Option<i8>,
