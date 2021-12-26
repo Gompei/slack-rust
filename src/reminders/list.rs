@@ -1,6 +1,6 @@
 use crate::error::Error;
 use crate::http_client::{get_slack_url, SlackWebAPIClient};
-use crate::reminders::add::Reminder;
+use crate::reminders::reminder::Reminder;
 use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
