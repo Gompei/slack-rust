@@ -1,5 +1,7 @@
 use serde::{Deserialize, Serialize};
+use serde_with::skip_serializing_none;
 
+#[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct Usergroup {
     pub id: Option<String>,
@@ -17,9 +19,10 @@ pub struct Usergroup {
     pub updated_by: Option<String>,
     pub deleted_by: Option<String>,
     pub prefs: Option<Pref>,
-    pub user_count: Option<i32>,
+    pub user_count: Option<String>,
 }
 
+#[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct Pref {
     pub channels: Option<Vec<String>>,
