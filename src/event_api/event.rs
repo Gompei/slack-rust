@@ -31,7 +31,8 @@ pub enum Event {
     #[serde(rename = "channel_archive")]
     ChannelArchive(ChannelEvent),
     /// ChannelUnarchive is sent when a channel is unarchived.
-    ChannelUnarchive,
+    #[serde(rename = "channel_unarchive")]
+    ChannelUnarchive(ChannelEvent),
     /// ChannelLeft is sent when a channel is left.
     ChannelLeft,
     /// ChannelRename is sent when a channel is rename.
