@@ -1,7 +1,9 @@
 use crate::error::Error;
 use crate::http_client::{get_slack_url, DefaultResponse, SlackWebAPIClient};
 use serde::{Deserialize, Serialize};
+use serde_with::skip_serializing_none;
 
+#[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct CompleteRequest {
     pub reminder: String,
@@ -25,4 +27,54 @@ where
         .and_then(|result| {
             serde_json::from_str::<DefaultResponse>(&result).map_err(Error::SerdeJsonError)
         })
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use crate::http_client::MockSlackWebAPIClient;
+
+    #[test]
+    fn convert_request() {
+        let request = CompleteRequest {
+            reminder: "Rm12345678".to_string(),
+            team_id: Some("T1234567890".to_string()),
+        };
+        let json = r##"{
+  "reminder": "Rm12345678",
+  "team_id": "T1234567890"
+}"##;
+
+        let j = serde_json::to_string_pretty(&request).unwrap();
+        assert_eq!(json, j);
+
+        let s = serde_json::from_str::<CompleteRequest>(json).unwrap();
+        assert_eq!(request, s);
+    }
+
+    #[async_std::test]
+    async fn test_complete() {
+        let param = CompleteRequest {
+            reminder: "Rm12345678".to_string(),
+            team_id: Some("T1234567890".to_string()),
+        };
+
+        let mut mock = MockSlackWebAPIClient::new();
+        mock.expect_post_json().returning(|_, _, _| {
+            Ok(r##"{
+  "ok": true
+}"##
+            .to_string())
+        });
+
+        let response = complete(&mock, &param, &"test_token".to_string())
+            .await
+            .unwrap();
+        let expect = DefaultResponse {
+            ok: true,
+            ..Default::default()
+        };
+
+        assert_eq!(expect, response);
+    }
 }
