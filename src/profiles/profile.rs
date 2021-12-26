@@ -11,10 +11,11 @@ pub struct Profile {
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct Field {
     pub id: Option<String>,
-    pub ordering: Option<i8>,
+    pub ordering: Option<i32>,
     pub label: Option<String>,
     pub hint: Option<String>,
-    pub r#type: Option<String>,
+    #[serde(rename = "type")]
+    pub type_filed: Option<String>,
     pub possible_values: Option<Vec<String>>,
     pub options: Option<Options>,
     pub is_hidden: Option<bool>,
@@ -23,5 +24,5 @@ pub struct Field {
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct Options {
-    pub is_protected: Option<i8>,
+    pub is_protected: Option<i32>,
 }
