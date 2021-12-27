@@ -47,7 +47,7 @@ pub enum SocketModeEventType {
 }
 
 #[skip_serializing_none]
-#[derive(Deserialize, Serialize, Debug, PartialEq)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct DebugInfo {
     pub host: Option<String>,
     pub started: Option<String>,
@@ -64,7 +64,7 @@ pub struct HelloEvent {
 }
 
 #[skip_serializing_none]
-#[derive(Deserialize, Serialize, Debug, PartialEq)]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct ConnectionInfo {
     pub app_id: Option<String>,
 }
@@ -112,4 +112,36 @@ pub struct SlashCommandsEvent {
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
 pub struct AcknowledgeMessage<'s> {
     pub envelope_id: &'s str,
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn deserialize_hello_event() {
+        let json = r##"{
+  "type": "hello",
+  "connection_info": {
+    "app_id": "app_id"
+  },
+  "num_connections": 1,
+  "debug_info": {
+    "host": "host"
+  }
+}"##;
+        let event = serde_json::from_str::<SocketModeEvent>(&json).unwrap();
+        match event {
+            SocketModeEvent::HelloEvent(HelloEvent {
+                connection_info,
+                num_connections,
+                debug_info,
+            }) => {
+                assert_eq!(connection_info.unwrap().app_id.unwrap(), "app_id");
+                assert_eq!(num_connections.unwrap(), 1);
+                assert_eq!(debug_info.unwrap().host.unwrap(), "host");
+            }
+            _ => panic!("Event deserialize into incorrect variant"),
+        }
+    }
 }

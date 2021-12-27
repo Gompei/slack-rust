@@ -53,6 +53,12 @@ pub trait EventHandler {
     }
 }
 
+/// Slack token.
+pub struct Token {
+    pub app_token: String,
+    pub bot_token: String,
+}
+
 /// The socket mode client.
 pub struct SocketMode {
     pub client: Client,
@@ -141,9 +147,4 @@ impl SocketMode {
             .await
             .map_err(Error::WebSocketError)
     }
-}
-
-pub struct Token {
-    pub app_token: String,
-    pub bot_token: String,
 }
