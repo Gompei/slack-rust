@@ -1,10 +1,11 @@
 use crate::error::Error;
 use async_trait::async_trait;
+#[cfg(test)]
 use mockall::*;
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 
-#[automock]
+#[cfg_attr(test, automock)]
 #[async_trait]
 pub trait SlackWebAPIClient {
     async fn post_json(&self, url: &str, body: &str, token: &str) -> Result<String, Error>;
