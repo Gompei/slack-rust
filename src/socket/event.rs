@@ -222,4 +222,29 @@ mod test {
             _ => panic!("Event deserialize into incorrect variant"),
         }
     }
+
+    #[test]
+    fn deserialize_slash_commands_event() {
+        let json = r##"{
+  "type": "slash_commands",
+  "envelope_id": "dbdd0ef3-1543-4f94-bfb4-133d0e6c1545",
+  "accepts_response_payload": true,
+  "payload": {
+    "token": "bHKJ2n9AW6Ju3MjciOHfbA1b"
+  }
+}"##;
+        let event = serde_json::from_str::<SocketModeEvent>(&json).unwrap();
+        match event {
+            SocketModeEvent::SlashCommandsEvent(SlashCommandsEvent {
+                envelope_id,
+                accepts_response_payload,
+                payload,
+            }) => {
+                assert_eq!(envelope_id, "dbdd0ef3-1543-4f94-bfb4-133d0e6c1545");
+                assert_eq!(accepts_response_payload, true);
+                assert_eq!(payload.token.unwrap(), "bHKJ2n9AW6Ju3MjciOHfbA1b");
+            }
+            _ => panic!("Event deserialize into incorrect variant"),
+        }
+    }
 }
