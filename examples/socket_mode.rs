@@ -27,7 +27,6 @@ async fn main() {
         env::var("SLACK_CHANNEL_ID").unwrap_or_else(|_| panic!("slack channel id is not set."));
 
     SocketMode::new(slack_app_token, slack_bot_token)
-        // TODO
         .option_parameter("SLACK_CHANNEL_ID".to_string(), slack_channel_id)
         .run(&mut Handler)
         .await
@@ -58,9 +57,8 @@ impl EventHandler for Handler {
         match e.payload.type_filed {
             InteractiveEventType::ViewSubmission => {
                 let request = PostMessageRequest {
-                    // TODO
                     channel: socket_mode
-                        .option_parameters
+                        .option_parameter
                         .get("SLACK_CHANNEL_ID")
                         .unwrap()
                         .to_string(),
@@ -68,13 +66,12 @@ impl EventHandler for Handler {
                     ..Default::default()
                 };
                 let response =
-                    post_message(&socket_mode.client, &request, &socket_mode.token.bot_token)
+                    post_message(&socket_mode.api_client, &request, &socket_mode.bot_token)
                         .await
                         .expect("post message api error.");
                 log::info!("post message api response: {:?}", response);
             }
             InteractiveEventType::Shortcut => {
-                // TODO
                 match e.payload.callback_id.as_ref().unwrap().as_ref() {
                     "example_shortcut" => {
                         let request =
@@ -162,7 +159,7 @@ impl EventHandler for Handler {
                                 },
                             };
                         let response =
-                            open(&socket_mode.client, &request, &socket_mode.token.bot_token)
+                            open(&socket_mode.api_client, &request, &socket_mode.bot_token)
                                 .await
                                 .expect("view open api error.");
                         log::info!("view open api response: {:?}", response);

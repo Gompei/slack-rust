@@ -53,33 +53,31 @@ pub trait EventHandler {
     }
 }
 
-/// Slack token.
-pub struct Token {
-    pub app_token: String,
-    pub bot_token: String,
-}
-
 /// The socket mode client.
 pub struct SocketMode {
-    pub client: Client,
-    pub token: Token,
-    pub option_parameters: HashMap<String, String>,
+    pub api_client: Client,
+    pub app_token: String,
+    pub bot_token: String,
+    pub web_socket_port: String,
+    pub option_parameter: HashMap<String, String>,
 }
 
 impl SocketMode {
-    pub fn new(app_token: String, bot_token: String) -> SocketMode {
+    pub fn new(app_token: String, bot_token: String) -> Self {
         SocketMode {
-            client: default_client(),
-            token: Token {
-                app_token,
-                bot_token,
-            },
-            option_parameters: HashMap::new(),
+            api_client: default_client(),
+            app_token,
+            bot_token,
+            web_socket_port: "443".to_string(),
+            option_parameter: HashMap::new(),
         }
     }
-    // TODO
-    pub fn option_parameter(mut self, key: String, value: String) -> SocketMode {
-        self.option_parameters.insert(key, value);
+    pub fn web_socket_port(mut self, port: String) -> Self {
+        self.web_socket_port = port;
+        self
+    }
+    pub fn option_parameter(mut self, key: String, value: String) -> Self {
+        self.option_parameter.insert(key, value);
         self
     }
     /// Run slack and websocket communication.
@@ -87,7 +85,7 @@ impl SocketMode {
     where
         T: EventHandler + std::marker::Send,
     {
-        let wss_url = connections_open(&self.client, &self.token.app_token).await?;
+        let wss_url = connections_open(&self.api_client, &self.app_token).await?;
         let url = wss_url
             .url
             .ok_or_else(|| Error::OptionError("connections open error".to_string()))?;
@@ -96,7 +94,8 @@ impl SocketMode {
             .domain()
             .ok_or_else(|| Error::OptionError("domain parse error".to_string()))?;
 
-        let tcp_stream = TcpStream::connect(&format!("{}:443", wss_domain)).await?;
+        let tcp_stream =
+            TcpStream::connect(&format!("{}:{}", wss_domain, &self.web_socket_port)).await?;
         let tls_stream = TlsConnector::default()
             .connect(wss_domain, tcp_stream)
             .await?;
