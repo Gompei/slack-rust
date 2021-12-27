@@ -117,6 +117,7 @@ pub struct AcknowledgeMessage<'s> {
 #[cfg(test)]
 mod test {
     use super::*;
+    use crate::event_api::app::AppHomeOpenedEvent;
 
     #[test]
     fn deserialize_hello_event() {
@@ -159,6 +160,38 @@ mod test {
             SocketModeEvent::DisconnectEvent(DisconnectEvent { reason, debug_info }) => {
                 assert_eq!(reason, DisconnectReason::LinkDisabled);
                 assert_eq!(debug_info.unwrap().host.unwrap(), "wss-111.slack.com");
+            }
+            _ => panic!("Event deserialize into incorrect variant"),
+        }
+    }
+
+    #[test]
+    fn deserialize_events_api() {
+        let json = r##"{
+  "type": "events_api",
+  "envelope_id": "dbdd0ef3-1543-4f94-bfb4-133d0e6c1545",
+  "accepts_response_payload": false,
+  "payload": {
+    "type": "app_home_opened",
+    "user": "U061F7AUR"
+  }
+}"##;
+        let event = serde_json::from_str::<SocketModeEvent>(&json).unwrap();
+        match event {
+            SocketModeEvent::EventsAPI(EventsAPI {
+                envelope_id,
+                accepts_response_payload,
+                payload,
+            }) => {
+                assert_eq!(envelope_id, "dbdd0ef3-1543-4f94-bfb4-133d0e6c1545");
+                assert_eq!(accepts_response_payload, false);
+
+                match payload {
+                    Event::AppHomeOpened(AppHomeOpenedEvent { user, .. }) => {
+                        assert_eq!(user.unwrap(), "U061F7AUR");
+                    }
+                    _ => panic!("Payload deserialize into incorrect variant"),
+                }
             }
             _ => panic!("Event deserialize into incorrect variant"),
         }
