@@ -7,12 +7,6 @@ use serde_with::skip_serializing_none;
 #[automock]
 #[async_trait]
 pub trait SlackWebAPIClient {
-    async fn post_multipart_forms(
-        &self,
-        url: &str,
-        body: &str,
-        token: &str,
-    ) -> Result<String, Error>;
     async fn post_json(&self, url: &str, body: &str, token: &str) -> Result<String, Error>;
     async fn post(&self, url: &str, token: &str) -> Result<String, Error>;
 }
@@ -49,26 +43,6 @@ pub fn default_client() -> Client {
 
 #[async_trait]
 impl SlackWebAPIClient for Client {
-    // TODO
-    /// Send a post request to the slack api.
-    async fn post_multipart_forms(
-        &self,
-        url: &str,
-        body: &str,
-        token: &str,
-    ) -> Result<String, Error> {
-        let check_url = url::Url::parse(url)?;
-
-        Ok(self
-            .post(check_url)
-            .header("Authorization", format!("Bearer {}", token))
-            .content_type(surf::http::mime::MULTIPART_FORM)
-            .body(body)
-            .await?
-            .body_string()
-            .await?)
-    }
-
     /// Send a post request to the slack api.
     async fn post_json(&self, url: &str, body: &str, token: &str) -> Result<String, Error> {
         let check_url = url::Url::parse(url)?;
