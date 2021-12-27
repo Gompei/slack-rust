@@ -144,4 +144,23 @@ mod test {
             _ => panic!("Event deserialize into incorrect variant"),
         }
     }
+
+    #[test]
+    fn deserialize_disconnect_event() {
+        let json = r##"{
+  "type": "disconnect",
+  "reason": "link_disabled",
+  "debug_info": {
+    "host": "wss-111.slack.com"
+  }
+}"##;
+        let event = serde_json::from_str::<SocketModeEvent>(&json).unwrap();
+        match event {
+            SocketModeEvent::DisconnectEvent(DisconnectEvent { reason, debug_info }) => {
+                assert_eq!(reason, DisconnectReason::LinkDisabled);
+                assert_eq!(debug_info.unwrap().host.unwrap(), "wss-111.slack.com");
+            }
+            _ => panic!("Event deserialize into incorrect variant"),
+        }
+    }
 }
