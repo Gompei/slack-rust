@@ -52,7 +52,7 @@ mod test {
     use crate::block::block_input::InputBlock;
     use crate::block::block_object::{OptionBlockObject, TextBlockObject, TextBlockType};
     use crate::block::blocks::Block;
-    use crate::channels::channel::{Purpose, Topic};
+
     use crate::http_client::MockSlackWebAPIClient;
     use crate::views::view::ViewType;
 
