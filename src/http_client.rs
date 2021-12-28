@@ -1,46 +1,18 @@
 use crate::error::Error;
 use async_trait::async_trait;
 #[cfg(test)]
-use mockall::*;
+use mockall::automock;
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 
 #[cfg_attr(test, automock)]
 #[async_trait]
-pub trait SlackWebAPIClient {
+pub trait SlackWebAPIClient: Sync + Send {
     async fn post_json(&self, url: &str, body: &str, token: &str) -> Result<String, Error>;
     async fn post(&self, url: &str, token: &str) -> Result<String, Error>;
 }
 
 pub type Client = surf::Client;
-
-/// Slack default response.
-#[skip_serializing_none]
-#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
-pub struct DefaultResponse {
-    pub ok: bool,
-    pub error: Option<String>,
-    pub response_metadata: Option<ResponseMetadata>,
-}
-
-/// Metadata.
-#[skip_serializing_none]
-#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
-pub struct ResponseMetadata {
-    pub next_cursor: Option<String>,
-    pub messages: Option<Vec<String>>,
-    pub warnings: Option<Vec<String>>,
-}
-
-/// Returns the slack api url for each method.
-pub fn get_slack_url(method: &str) -> String {
-    format!("https://slack.com/api/{}", method)
-}
-
-/// Provides a default `surf` client to give to the API functions to send requests.
-pub fn default_client() -> Client {
-    surf::Client::new()
-}
 
 #[async_trait]
 impl SlackWebAPIClient for Client {
@@ -69,4 +41,32 @@ impl SlackWebAPIClient for Client {
             .body_string()
             .await?)
     }
+}
+
+/// Returns the slack api url for each method.
+pub fn get_slack_url(method: &str) -> String {
+    format!("https://slack.com/api/{}", method)
+}
+
+/// Provides a default `surf` client to give to the API functions to send requests.
+pub fn default_client() -> Client {
+    surf::Client::new()
+}
+
+/// Slack default response.
+#[skip_serializing_none]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
+pub struct DefaultResponse {
+    pub ok: bool,
+    pub error: Option<String>,
+    pub response_metadata: Option<ResponseMetadata>,
+}
+
+/// Metadata.
+#[skip_serializing_none]
+#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
+pub struct ResponseMetadata {
+    pub next_cursor: Option<String>,
+    pub messages: Option<Vec<String>>,
+    pub warnings: Option<Vec<String>>,
 }

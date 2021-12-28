@@ -7,9 +7,10 @@ use slack::block::block_input::InputBlock;
 use slack::block::block_object::{OptionBlockObject, TextBlockObject, TextBlockType};
 use slack::block::blocks::Block;
 use slack::chat::post_message::{post_message, PostMessageRequest};
+use slack::http_client::{default_client, SlackWebAPIClient};
 use slack::payloads::interactive::InteractiveEventType;
 use slack::socket::event::{HelloEvent, InteractiveEvent};
-use slack::socket::socket_mode::{EventHandler, SocketMode, Stream};
+use slack::socket::socket_mode::{ack, EventHandler, SocketMode, Stream};
 use slack::views::open::{open, OpenRequest};
 use slack::views::view::{View, ViewType};
 use slack_rust as slack;
@@ -26,7 +27,9 @@ async fn main() {
     let slack_channel_id =
         env::var("SLACK_CHANNEL_ID").unwrap_or_else(|_| panic!("slack channel id is not set."));
 
-    SocketMode::new(slack_app_token, slack_bot_token)
+    let slack_api_client = default_client();
+
+    SocketMode::new(slack_api_client, slack_app_token, slack_bot_token)
         .option_parameter("SLACK_CHANNEL_ID".to_string(), slack_channel_id)
         .run(&mut Handler)
         .await
@@ -35,22 +38,26 @@ async fn main() {
 
 pub struct Handler;
 
+#[allow(unused_variables)]
 #[async_trait]
-impl EventHandler for Handler {
-    async fn on_connect(&mut self, _socket_mode: &SocketMode) {
+impl<S> EventHandler<S> for Handler
+where
+    S: SlackWebAPIClient,
+{
+    async fn on_connect(&mut self, socket_mode: &SocketMode<S>) {
         log::info!("start socket mode...");
     }
-    async fn on_hello(&mut self, _socket_mode: &SocketMode, e: &HelloEvent) {
+    async fn on_hello(&mut self, socket_mode: &SocketMode<S>, e: &HelloEvent) {
         log::info!("hello event: {:?}", e);
     }
     async fn on_interactive(
         &mut self,
-        socket_mode: &SocketMode,
+        socket_mode: &SocketMode<S>,
         e: &InteractiveEvent,
         s: &mut Stream,
     ) {
         log::info!("interactive event: {:?}", e);
-        SocketMode::ack(&e.envelope_id, s)
+        ack(&e.envelope_id, s)
             .await
             .expect("socket mode ack error.");
 
