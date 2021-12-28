@@ -1,6 +1,6 @@
 use crate::apps::connections_open::connections_open;
 use crate::error::Error;
-use crate::http_client::SlackWebAPIClient;
+use crate::http_client::{default_client, Client};
 use crate::socket::event::{
     AcknowledgeMessage, DisconnectEvent, EventsAPI, HelloEvent, InteractiveEvent,
     SlashCommandsEvent, SocketModeEvent,
@@ -20,28 +20,25 @@ pub type Stream = WebSocketStream<TlsStream<TcpStream>>;
 /// Implement this trait in your code to handle slack events.
 #[allow(unused_variables)]
 #[async_trait]
-pub trait EventHandler<S>: Send
-where
-    S: SlackWebAPIClient,
-{
-    async fn on_close(&mut self, socket_mode: &SocketMode<S>) {
+pub trait EventHandler {
+    async fn on_close(&mut self, socket_mode: &SocketMode) {
         log::info!("websocket close");
     }
-    async fn on_connect(&mut self, socket_mode: &SocketMode<S>) {
+    async fn on_connect(&mut self, socket_mode: &SocketMode) {
         log::info!("websocket connect");
     }
-    async fn on_hello(&mut self, socket_mode: &SocketMode<S>, e: &HelloEvent) {
+    async fn on_hello(&mut self, socket_mode: &SocketMode, e: &HelloEvent) {
         log::info!("hello event: {:?}", e);
     }
-    async fn on_disconnect(&mut self, socket_mode: &SocketMode<S>, e: &DisconnectEvent) {
+    async fn on_disconnect(&mut self, socket_mode: &SocketMode, e: &DisconnectEvent) {
         log::info!("disconnect event: {:?}", e);
     }
-    async fn on_events_api(&mut self, socket_mode: &SocketMode<S>, e: &EventsAPI, s: &mut Stream) {
+    async fn on_events_api(&mut self, socket_mode: &SocketMode, e: &EventsAPI, s: &mut Stream) {
         log::info!("events api event: {:?}", e);
     }
     async fn on_interactive(
         &mut self,
-        socket_mode: &SocketMode<S>,
+        socket_mode: &SocketMode,
         e: &InteractiveEvent,
         s: &mut Stream,
     ) {
@@ -49,7 +46,7 @@ where
     }
     async fn on_slash_commands(
         &mut self,
-        socket_mode: &SocketMode<S>,
+        socket_mode: &SocketMode,
         e: &SlashCommandsEvent,
         s: &mut Stream,
     ) {
@@ -58,23 +55,17 @@ where
 }
 
 /// The socket mode client.
-pub struct SocketMode<S>
-where
-    S: SlackWebAPIClient,
-{
-    pub api_client: S,
+pub struct SocketMode {
+    pub api_client: Client,
     pub app_token: String,
     pub bot_token: String,
     pub option_parameter: HashMap<String, String>,
 }
 
-impl<S> SocketMode<S>
-where
-    S: SlackWebAPIClient,
-{
-    pub fn new(api_client: S, app_token: String, bot_token: String) -> Self {
+impl SocketMode {
+    pub fn new(app_token: String, bot_token: String) -> Self {
         SocketMode {
-            api_client,
+            api_client: default_client(),
             app_token,
             bot_token,
             option_parameter: HashMap::new(),
@@ -87,7 +78,7 @@ where
     /// Run slack and websocket communication.
     pub async fn run<T>(self, handler: &mut T) -> Result<(), Error>
     where
-        T: EventHandler<S>,
+        T: EventHandler + std::marker::Send,
     {
         let response = connections_open(&self.api_client, &self.app_token).await?;
         let ws_url = response

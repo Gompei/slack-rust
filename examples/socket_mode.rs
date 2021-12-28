@@ -7,7 +7,6 @@ use slack::block::block_input::InputBlock;
 use slack::block::block_object::{OptionBlockObject, TextBlockObject, TextBlockType};
 use slack::block::blocks::Block;
 use slack::chat::post_message::{post_message, PostMessageRequest};
-use slack::http_client::{default_client, SlackWebAPIClient};
 use slack::payloads::interactive::InteractiveEventType;
 use slack::socket::event::{HelloEvent, InteractiveEvent};
 use slack::socket::socket_mode::{ack, EventHandler, SocketMode, Stream};
@@ -27,9 +26,7 @@ async fn main() {
     let slack_channel_id =
         env::var("SLACK_CHANNEL_ID").unwrap_or_else(|_| panic!("slack channel id is not set."));
 
-    let slack_api_client = default_client();
-
-    SocketMode::new(slack_api_client, slack_app_token, slack_bot_token)
+    SocketMode::new(slack_app_token, slack_bot_token)
         .option_parameter("SLACK_CHANNEL_ID".to_string(), slack_channel_id)
         .run(&mut Handler)
         .await
@@ -40,19 +37,16 @@ pub struct Handler;
 
 #[allow(unused_variables)]
 #[async_trait]
-impl<S> EventHandler<S> for Handler
-where
-    S: SlackWebAPIClient,
-{
-    async fn on_connect(&mut self, socket_mode: &SocketMode<S>) {
+impl EventHandler for Handler {
+    async fn on_connect(&mut self, socket_mode: &SocketMode) {
         log::info!("start socket mode...");
     }
-    async fn on_hello(&mut self, socket_mode: &SocketMode<S>, e: &HelloEvent) {
+    async fn on_hello(&mut self, socket_mode: &SocketMode, e: &HelloEvent) {
         log::info!("hello event: {:?}", e);
     }
     async fn on_interactive(
         &mut self,
-        socket_mode: &SocketMode<S>,
+        socket_mode: &SocketMode,
         e: &InteractiveEvent,
         s: &mut Stream,
     ) {
