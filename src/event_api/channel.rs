@@ -1,5 +1,4 @@
 use crate::channels::channel::Channel;
-
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 
