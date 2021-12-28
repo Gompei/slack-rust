@@ -247,4 +247,18 @@ mod test {
             _ => panic!("Event deserialize into incorrect variant"),
         }
     }
+
+    #[test]
+    fn serialize_acknowledge_message() {
+        let json = serde_json::to_string_pretty(&AcknowledgeMessage {
+            envelope_id: "xxxxxxxxxxxxxxxxxxxxx",
+        })
+        .unwrap();
+
+        let expect = r##"{
+  "envelope_id": "xxxxxxxxxxxxxxxxxxxxx"
+}"##;
+
+        assert_eq!(expect, json);
+    }
 }
