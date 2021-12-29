@@ -132,7 +132,7 @@ mod test {
     "host": "host"
   }
 }"##;
-        let event = serde_json::from_str::<SocketModeEvent>(&json).unwrap();
+        let event = serde_json::from_str::<SocketModeEvent>(json).unwrap();
         match event {
             SocketModeEvent::HelloEvent(HelloEvent {
                 connection_info,
@@ -156,7 +156,7 @@ mod test {
     "host": "wss-111.slack.com"
   }
 }"##;
-        let event = serde_json::from_str::<SocketModeEvent>(&json).unwrap();
+        let event = serde_json::from_str::<SocketModeEvent>(json).unwrap();
         match event {
             SocketModeEvent::DisconnectEvent(DisconnectEvent { reason, debug_info }) => {
                 assert_eq!(reason, DisconnectReason::LinkDisabled);
@@ -177,7 +177,7 @@ mod test {
     "user": "U061F7AUR"
   }
 }"##;
-        let event = serde_json::from_str::<SocketModeEvent>(&json).unwrap();
+        let event = serde_json::from_str::<SocketModeEvent>(json).unwrap();
         match event {
             SocketModeEvent::EventsAPI(EventsAPI {
                 envelope_id,
@@ -208,7 +208,7 @@ mod test {
     "type": "view_submission"
   }
 }"##;
-        let event = serde_json::from_str::<SocketModeEvent>(&json).unwrap();
+        let event = serde_json::from_str::<SocketModeEvent>(json).unwrap();
         match event {
             SocketModeEvent::InteractiveEvent(InteractiveEvent {
                 envelope_id,
@@ -233,7 +233,7 @@ mod test {
     "token": "bHKJ2n9AW6Ju3MjciOHfbA1b"
   }
 }"##;
-        let event = serde_json::from_str::<SocketModeEvent>(&json).unwrap();
+        let event = serde_json::from_str::<SocketModeEvent>(json).unwrap();
         match event {
             SocketModeEvent::SlashCommandsEvent(SlashCommandsEvent {
                 envelope_id,

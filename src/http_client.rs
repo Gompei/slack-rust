@@ -7,7 +7,7 @@ use serde_with::skip_serializing_none;
 
 #[cfg_attr(test, automock)]
 #[async_trait]
-pub trait SlackWebAPIClient {
+pub trait SlackWebAPIClient: Sync + Send {
     async fn post_json(&self, url: &str, body: &str, token: &str) -> Result<String, Error>;
     async fn post(&self, url: &str, token: &str) -> Result<String, Error>;
 }
