@@ -191,9 +191,9 @@ mod test {
     use crate::payloads::interactive::InteractiveEventType;
     use crate::socket::event::{
         DisconnectEvent, DisconnectReason, EventsAPI, HelloEvent, InteractiveEvent,
-        SlashCommandsEvent, SocketModeEvent,
+        SlashCommandsEvent,
     };
-    use crate::socket::socket_mode::{ack, EventHandler, SocketMode, Stream};
+    use crate::socket::socket_mode::{EventHandler, SocketMode, Stream};
     use async_std::net::TcpListener;
     use async_std::task;
     use async_tls::TlsAcceptor;
@@ -285,7 +285,7 @@ mod test {
     async fn test_socket_mode() {
         env_logger::init();
 
-        let mut event = vec![
+        let event = vec![
             r##"{
   "type": "hello",
   "connection_info": {
@@ -361,7 +361,7 @@ mod test {
         .unwrap_or_else(|_| panic!("socket mode run error."));
     }
 
-    async fn mock_web_socket(mut event: Vec<String>) -> Result<u16, Box<dyn Error>> {
+    async fn mock_web_socket(event: Vec<String>) -> Result<u16, Box<dyn Error>> {
         let listener = TcpListener::bind("localhost:0").await?;
         let port = listener.local_addr()?.port();
 
@@ -372,7 +372,7 @@ mod test {
         Ok(port)
     }
 
-    async fn web_socket_handler(listener: &TcpListener, mut event: Vec<String>) {
+    async fn web_socket_handler(listener: &TcpListener, event: Vec<String>) {
         let config = load_config("localhost.pem", "localhost-key.pem").unwrap();
         // TODO: async-tungstenite latest version Crate depends on rustls v.0.19
         let acceptor = TlsAcceptor::from(Arc::new(config));

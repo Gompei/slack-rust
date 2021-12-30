@@ -47,13 +47,13 @@ where
     async fn on_connect(&mut self, socket_mode: &SocketMode<S>) {
         log::info!("start socket mode...");
     }
-    async fn on_hello(&mut self, socket_mode: &SocketMode<S>, e: &HelloEvent, s: &mut Stream) {
+    async fn on_hello(&mut self, socket_mode: &SocketMode<S>, e: HelloEvent, s: &mut Stream) {
         log::info!("hello event: {:?}", e);
     }
     async fn on_interactive(
         &mut self,
         socket_mode: &SocketMode<S>,
-        e: &InteractiveEvent,
+        e: InteractiveEvent,
         s: &mut Stream,
     ) {
         log::info!("interactive event: {:?}", e);
