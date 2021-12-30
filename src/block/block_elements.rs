@@ -216,6 +216,64 @@ pub struct CheckboxGroupsBlockElement {
     pub focus_on_load: Option<bool>,
 }
 
+impl CheckboxGroupsBlockElement {
+    pub fn builder(
+        action_id: String,
+        options: Vec<OptionBlockObject>,
+    ) -> CheckboxGroupsBlockElementBuilder {
+        CheckboxGroupsBlockElementBuilder::new(action_id, options)
+    }
+}
+
+#[derive(Debug, Default)]
+pub struct CheckboxGroupsBlockElementBuilder {
+    pub action_id: String,
+    pub options: Vec<OptionBlockObject>,
+    pub initial_options: Option<Vec<OptionBlockObject>>,
+    pub confirm: Option<ConfirmationBlockObject>,
+    pub focus_on_load: Option<bool>,
+}
+
+impl CheckboxGroupsBlockElementBuilder {
+    pub fn new(
+        action_id: String,
+        options: Vec<OptionBlockObject>,
+    ) -> CheckboxGroupsBlockElementBuilder {
+        CheckboxGroupsBlockElementBuilder {
+            action_id,
+            options,
+            ..Default::default()
+        }
+    }
+    pub fn initial_options(
+        mut self,
+        initial_options: Vec<OptionBlockObject>,
+    ) -> CheckboxGroupsBlockElementBuilder {
+        self.initial_options = Some(initial_options);
+        self
+    }
+    pub fn confirm(
+        mut self,
+        confirm: ConfirmationBlockObject,
+    ) -> CheckboxGroupsBlockElementBuilder {
+        self.confirm = Some(confirm);
+        self
+    }
+    pub fn focus_on_load(mut self, focus_on_load: bool) -> CheckboxGroupsBlockElementBuilder {
+        self.focus_on_load = Some(focus_on_load);
+        self
+    }
+    pub fn build(self) -> CheckboxGroupsBlockElement {
+        CheckboxGroupsBlockElement {
+            action_id: self.action_id,
+            options: self.options,
+            initial_options: self.initial_options,
+            confirm: self.confirm,
+            focus_on_load: self.focus_on_load,
+        }
+    }
+}
+
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct DatePickerBlockElement {
