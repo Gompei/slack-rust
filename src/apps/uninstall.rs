@@ -8,6 +8,15 @@ pub struct UninstallRequest {
     pub client_secret: String,
 }
 
+impl UninstallRequest {
+    pub fn new(client_id: String, client_secret: String) -> Self {
+        UninstallRequest {
+            client_id,
+            client_secret,
+        }
+    }
+}
+
 pub async fn uninstall<T>(
     client: &T,
     param: &UninstallRequest,
