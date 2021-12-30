@@ -11,6 +11,47 @@ pub struct TextBlockObject {
     pub verbatim: Option<bool>,
 }
 
+impl TextBlockObject {
+    pub fn builder(text_block_type: TextBlockType, text: String) -> TextBlockObjectBuilder {
+        TextBlockObjectBuilder::new(text_block_type, text)
+    }
+}
+
+#[derive(Debug, Default)]
+pub struct TextBlockObjectBuilder {
+    #[serde(rename = "type")]
+    pub type_filed: TextBlockType,
+    pub text: String,
+    pub emoji: Option<bool>,
+    pub verbatim: Option<bool>,
+}
+
+impl TextBlockObjectBuilder {
+    pub fn new(text_block_type: TextBlockType, text: String) -> TextBlockObjectBuilder {
+        TextBlockObjectBuilder {
+            type_filed: text_block_type,
+            text,
+            ..Default::default()
+        }
+    }
+    pub fn emoji(mut self, emoji: bool) -> TextBlockObjectBuilder {
+        self.emoji = Some(emoji);
+        self
+    }
+    pub fn verbatim(mut self, verbatim: bool) -> TextBlockObjectBuilder {
+        self.verbatim = Some(verbatim);
+        self
+    }
+    pub fn build(self) -> TextBlockObject {
+        TextBlockObject {
+            type_filed: self.type_filed,
+            text: self.text,
+            emoji: self.emoji,
+            verbatim: self.verbatim,
+        }
+    }
+}
+
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub enum TextBlockType {
