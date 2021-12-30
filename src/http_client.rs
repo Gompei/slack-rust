@@ -1,3 +1,5 @@
+//! HTTP client for Slack WEB API.
+
 use crate::error::Error;
 use async_trait::async_trait;
 #[cfg(test)]
