@@ -185,7 +185,7 @@ mod test {
                 payload,
             }) => {
                 assert_eq!(envelope_id, "dbdd0ef3-1543-4f94-bfb4-133d0e6c1545");
-                assert_eq!(accepts_response_payload, false);
+                assert!(!accepts_response_payload, "false");
 
                 match payload {
                     Event::AppHomeOpened(AppHomeOpenedEvent { user, .. }) => {
@@ -216,7 +216,7 @@ mod test {
                 payload,
             }) => {
                 assert_eq!(envelope_id, "dbdd0ef3-1543-4f94-bfb4-133d0e6c1545");
-                assert_eq!(accepts_response_payload, true);
+                assert!(accepts_response_payload, "true");
                 assert_eq!(payload.type_filed, InteractiveEventType::ViewSubmission);
             }
             _ => panic!("Event deserialize into incorrect variant"),
@@ -241,7 +241,7 @@ mod test {
                 payload,
             }) => {
                 assert_eq!(envelope_id, "dbdd0ef3-1543-4f94-bfb4-133d0e6c1545");
-                assert_eq!(accepts_response_payload, true);
+                assert!(accepts_response_payload, "true");
                 assert_eq!(payload.token.unwrap(), "bHKJ2n9AW6Ju3MjciOHfbA1b");
             }
             _ => panic!("Event deserialize into incorrect variant"),
