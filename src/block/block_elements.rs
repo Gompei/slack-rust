@@ -154,6 +154,58 @@ pub struct ButtonElement {
     pub confirm: Option<ConfirmationBlockObject>,
 }
 
+impl ButtonElement {
+    pub fn builder(text: TextBlockObject, action_id: String) -> ButtonElementBuilder {
+        ButtonElementBuilder::new(text, action_id)
+    }
+}
+
+#[derive(Debug, Default)]
+pub struct ButtonElementBuilder {
+    pub text: TextBlockObject,
+    pub action_id: String,
+    pub url: Option<String>,
+    pub value: Option<String>,
+    pub style: Option<String>,
+    pub confirm: Option<ConfirmationBlockObject>,
+}
+
+impl ButtonElementBuilder {
+    pub fn new(text: TextBlockObject, action_id: String) -> ButtonElementBuilder {
+        ButtonElementBuilder {
+            text,
+            action_id,
+            ..Default::default()
+        }
+    }
+    pub fn url(mut self, url: String) -> ButtonElementBuilder {
+        self.url = Some(url);
+        self
+    }
+    pub fn value(mut self, value: String) -> ButtonElementBuilder {
+        self.value = Some(value);
+        self
+    }
+    pub fn style(mut self, style: String) -> ButtonElementBuilder {
+        self.style = Some(style);
+        self
+    }
+    pub fn confirm(mut self, confirm: ConfirmationBlockObject) -> ButtonElementBuilder {
+        self.confirm = Some(confirm);
+        self
+    }
+    pub fn build(self) -> ButtonElement {
+        ButtonElement {
+            text: self.text,
+            action_id: self.action_id,
+            url: self.url,
+            value: self.value,
+            style: self.style,
+            confirm: self.confirm,
+        }
+    }
+}
+
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct CheckboxGroupsBlockElement {
