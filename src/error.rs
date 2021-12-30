@@ -2,6 +2,7 @@ use std::fmt;
 
 #[derive(Debug)]
 pub enum Error {
+    InvalidInputError,
     IOError(std::io::Error),
     OptionError(String),
     SerdeJsonError(serde_json::Error),
@@ -49,6 +50,7 @@ impl From<async_tungstenite::tungstenite::Error> for Error {
 impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match *self {
+            Error::InvalidInputError => write!(f, "Invalid Input Error"),
             Error::IOError(ref e) => write!(f, "IO Error: {}", e),
             Error::OptionError(ref e) => write!(f, "Option Error: {}", e),
             Error::SerdeJsonError(ref e) => write!(f, "Serde Json Error: {}", e),

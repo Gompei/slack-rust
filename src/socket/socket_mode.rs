@@ -5,6 +5,7 @@ use crate::socket::event::{
     AcknowledgeMessage, DisconnectEvent, EventsAPI, HelloEvent, InteractiveEvent,
     SlashCommandsEvent, SocketModeEvent,
 };
+use async_std::fs::read;
 use async_std::net::TcpStream;
 use async_tls::client::TlsStream;
 use async_tls::TlsConnector;
@@ -74,8 +75,8 @@ where
     pub app_token: String,
     pub bot_token: String,
     pub option_parameter: HashMap<String, String>,
-    web_socket_port: u16,
-    test_ca_file_path: Option<String>,
+    pub web_socket_port: u16,
+    pub ca_file_path: Option<String>,
 }
 
 impl<S> SocketMode<S>
@@ -89,19 +90,19 @@ where
             bot_token,
             option_parameter: HashMap::new(),
             web_socket_port: 443,
-            test_ca_file_path: None,
+            ca_file_path: None,
         }
     }
     pub fn option_parameter(mut self, key: String, value: String) -> Self {
         self.option_parameter.insert(key, value);
         self
     }
-    fn web_socket_port(mut self, port: u16) -> Self {
+    pub fn web_socket_port(mut self, port: u16) -> Self {
         self.web_socket_port = port;
         self
     }
-    fn test_ca_file_path(mut self, test_ca_file_path: String) -> Self {
-        self.test_ca_file_path = Some(test_ca_file_path);
+    pub fn ca_file_path(mut self, ca_file_path: String) -> Self {
+        self.ca_file_path = Some(ca_file_path);
         self
     }
     /// Run slack and websocket communication.
@@ -119,8 +120,8 @@ where
             .ok_or_else(|| Error::OptionError("url doesn't have domain".to_string()))?;
 
         let tcp_stream = TcpStream::connect((ws_domain, self.web_socket_port)).await?;
-        let connector = if let Some(test_ca_file_path) = &self.test_ca_file_path {
-            connector_for_ca_file(test_ca_file_path).await?
+        let connector = if let Some(ca_file_path) = &self.ca_file_path {
+            connector_for_ca_file(ca_file_path).await?
         } else {
             TlsConnector::default()
         };
@@ -175,11 +176,14 @@ pub async fn ack(envelope_id: &str, stream: &mut Stream) -> Result<(), Error> {
         .map_err(Error::WebSocketError)
 }
 
-async fn connector_for_ca_file(ca_file_path: &str) -> Result<TlsConnector, Error> {
+pub async fn connector_for_ca_file(ca_file_path: &str) -> Result<TlsConnector, Error> {
     let mut config = ClientConfig::new();
-    let file = async_std::fs::read(ca_file_path).await?;
+    let file = read(ca_file_path).await?;
     let mut pem = Cursor::new(file);
-    config.root_store.add_pem_file(&mut pem);
+    config
+        .root_store
+        .add_pem_file(&mut pem)
+        .map_err(|_| Error::InvalidInputError)?;
     Ok(TlsConnector::from(Arc::new(config)))
 }
 
@@ -216,14 +220,6 @@ mod test {
     where
         S: SlackWebAPIClient,
     {
-        async fn on_close(&mut self, socket_mode: &SocketMode<S>) {
-            assert!(true, "always true");
-            log::info!("success on_close test");
-        }
-        async fn on_connect(&mut self, socket_mode: &SocketMode<S>) {
-            assert!(true, "always true");
-            log::info!("success on_connect test");
-        }
         async fn on_hello(&mut self, socket_mode: &SocketMode<S>, e: HelloEvent, s: &mut Stream) {
             assert_eq!(e.connection_info.unwrap().app_id.unwrap(), "app_id");
             assert_eq!(e.num_connections.unwrap(), 1);
@@ -247,7 +243,7 @@ mod test {
             s: &mut Stream,
         ) {
             assert_eq!(e.envelope_id, "dbdd0ef3-1543-4f94-bfb4-133d0e6c1545");
-            assert_eq!(e.accepts_response_payload, false);
+            assert!(!e.accepts_response_payload, "false");
 
             match e.payload {
                 Event::AppHomeOpened(AppHomeOpenedEvent { user, .. }) => {
@@ -264,7 +260,7 @@ mod test {
             s: &mut Stream,
         ) {
             assert_eq!(e.envelope_id, "dbdd0ef3-1543-4f94-bfb4-133d0e6c1545");
-            assert_eq!(e.accepts_response_payload, true);
+            assert!(e.accepts_response_payload, "true");
             assert_eq!(e.payload.type_filed, InteractiveEventType::ViewSubmission);
             log::info!("success on_interactive test")
         }
@@ -275,7 +271,7 @@ mod test {
             s: &mut Stream,
         ) {
             assert_eq!(e.envelope_id, "dbdd0ef3-1543-4f94-bfb4-133d0e6c1545");
-            assert_eq!(e.accepts_response_payload, true);
+            assert!(e.accepts_response_payload, "true");
             assert_eq!(e.payload.token.unwrap(), "bHKJ2n9AW6Ju3MjciOHfbA1b");
             log::info!("success on_slash_commands test");
         }
@@ -355,7 +351,7 @@ mod test {
             "SLACK_CHANNEL_ID".to_string(),
             "slack_channel_id".to_string(),
         )
-        .test_ca_file_path("rootCA.pem".to_string())
+        .ca_file_path("rootCA.pem".to_string())
         .run(&mut Handler)
         .await
         .unwrap_or_else(|_| panic!("socket mode run error."));
