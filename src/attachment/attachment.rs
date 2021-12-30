@@ -10,6 +10,47 @@ pub struct AttachmentField {
     pub short: Option<bool>,
 }
 
+impl AttachmentField {
+    pub fn builder() -> AttachmentFieldBuilder {
+        AttachmentFieldBuilder::new()
+    }
+}
+
+#[derive(Debug, Default)]
+pub struct AttachmentFieldBuilder {
+    pub title: Option<String>,
+    pub value: Option<String>,
+    pub short: Option<bool>,
+}
+
+impl AttachmentFieldBuilder {
+    pub fn new() -> AttachmentFieldBuilder {
+        AttachmentFieldBuilder {
+            title: Some("".to_string()),
+            ..Default::default()
+        }
+    }
+    pub fn title(mut self, title: String) -> AttachmentFieldBuilder {
+        self.title = Some(title);
+        self
+    }
+    pub fn value(mut self, value: String) -> AttachmentFieldBuilder {
+        self.value = Some(value);
+        self
+    }
+    pub fn short(mut self, short: bool) -> AttachmentFieldBuilder {
+        self.short = Some(short);
+        self
+    }
+    pub fn build(self) -> AttachmentField {
+        AttachmentField {
+            title: self.title,
+            value: self.value,
+            short: self.short,
+        }
+    }
+}
+
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct AttachmentAction {
