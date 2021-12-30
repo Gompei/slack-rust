@@ -6,7 +6,7 @@ test: mkcert
 
 .PHONY: mkcert
 mkcert:
-	docker run --rm -d -e domain=localhost --name slack-rust-mkcert vishnunair/docker-mkcert && sleep 1
+	docker run --rm -d -e domain=localhost --name slack-rust-mkcert vishnunair/docker-mkcert && sleep 3
 	docker cp slack-rust-mkcert:/root/.local/share/mkcert/rootCA.pem $(MAKEFILE_DIR)
 	docker cp slack-rust-mkcert:/root/.local/share/mkcert/localhost-key.pem $(MAKEFILE_DIR)
 	docker cp slack-rust-mkcert:/root/.local/share/mkcert/localhost.pem $(MAKEFILE_DIR)
