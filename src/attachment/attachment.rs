@@ -53,39 +53,6 @@ impl AttachmentFieldBuilder {
 
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
-pub struct AttachmentAction {
-    pub name: Option<String>,
-    pub text: Option<String>,
-    pub style: Option<String>,
-    #[serde(rename = "type")]
-    pub type_filed: Option<String>,
-    pub value: Option<String>,
-    pub data_source: Option<String>,
-    pub min_query_length: Option<i32>,
-    pub options: Option<AttachmentActionOption>,
-    pub selected_options: Option<AttachmentActionOption>,
-    pub option_groups: Option<AttachmentActionOptionGroup>,
-    pub confirm: Option<ConfirmationField>,
-    pub url: Option<String>,
-}
-
-#[skip_serializing_none]
-#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
-pub struct AttachmentActionOption {
-    pub text: Option<String>,
-    pub value: Option<String>,
-    pub description: Option<String>,
-}
-
-#[skip_serializing_none]
-#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
-pub struct AttachmentActionOptionGroup {
-    pub text: Option<String>,
-    pub options: Option<Vec<AttachmentActionOption>>,
-}
-
-#[skip_serializing_none]
-#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct ConfirmationField {
     pub title: Option<String>,
     pub text: Option<String>,
@@ -118,7 +85,6 @@ pub struct Attachment {
     pub from_url: Option<String>,
     pub original_url: Option<String>,
     pub fields: Option<Vec<AttachmentField>>,
-    pub actions: Option<Vec<AttachmentAction>>,
     pub mrkdwn_in: Option<Vec<String>>,
     pub blocks: Option<Vec<Block>>,
     pub footer: Option<String>,
@@ -156,7 +122,6 @@ pub struct AttachmentBuilder {
     pub from_url: Option<String>,
     pub original_url: Option<String>,
     pub fields: Option<Vec<AttachmentField>>,
-    pub actions: Option<Vec<AttachmentAction>>,
     pub mrkdwn_in: Option<Vec<String>>,
     pub blocks: Option<Vec<Block>>,
     pub footer: Option<String>,
@@ -236,10 +201,6 @@ impl AttachmentBuilder {
         self.fields = Some(fields);
         self
     }
-    pub fn actions(mut self, actions: Vec<AttachmentAction>) -> AttachmentBuilder {
-        self.actions = Some(actions);
-        self
-    }
     pub fn mrkdwn_in(mut self, mrkdwn_in: Vec<String>) -> AttachmentBuilder {
         self.mrkdwn_in = Some(mrkdwn_in);
         self
@@ -280,7 +241,6 @@ impl AttachmentBuilder {
             from_url: self.from_url,
             original_url: self.original_url,
             fields: self.fields,
-            actions: self.actions,
             mrkdwn_in: self.mrkdwn_in,
             blocks: self.blocks,
             footer: self.footer,
