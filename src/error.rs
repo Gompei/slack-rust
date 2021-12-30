@@ -4,8 +4,10 @@ use std::fmt;
 pub enum Error {
     InvalidInputError,
     IOError(std::io::Error),
-    OptionError(String),
+    NotFoundDomain,
+    NotFoundStream,
     SerdeJsonError(serde_json::Error),
+    SocketModeOpenConnectionError,
     SurfError(surf::Error),
     UrlParseError(url::ParseError),
     WebSocketError(async_tungstenite::tungstenite::Error),
@@ -14,12 +16,6 @@ pub enum Error {
 impl From<std::io::Error> for Error {
     fn from(err: std::io::Error) -> Error {
         Error::IOError(err)
-    }
-}
-
-impl From<String> for Error {
-    fn from(err: String) -> Error {
-        Error::OptionError(err)
     }
 }
 
@@ -52,8 +48,10 @@ impl fmt::Display for Error {
         match *self {
             Error::InvalidInputError => write!(f, "Invalid Input Error"),
             Error::IOError(ref e) => write!(f, "IO Error: {}", e),
-            Error::OptionError(ref e) => write!(f, "Option Error: {}", e),
+            Error::NotFoundDomain => write!(f, "NotFound Domain Error"),
+            Error::NotFoundStream => write!(f, "NotFound Stream Error"),
             Error::SerdeJsonError(ref e) => write!(f, "Serde Json Error: {}", e),
+            Error::SocketModeOpenConnectionError => write!(f, "SocketMode OpenConnection Error"),
             Error::SurfError(ref e) => write!(f, "Surf Error: {}", e),
             Error::UrlParseError(ref e) => write!(f, "Url Parse Error: {}", e),
             Error::WebSocketError(ref e) => write!(f, "WebSocket Error: {:?}", e),

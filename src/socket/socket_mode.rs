@@ -113,11 +113,11 @@ where
         let response = connections_open(&self.api_client, &self.app_token).await?;
         let ws_url = response
             .url
-            .ok_or_else(|| Error::OptionError("connections open api error".to_string()))?;
+            .ok_or_else(|| Error::SocketModeOpenConnectionError)?;
         let ws_url_parsed = Url::parse(&ws_url)?;
         let ws_domain = ws_url_parsed
             .domain()
-            .ok_or_else(|| Error::OptionError("url doesn't have domain".to_string()))?;
+            .ok_or_else(|| Error::NotFoundDomain)?;
 
         let tcp_stream = TcpStream::connect((ws_domain, self.web_socket_port)).await?;
         let connector = if let Some(ca_file_path) = &self.ca_file_path {
@@ -132,10 +132,7 @@ where
         handler.on_connect(&self).await;
 
         loop {
-            let message = ws
-                .next()
-                .await
-                .ok_or_else(|| Error::OptionError("web socket stream error".to_string()))?;
+            let message = ws.next().await.ok_or_else(|| Error::NotFoundStream)?;
 
             match message? {
                 Message::Text(t) => {
