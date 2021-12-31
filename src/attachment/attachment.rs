@@ -157,8 +157,8 @@ impl AttachmentBuilder {
         self.author_link = Some(author_link);
         self
     }
-    pub fn author_icon(mut self, color: String) -> AttachmentBuilder {
-        self.color = Some(color);
+    pub fn author_icon(mut self, author_icon: String) -> AttachmentBuilder {
+        self.author_icon = Some(author_icon);
         self
     }
     pub fn title(mut self, title: String) -> AttachmentBuilder {
