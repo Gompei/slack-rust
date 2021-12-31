@@ -25,6 +25,15 @@ pub struct PostMessageRequest {
     pub username: Option<String>,
 }
 
+impl PostMessageRequest {
+    pub fn new(channel: String) -> PostMessageRequest {
+        PostMessageRequest {
+            channel,
+            ..Default::default()
+        }
+    }
+}
+
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct PostMessageResponse {
