@@ -786,3 +786,46 @@ pub struct TimePickerBlockElement {
     pub initial_time: Option<String>,
     pub confirm: Option<ConfirmationBlockObject>,
 }
+
+impl TimePickerBlockElement {
+    pub fn builder(action_id: String) -> TimePickerBlockElementBuilder {
+        TimePickerBlockElementBuilder::new(action_id)
+    }
+}
+
+#[derive(Debug, Default)]
+pub struct TimePickerBlockElementBuilder {
+    pub action_id: String,
+    pub placeholder: Option<TextBlockObject>,
+    pub initial_time: Option<String>,
+    pub confirm: Option<ConfirmationBlockObject>,
+}
+
+impl TimePickerBlockElementBuilder {
+    pub fn new(action_id: String) -> TimePickerBlockElementBuilder {
+        TimePickerBlockElementBuilder {
+            action_id,
+            ..Default::default()
+        }
+    }
+    pub fn placeholder(mut self, placeholder: TextBlockObject) -> TimePickerBlockElementBuilder {
+        self.placeholder = Some(placeholder);
+        self
+    }
+    pub fn initial_time(mut self, initial_time: String) -> TimePickerBlockElementBuilder {
+        self.initial_time = Some(initial_time);
+        self
+    }
+    pub fn confirm(mut self, confirm: ConfirmationBlockObjec) -> TimePickerBlockElementBuilder {
+        self.confirm = Some(confirm);
+        self
+    }
+    pub fn build(self) -> TimePickerBlockElementBuilder {
+        TimePickerBlockElementBuilder {
+            action_id: self.action_id,
+            placeholder: self.placeholder,
+            initial_time: self.initial_time,
+            confirm: self.confirm,
+        }
+    }
+}
