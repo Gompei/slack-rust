@@ -528,6 +528,79 @@ pub struct PlainTextInputBlockElement {
     pub focus_on_load: Option<bool>,
 }
 
+impl PlainTextInputBlockElement {
+    pub fn builder(action_id: String) -> PlainTextInputBlockElementBuilder {
+        PlainTextInputBlockElementBuilder::new(action_id)
+    }
+}
+
+#[derive(Debug, Default)]
+pub struct PlainTextInputBlockElementBuilder {
+    pub action_id: String,
+    pub placeholder: Option<TextBlockObject>,
+    pub initial_value: Option<String>,
+    pub multiline: Option<bool>,
+    pub min_length: Option<i32>,
+    pub max_length: Option<i32>,
+    pub dispatch_action_config: Option<DispatchActionConfig>,
+    pub focus_on_load: Option<bool>,
+}
+
+impl PlainTextInputBlockElementBuilder {
+    pub fn new(action_id: String) -> PlainTextInputBlockElementBuilder {
+        PlainTextInputBlockElementBuilder {
+            action_id,
+            ..Default::default()
+        }
+    }
+    pub fn placeholder(
+        mut self,
+        placeholder: TextBlockObject,
+    ) -> PlainTextInputBlockElementBuilder {
+        self.placeholder = Some(placeholder);
+        self
+    }
+    pub fn initial_value(mut self, initial_value: String) -> PlainTextInputBlockElementBuilder {
+        self.initial_value = Some(initial_value);
+        self
+    }
+    pub fn multiline(mut self, multiline: bool) -> PlainTextInputBlockElementBuilder {
+        self.multiline = Some(multiline);
+        self
+    }
+    pub fn min_length(mut self, min_length: i32) -> PlainTextInputBlockElementBuilder {
+        self.min_length = Some(min_length);
+        self
+    }
+    pub fn max_length(mut self, max_length: i32) -> PlainTextInputBlockElementBuilder {
+        self.max_length = Some(max_length);
+        self
+    }
+    pub fn dispatch_action_config(
+        mut self,
+        dispatch_action_config: DispatchActionConfig,
+    ) -> PlainTextInputBlockElementBuilder {
+        self.dispatch_action_config = Some(dispatch_action_config);
+        self
+    }
+    pub fn focus_on_load(mut self, focus_on_load: bool) -> PlainTextInputBlockElementBuilder {
+        self.focus_on_load = Some(focus_on_load);
+        self
+    }
+    pub fn build(self) -> PlainTextInputBlockElement {
+        PlainTextInputBlockElement {
+            action_id: self.action_id,
+            placeholder: self.placeholder,
+            initial_value: self.initial_value,
+            multiline: self.multiline,
+            min_length: self.min_length,
+            max_length: self.max_length,
+            dispatch_action_config: self.dispatch_action_config,
+            focus_on_load: self.focus_on_load,
+        }
+    }
+}
+
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct RadioButtonsBlockElement {
