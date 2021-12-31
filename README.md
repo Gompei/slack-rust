@@ -6,7 +6,7 @@
 This is a Slack library for Rust that I'm working on, inspired by [slack-go/slack](https://github.com/slack-go/slack).  
 It supports [SocketMode](https://api.slack.com/apis/connections/socket), [Event API](https://api.slack.com/apis/connections/events-api), and [WEB API](https://api.slack.com/web).
 
-**This crate is under development. If you have any feature requests, please create them in an issue! ** :wave:
+**This crate is under development. If you have any feature requests, please create them in an issue!** :wave:
 
 ## Usage
 
@@ -48,6 +48,7 @@ async fn main() {
 ### [Socket Mode](https://api.slack.com/apis/connections/socket-implement)
 
 ```rust
+use async_trait::async_trait;
 use slack::chat::post_message::{post_message, PostMessageRequest};
 use slack::http_client::{default_client, SlackWebAPIClient};
 use slack::socket::event::{HelloEvent, InteractiveEvent};
