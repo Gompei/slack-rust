@@ -76,6 +76,49 @@ pub struct OptionBlockObject {
     pub url: Option<String>,
 }
 
+impl OptionBlockObject {
+    pub fn builder(text: TextBlockObject) -> OptionBlockObjectBuilder {
+        OptionBlockObjectBuilder::new(text)
+    }
+}
+
+#[derive(Debug, Default)]
+pub struct OptionBlockObjectBuilder {
+    pub text: TextBlockObject,
+    pub value: Option<String>,
+    pub description: Option<TextBlockObject>,
+    pub url: Option<String>,
+}
+
+impl OptionBlockObjectBuilder {
+    pub fn new(text: TextBlockObject) -> OptionBlockObjectBuilder {
+        OptionBlockObjectBuilder {
+            text,
+            ..Default::default()
+        }
+    }
+    pub fn value(mut self, value: String) -> OptionBlockObjectBuilder {
+        self.value = Some(value);
+        self
+    }
+    pub fn description(mut self, description: TextBlockObject) -> OptionBlockObjectBuilder {
+        self.description = Some(description);
+        self
+    }
+    pub fn url(mut self, url: String) -> OptionBlockObjectBuilder {
+        self.url = Some(url);
+        self
+    }
+    pub fn build(self) -> OptionBlockObject {
+        OptionBlockObject {
+            text: self.text,
+            value: self.value,
+            description: self.description,
+            url: self.url,
+        }
+    }
+}
+
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct OptionGroupBlockObject {
