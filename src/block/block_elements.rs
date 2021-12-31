@@ -816,7 +816,7 @@ impl TimePickerBlockElementBuilder {
         self.initial_time = Some(initial_time);
         self
     }
-    pub fn confirm(mut self, confirm: ConfirmationBlockObjec) -> TimePickerBlockElementBuilder {
+    pub fn confirm(mut self, confirm: ConfirmationBlockObject) -> TimePickerBlockElementBuilder {
         self.confirm = Some(confirm);
         self
     }

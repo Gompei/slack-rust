@@ -79,7 +79,7 @@ mod test {
                             text: "Title".to_string(),
                             ..Default::default()
                         },
-                        element: Some(BlockElement::PlainTextInputBlockElement(
+                        element: BlockElement::PlainTextInputBlockElement(
                             PlainTextInputBlockElement {
                                 action_id: "title".to_string(),
                                 placeholder: Some(TextBlockObject {
@@ -89,7 +89,7 @@ mod test {
                                 }),
                                 ..Default::default()
                             },
-                        )),
+                        ),
                         ..Default::default()
                     }),
                     Block::InputBlock(InputBlock {
@@ -98,26 +98,24 @@ mod test {
                             text: "Channel(s)".to_string(),
                             ..Default::default()
                         },
-                        element: Some(BlockElement::MultiSelectBlockElement(
-                            MultiSelectBlockElement {
-                                action_id: "title".to_string(),
-                                placeholder: TextBlockObject {
-                                    type_filed: TextBlockType::PlainText,
-                                    text: "Where should the poll be sent?".to_string(),
-                                    ..Default::default()
-                                },
-                                options: vec![OptionBlockObject {
-                                    text: TextBlockObject {
-                                        type_filed: TextBlockType::PlainText,
-                                        text: "*this is plain_text text*".to_string(),
-                                        ..Default::default()
-                                    },
-                                    value: Some("value-0".to_string()),
-                                    ..Default::default()
-                                }],
+                        element: BlockElement::MultiSelectBlockElement(MultiSelectBlockElement {
+                            action_id: "title".to_string(),
+                            placeholder: TextBlockObject {
+                                type_filed: TextBlockType::PlainText,
+                                text: "Where should the poll be sent?".to_string(),
                                 ..Default::default()
                             },
-                        )),
+                            options: vec![OptionBlockObject {
+                                text: TextBlockObject {
+                                    type_filed: TextBlockType::PlainText,
+                                    text: "*this is plain_text text*".to_string(),
+                                    ..Default::default()
+                                },
+                                value: Some("value-0".to_string()),
+                                ..Default::default()
+                            }],
+                            ..Default::default()
+                        }),
                         ..Default::default()
                     }),
                     Block::ActionBlock(ActionBlock {
@@ -240,7 +238,7 @@ mod test {
                             text: "Title".to_string(),
                             ..Default::default()
                         },
-                        element: Some(BlockElement::PlainTextInputBlockElement(
+                        element: BlockElement::PlainTextInputBlockElement(
                             PlainTextInputBlockElement {
                                 action_id: "title".to_string(),
                                 placeholder: Some(TextBlockObject {
@@ -250,7 +248,7 @@ mod test {
                                 }),
                                 ..Default::default()
                             },
-                        )),
+                        ),
                         ..Default::default()
                     }),
                     Block::InputBlock(InputBlock {
@@ -259,26 +257,24 @@ mod test {
                             text: "Channel(s)".to_string(),
                             ..Default::default()
                         },
-                        element: Some(BlockElement::MultiSelectBlockElement(
-                            MultiSelectBlockElement {
-                                action_id: "title".to_string(),
-                                placeholder: TextBlockObject {
-                                    type_filed: TextBlockType::PlainText,
-                                    text: "Where should the poll be sent?".to_string(),
-                                    ..Default::default()
-                                },
-                                options: vec![OptionBlockObject {
-                                    text: TextBlockObject {
-                                        type_filed: TextBlockType::PlainText,
-                                        text: "*this is plain_text text*".to_string(),
-                                        ..Default::default()
-                                    },
-                                    value: Some("value-0".to_string()),
-                                    ..Default::default()
-                                }],
+                        element: BlockElement::MultiSelectBlockElement(MultiSelectBlockElement {
+                            action_id: "title".to_string(),
+                            placeholder: TextBlockObject {
+                                type_filed: TextBlockType::PlainText,
+                                text: "Where should the poll be sent?".to_string(),
                                 ..Default::default()
                             },
-                        )),
+                            options: vec![OptionBlockObject {
+                                text: TextBlockObject {
+                                    type_filed: TextBlockType::PlainText,
+                                    text: "*this is plain_text text*".to_string(),
+                                    ..Default::default()
+                                },
+                                value: Some("value-0".to_string()),
+                                ..Default::default()
+                            }],
+                            ..Default::default()
+                        }),
                         ..Default::default()
                     }),
                     Block::ActionBlock(ActionBlock {
@@ -397,7 +393,7 @@ mod test {
                             text: "Title".to_string(),
                             ..Default::default()
                         },
-                        element: Some(BlockElement::PlainTextInputBlockElement(
+                        element: BlockElement::PlainTextInputBlockElement(
                             PlainTextInputBlockElement {
                                 action_id: "title".to_string(),
                                 placeholder: Some(TextBlockObject {
@@ -407,7 +403,7 @@ mod test {
                                 }),
                                 ..Default::default()
                             },
-                        )),
+                        ),
                         ..Default::default()
                     }),
                     Block::InputBlock(InputBlock {
@@ -416,26 +412,24 @@ mod test {
                             text: "Channel(s)".to_string(),
                             ..Default::default()
                         },
-                        element: Some(BlockElement::MultiSelectBlockElement(
-                            MultiSelectBlockElement {
-                                action_id: "title".to_string(),
-                                placeholder: TextBlockObject {
-                                    type_filed: TextBlockType::PlainText,
-                                    text: "Where should the poll be sent?".to_string(),
-                                    ..Default::default()
-                                },
-                                options: vec![OptionBlockObject {
-                                    text: TextBlockObject {
-                                        type_filed: TextBlockType::PlainText,
-                                        text: "*this is plain_text text*".to_string(),
-                                        ..Default::default()
-                                    },
-                                    value: Some("value-0".to_string()),
-                                    ..Default::default()
-                                }],
+                        element: BlockElement::MultiSelectBlockElement(MultiSelectBlockElement {
+                            action_id: "title".to_string(),
+                            placeholder: TextBlockObject {
+                                type_filed: TextBlockType::PlainText,
+                                text: "Where should the poll be sent?".to_string(),
                                 ..Default::default()
                             },
-                        )),
+                            options: vec![OptionBlockObject {
+                                text: TextBlockObject {
+                                    type_filed: TextBlockType::PlainText,
+                                    text: "*this is plain_text text*".to_string(),
+                                    ..Default::default()
+                                },
+                                value: Some("value-0".to_string()),
+                                ..Default::default()
+                            }],
+                            ..Default::default()
+                        }),
                         ..Default::default()
                     }),
                     Block::ActionBlock(ActionBlock {
@@ -554,7 +548,7 @@ mod test {
                             text: "Title".to_string(),
                             ..Default::default()
                         },
-                        element: Some(BlockElement::PlainTextInputBlockElement(
+                        element: BlockElement::PlainTextInputBlockElement(
                             PlainTextInputBlockElement {
                                 action_id: "title".to_string(),
                                 placeholder: Some(TextBlockObject {
@@ -564,7 +558,7 @@ mod test {
                                 }),
                                 ..Default::default()
                             },
-                        )),
+                        ),
                         ..Default::default()
                     }),
                     Block::InputBlock(InputBlock {
@@ -573,26 +567,24 @@ mod test {
                             text: "Channel(s)".to_string(),
                             ..Default::default()
                         },
-                        element: Some(BlockElement::MultiSelectBlockElement(
-                            MultiSelectBlockElement {
-                                action_id: "title".to_string(),
-                                placeholder: TextBlockObject {
-                                    type_filed: TextBlockType::PlainText,
-                                    text: "Where should the poll be sent?".to_string(),
-                                    ..Default::default()
-                                },
-                                options: vec![OptionBlockObject {
-                                    text: TextBlockObject {
-                                        type_filed: TextBlockType::PlainText,
-                                        text: "*this is plain_text text*".to_string(),
-                                        ..Default::default()
-                                    },
-                                    value: Some("value-0".to_string()),
-                                    ..Default::default()
-                                }],
+                        element: BlockElement::MultiSelectBlockElement(MultiSelectBlockElement {
+                            action_id: "title".to_string(),
+                            placeholder: TextBlockObject {
+                                type_filed: TextBlockType::PlainText,
+                                text: "Where should the poll be sent?".to_string(),
                                 ..Default::default()
                             },
-                        )),
+                            options: vec![OptionBlockObject {
+                                text: TextBlockObject {
+                                    type_filed: TextBlockType::PlainText,
+                                    text: "*this is plain_text text*".to_string(),
+                                    ..Default::default()
+                                },
+                                value: Some("value-0".to_string()),
+                                ..Default::default()
+                            }],
+                            ..Default::default()
+                        }),
                         ..Default::default()
                     }),
                     Block::ActionBlock(ActionBlock {

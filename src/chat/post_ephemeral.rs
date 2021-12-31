@@ -70,11 +70,11 @@ mod test {
                 ..Default::default()
             }]),
             blocks: Some(vec![Block::SectionBlock(SectionBlock {
-                text: TextBlockObject {
+                text: Some(TextBlockObject {
                     type_filed: TextBlockType::PlainText,
                     text: "text".to_string(),
                     ..Default::default()
-                },
+                }),
                 ..Default::default()
             })]),
             icon_emoji: Some(":chart_with_upwards_trend:".to_string()),
@@ -150,11 +150,11 @@ mod test {
                 ..Default::default()
             }]),
             blocks: Some(vec![Block::SectionBlock(SectionBlock {
-                text: TextBlockObject {
+                text: Some(TextBlockObject {
                     type_filed: TextBlockType::PlainText,
                     text: "text".to_string(),
                     ..Default::default()
-                },
+                }),
                 ..Default::default()
             })]),
             icon_emoji: Some(":chart_with_upwards_trend:".to_string()),

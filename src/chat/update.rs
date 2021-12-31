@@ -71,11 +71,11 @@ mod test {
                 ..Default::default()
             }]),
             blocks: Some(vec![Block::SectionBlock(SectionBlock {
-                text: TextBlockObject {
+                text: Some(TextBlockObject {
                     type_filed: TextBlockType::PlainText,
                     text: "text".to_string(),
                     ..Default::default()
-                },
+                }),
                 ..Default::default()
             })]),
             file_ids: Some(vec!["F013GKY52QK".to_string(), "F013GL22D0T".to_string()]),
@@ -164,11 +164,11 @@ mod test {
                 ..Default::default()
             }]),
             blocks: Some(vec![Block::SectionBlock(SectionBlock {
-                text: TextBlockObject {
+                text: Some(TextBlockObject {
                     type_filed: TextBlockType::PlainText,
                     text: "text".to_string(),
                     ..Default::default()
-                },
+                }),
                 ..Default::default()
             })]),
             file_ids: Some(vec!["F013GKY52QK".to_string(), "F013GL22D0T".to_string()]),

@@ -74,11 +74,11 @@ mod test {
                 ..Default::default()
             }]),
             blocks: Some(vec![Block::SectionBlock(SectionBlock {
-                text: TextBlockObject {
+                text: Some(TextBlockObject {
                     type_filed: TextBlockType::PlainText,
                     text: "text".to_string(),
                     ..Default::default()
-                },
+                }),
                 ..Default::default()
             })]),
             link_names: Some(true),
@@ -187,11 +187,11 @@ mod test {
                 ..Default::default()
             }]),
             blocks: Some(vec![Block::SectionBlock(SectionBlock {
-                text: TextBlockObject {
+                text: Some(TextBlockObject {
                     type_filed: TextBlockType::PlainText,
                     text: "text".to_string(),
                     ..Default::default()
-                },
+                }),
                 ..Default::default()
             })]),
             link_names: Some(true),

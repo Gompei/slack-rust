@@ -19,7 +19,6 @@ impl TextBlockObject {
 
 #[derive(Debug, Default)]
 pub struct TextBlockObjectBuilder {
-    #[serde(rename = "type")]
     pub type_filed: TextBlockType,
     pub text: String,
     pub emoji: Option<bool>,

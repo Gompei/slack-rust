@@ -10,7 +10,7 @@ pub struct DividerBlock {
 impl DividerBlock {
     pub fn new(block_id: String) -> DividerBlock {
         DividerBlock {
-            block_id: String(block_id),
+            block_id: Some(block_id),
         }
     }
 }

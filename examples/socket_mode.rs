@@ -81,90 +81,93 @@ where
             InteractiveEventType::Shortcut => {
                 match e.payload.callback_id.as_ref().unwrap().as_ref() {
                     "example_shortcut" => {
-                        let request =
-                            OpenRequest {
-                                trigger_id: e
-                                    .payload
-                                    .trigger_id
-                                    .as_ref()
-                                    .map_or("".to_string(), |r| r.to_string()),
-                                view: View {
-                                    type_filed: Some(ViewType::Modal),
-                                    title: Some(TextBlockObject {
-                                        type_filed: TextBlockType::PlainText,
-                                        text: "Slack Rust Example Modal".to_string(),
-                                        ..Default::default()
-                                    }),
-                                    submit: Some(TextBlockObject {
-                                        type_filed: TextBlockType::PlainText,
-                                        text: "Submit".to_string(),
-                                        ..Default::default()
-                                    }),
-                                    blocks: Some(vec![
-                                Block::InputBlock(InputBlock {
-                                    label: TextBlockObject {
-                                        type_filed: TextBlockType::PlainText,
-                                        text: "Title".to_string(),
-                                        ..Default::default()
-                                    },
-                                    element: Some(BlockElement::PlainTextInputBlockElement(
-                                        PlainTextInputBlockElement {
-                                            action_id: "title".to_string(),
-                                            placeholder: Some(TextBlockObject {
-                                                type_filed: TextBlockType::PlainText,
-                                                text: "What do you want to ask of the world?"
-                                                    .to_string(),
-                                                ..Default::default()
-                                            }),
-                                            ..Default::default()
-                                        },
-                                    )),
+                        let request = OpenRequest {
+                            trigger_id: e
+                                .payload
+                                .trigger_id
+                                .as_ref()
+                                .map_or("".to_string(), |r| r.to_string()),
+                            view: View {
+                                type_filed: Some(ViewType::Modal),
+                                title: Some(TextBlockObject {
+                                    type_filed: TextBlockType::PlainText,
+                                    text: "Slack Rust Example Modal".to_string(),
                                     ..Default::default()
                                 }),
-                                Block::InputBlock(InputBlock {
-                                    label: TextBlockObject {
-                                        type_filed: TextBlockType::PlainText,
-                                        text: "Channel(s)".to_string(),
-                                        ..Default::default()
-                                    },
-                                    element: Some(BlockElement::MultiSelectBlockElement(
-                                        MultiSelectBlockElement {
-                                            action_id: "title".to_string(),
-                                            placeholder: TextBlockObject {
-                                                type_filed: TextBlockType::PlainText,
-                                                text: "Where should the poll be sent?".to_string(),
+                                submit: Some(TextBlockObject {
+                                    type_filed: TextBlockType::PlainText,
+                                    text: "Submit".to_string(),
+                                    ..Default::default()
+                                }),
+                                blocks: Some(vec![
+                                    Block::InputBlock(InputBlock {
+                                        label: TextBlockObject {
+                                            type_filed: TextBlockType::PlainText,
+                                            text: "Title".to_string(),
+                                            ..Default::default()
+                                        },
+                                        element: BlockElement::PlainTextInputBlockElement(
+                                            PlainTextInputBlockElement {
+                                                action_id: "title".to_string(),
+                                                placeholder: Some(TextBlockObject {
+                                                    type_filed: TextBlockType::PlainText,
+                                                    text: "What do you want to ask of the world?"
+                                                        .to_string(),
+                                                    ..Default::default()
+                                                }),
                                                 ..Default::default()
                                             },
-                                            options: vec![OptionBlockObject {
-                                                text: TextBlockObject {
+                                        ),
+                                        ..Default::default()
+                                    }),
+                                    Block::InputBlock(InputBlock {
+                                        label: TextBlockObject {
+                                            type_filed: TextBlockType::PlainText,
+                                            text: "Channel(s)".to_string(),
+                                            ..Default::default()
+                                        },
+                                        element: BlockElement::MultiSelectBlockElement(
+                                            MultiSelectBlockElement {
+                                                action_id: "title".to_string(),
+                                                placeholder: TextBlockObject {
                                                     type_filed: TextBlockType::PlainText,
-                                                    text: "*this is plain_text text*".to_string(),
+                                                    text: "Where should the poll be sent?"
+                                                        .to_string(),
                                                     ..Default::default()
                                                 },
-                                                value: Some("value-0".to_string()),
+                                                options: vec![OptionBlockObject {
+                                                    text: TextBlockObject {
+                                                        type_filed: TextBlockType::PlainText,
+                                                        text: "*this is plain_text text*"
+                                                            .to_string(),
+                                                        ..Default::default()
+                                                    },
+                                                    value: Some("value-0".to_string()),
+                                                    ..Default::default()
+                                                }],
                                                 ..Default::default()
-                                            }],
-                                            ..Default::default()
-                                        },
-                                    )),
-                                    ..Default::default()
-                                }),
-                                Block::ActionBlock(ActionBlock {
-                                    elements: vec![BlockElement::ButtonElement(ButtonElement {
-                                        action_id: "add_option".to_string(),
-                                        text: TextBlockObject {
-                                            type_filed: TextBlockType::PlainText,
-                                            text: "Add another option".to_string(),
-                                            ..Default::default()
-                                        },
+                                            },
+                                        ),
                                         ..Default::default()
-                                    })],
-                                    ..Default::default()
-                                }),
-                            ]),
-                                    ..Default::default()
-                                },
-                            };
+                                    }),
+                                    Block::ActionBlock(ActionBlock {
+                                        elements: vec![BlockElement::ButtonElement(
+                                            ButtonElement {
+                                                action_id: "add_option".to_string(),
+                                                text: TextBlockObject {
+                                                    type_filed: TextBlockType::PlainText,
+                                                    text: "Add another option".to_string(),
+                                                    ..Default::default()
+                                                },
+                                                ..Default::default()
+                                            },
+                                        )],
+                                        ..Default::default()
+                                    }),
+                                ]),
+                                ..Default::default()
+                            },
+                        };
                         let response =
                             open(&socket_mode.api_client, &request, &socket_mode.bot_token)
                                 .await
