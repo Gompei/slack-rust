@@ -610,6 +610,55 @@ pub struct RadioButtonsBlockElement {
     pub confirm: Option<ConfirmationBlockObject>,
 }
 
+impl RadioButtonsBlockElement {
+    pub fn builder(
+        action_id: String,
+        options: Vec<OptionBlockObject>,
+    ) -> RadioButtonsBlockElementBuilder {
+        RadioButtonsBlockElementBuilder::new(action_id, options)
+    }
+}
+
+#[derive(Debug, Default)]
+pub struct RadioButtonsBlockElementBuilder {
+    pub action_id: String,
+    pub options: Vec<OptionBlockObject>,
+    pub initial_option: Option<OptionBlockObject>,
+    pub confirm: Option<ConfirmationBlockObject>,
+}
+
+impl RadioButtonsBlockElementBuilder {
+    pub fn new(
+        action_id: String,
+        options: Vec<OptionBlockObject>,
+    ) -> RadioButtonsBlockElementBuilder {
+        RadioButtonsBlockElementBuilder {
+            action_id,
+            options,
+            ..Default::default()
+        }
+    }
+    pub fn initial_option(
+        mut self,
+        initial_option: OptionBlockObject,
+    ) -> RadioButtonsBlockElementBuilder {
+        self.initial_option = Some(initial_option);
+        self
+    }
+    pub fn confirm(mut self, confirm: ConfirmationBlockObject) -> RadioButtonsBlockElementBuilder {
+        self.confirm = Some(confirm);
+        self
+    }
+    pub fn build(self) -> RadioButtonsBlockElement {
+        RadioButtonsBlockElement {
+            action_id: self.action_id,
+            options: self.options,
+            initial_option: self.initial_option,
+            confirm: self.confirm,
+        }
+    }
+}
+
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct SelectBlockElement {
