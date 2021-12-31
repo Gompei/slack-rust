@@ -5,6 +5,7 @@
 //! # Usage
 //!
 //! ## [Web API](https://api.slack.com/methods)
+//!
 //! ```no_run
 //! use slack::chat::post_message::{post_message, PostMessageRequest};
 //! use slack::http_client::default_client;
@@ -30,14 +31,23 @@
 //! }
 //! ```
 //!
-//! ## Builder
+//! ### Builder
 //!
-//! ### Block
-//!
-//! ### Attachments
-//!
+//! ```ignore
+//!     let attachments = vec![Attachment::builder()
+//!         .color("#36a64f".to_string())
+//!         .author_name("slack-rust".to_string())
+//!         .author_icon("https://!2.bp.blogspot.com/-3o7K8_p8NNM/WGCRsl8GiCI/AAAAAAABAoc/XKnspjvc0YIoOiSRK9HW6wXhtlnZvHQ9QCLcB/s800/pyoko_hashiru.png".to_string())
+//!         .title("slack_rust_example".to_string())
+//!         .build()];
+//!     let param = PostMessageRequest::builder(slack_channel_id)
+//!         .text("Hello World!!".to_string())
+//!         .attachments(attachments)
+//!         .build();
+//! ```
 //!
 //! ## [Socket Mode](https://api.slack.com/apis/connections/socket-implement)
+//!
 //! ```no_run
 //! use async_trait::async_trait;
 //! use slack::chat::post_message::{post_message, PostMessageRequest};
