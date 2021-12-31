@@ -478,6 +478,43 @@ pub struct OverflowBlockElement {
     pub confirm: Option<ConfirmationBlockObject>,
 }
 
+impl OverflowBlockElement {
+    pub fn builder(
+        action_id: String,
+        options: Vec<OptionBlockObject>,
+    ) -> OverflowBlockElementBuilder {
+        OverflowBlockElementBuilder::new(action_id, options)
+    }
+}
+
+#[derive(Debug, Default)]
+pub struct OverflowBlockElementBuilder {
+    pub action_id: String,
+    pub options: Vec<OptionBlockObject>,
+    pub confirm: Option<ConfirmationBlockObject>,
+}
+
+impl OverflowBlockElementBuilder {
+    pub fn new(action_id: String, options: Vec<OptionBlockObject>) -> OverflowBlockElementBuilder {
+        OverflowBlockElementBuilder {
+            action_id,
+            options,
+            ..Default::default()
+        }
+    }
+    pub fn confirm(mut self, confirm: ConfirmationBlockObject) -> OverflowBlockElementBuilder {
+        self.confirm = Some(confirm);
+        self
+    }
+    pub fn build(self) -> OverflowBlockElement {
+        OverflowBlockElement {
+            action_id: self.action_id,
+            options: self.options,
+            confirm: self.confirm,
+        }
+    }
+}
+
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct PlainTextInputBlockElement {
