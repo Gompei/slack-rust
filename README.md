@@ -14,7 +14,7 @@ Add this to your Cargo.toml:
 
 ```toml
 [dependencies]
-slack_rust = "0.1.0-alpha"
+slack_rust = "0.0.1-alpha"
 ```
 
 ### [Web API](https://api.slack.com/methods)
