@@ -1,112 +1,312 @@
-use crate::event_api::app::{
-    AppHomeOpenedEvent, AppMentionEvent, AppRateLimitedEvent, AppRequestedEvent,
-};
-use crate::event_api::channel::{ChannelCreatedEvent, ChannelEvent};
-use serde::{Deserialize, Serialize};
+//! [Event API Types](https://api.slack.com/events?filter=Events)
 
+use crate::channels::channel::Channel;
+use crate::event_api::app::AppRequest;
+use crate::team::teams::Team;
+use crate::views::view::View;
+use serde::{Deserialize, Serialize};
+use serde_with::skip_serializing_none;
+use std::f32::consts::E;
+
+/// [Event API](https://api.slack.com/events?filter=Events)
+#[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
 #[serde(tag = "type")]
 pub enum Event {
-    /// AppMention is an Events API subscribable event
-    #[serde(rename = "app_mention")]
-    AppMention(AppMentionEvent),
-    /// AppHomeOpened Your Slack app home was opened
+    /// User clicked into your App Home
     #[serde(rename = "app_home_opened")]
-    AppHomeOpened(AppHomeOpenedEvent),
-    /// AppUninstalled Your Slack app was uninstalled.
-    AppUninstalled,
-    ///
+    AppHomeOpened {
+        user: String,
+        channel: String,
+        event_ts: String,
+        tab: String,
+        view: View,
+    },
+    /// Subscribe to only the message events that mention your app or bot
+    #[serde(rename = "app_mention")]
+    AppMention {
+        user: String,
+        text: String,
+        ts: String,
+        channel: String,
+        event_ts: String,
+    },
+    /// Indicates your app's event subscriptions are being rate limited
     #[serde(rename = "app_rate_limited")]
-    AppRateLimited(AppRateLimitedEvent),
-    ///
+    AppRateLimited {
+        token: String,
+        team_id: String,
+        minute_rate_limited: i32,
+        api_app_id: String,
+    },
+    /// User requested an app
     #[serde(rename = "app_requested")]
-    AppRequested(AppRequestedEvent),
-    /// ChannelCreated is sent when a new channel is created.
-    #[serde(rename = "channel_created")]
-    ChannelCreated(ChannelCreatedEvent),
-    /// ChannelDeleted is sent when a channel is deleted.
-    #[serde(rename = "channel_deleted")]
-    ChannelDeleted(ChannelEvent),
-    /// ChannelArchive is sent when a channel is archived.
+    AppRequested { app_request: AppRequest },
+    /// Your Slack app was uninstalled.
+    #[serde(rename = "event_callback")]
+    AppUninstalled(CallbackEvent),
+    /// A channel was archived
     #[serde(rename = "channel_archive")]
-    ChannelArchive(ChannelEvent),
-    /// ChannelUnarchive is sent when a channel is unarchived.
-    #[serde(rename = "channel_unarchive")]
-    ChannelUnarchive(ChannelEvent),
-    /// ChannelLeft is sent when a channel is left.
+    ChannelArchive { channel: String, user: String },
+    /// A channel was created
+    #[serde(rename = "channel_created")]
+    ChannelCreated { channel: Channel },
+    /// A channel was deleted
+    #[serde(rename = "channel_deleted")]
+    ChannelDeleted { channel: String },
+    /// Bulk updates were made to a channel's history
+    #[serde(rename = "channel_history_changed")]
+    ChannelHistoryChanged {
+        latest: String,
+        ts: String,
+        event_ts: String,
+    },
+    /// A channel ID changed
+    #[serde(rename = "channel_id_changed")]
+    ChannelIDChanged {
+        old_channel_id: String,
+        new_channel_id: String,
+        event_ts: String,
+    },
+    /// You left a channel
     #[serde(rename = "channel_left")]
-    ChannelLeft(ChannelEvent),
-    /// ChannelRename is sent when a channel is rename.
-    ChannelRename,
-    /// ChannelIDChanged is sent when a channel identifier is changed.
-    ChannelIDChanged,
-    /// GroupDeleted is sent when a group is deleted.
-    GroupDeleted,
-    /// GroupArchive is sent when a group is archived.
-    GroupArchive,
-    /// GroupUnarchive is sent when a group is unarchived.
-    GroupUnarchive,
-    /// GroupLeft is sent when a group is left.
-    GroupLeft,
-    /// GroupRename is sent when a group is renamed.
-    GroupRename,
-    /// GridMigrationFinished An enterprise grid migration has finished on this workspace.
-    GridMigrationFinished,
-    /// GridMigrationStarted An enterprise grid migration has started on this workspace.
-    GridMigrationStarted,
-    /// LinkShared A message was posted containing one or more links relevant to your application
+    ChannelLeft { channel: String },
+    /// A channel was renamed
+    #[serde(rename = "channel_rename")]
+    ChannelRename { channel: Channel },
+    /// A channel has been shared with an external workspace
+    #[serde(rename = "channel_shared")]
+    ChannelShared {
+        connected_team_id: String,
+        channel: String,
+        event_ts: String,
+    },
+    /// A channel was unarchived
+    #[serde(rename = "channel_unarchive")]
+    ChannelUnarchive { channel: String, user: String },
+    ///A channel has been unshared with an external workspace
+    #[serde(rename = "channel_unshared")]
+    ChannelUnshared {
+        previously_connected_team_id: String,
+        channel: String,
+        is_ext_shared: bool,
+        event_ts: String,
+    },
+    /// A custom emoji has been added or changed
+    #[serde(rename = "emoji_changed")]
+    EmojiChanged {
+        subtype: String,
+        names: Vec<String>,
+        event_ts: String,
+    },
+    /// An enterprise grid migration has finished on this workspace.
+    #[serde(rename = "event_callback")]
+    GridMigrationFinished(CallbackEvent),
+    /// An enterprise grid migration has started on this workspace.
+    #[serde(rename = "event_callback")]
+    GridMigrationStarted(CallbackEvent),
+    /// A private channel was archived
+    #[serde(rename = "group_archive")]
+    GroupArchive { channel: String },
+    /// You closed a private channel
+    #[serde(rename = "group_close")]
+    GroupClose { user: String, channel: String },
+    /// A private channel was deleted
+    #[serde(rename = "group_deleted")]
+    GroupDeleted { channel: String },
+    /// A private channel was deleted
+    #[serde(rename = "group_history_changed")]
+    GroupHistoryChanged {
+        latest: String,
+        ts: String,
+        event_ts: String,
+    },
+    /// You left a private channel
+    #[serde(rename = "group_left")]
+    GroupLeft { channel: String },
+    /// You created a group DM
+    #[serde(rename = "group_open")]
+    GroupOpen { user: String, channel: String },
+    /// A private channel was renamed
+    #[serde(rename = "group_rename")]
+    GroupRename { channel: Channel },
+    /// A private channel was unarchived
+    #[serde(rename = "group_unarchive")]
+    GroupUnarchive { channel: String },
+    /// You closed a DM
+    #[serde(rename = "im_close")]
+    ImClose { user: String, channel: String },
+    /// A DM was created
+    #[serde(rename = "im_created")]
+    ImCreated { user: String, channel: Channel },
+    /// Bulk updates were made to a DM's history
+    #[serde(rename = "im_history_changed")]
+    ImHistoryChanged {
+        latest: String,
+        ts: String,
+        event_ts: String,
+    },
+    /// You opened a DM
+    #[serde(rename = "im_open")]
+    ImOpen { user: String, channel: String },
+    /// User requested an invite
+    #[serde(rename = "invite_requested")]
+    InviteRequested {
+        id: String,
+        email: String,
+        date_created: i32,
+        requester_ids: Vec<String>,
+        channel_ids: Vec<String>,
+        invite_type: String,
+        real_name: String,
+        date_expire: i32,
+        request_reason: String,
+        team: Team,
+    },
+    // TODO: To be implemented in the future
+    /// A message was posted containing one or more links relevant to your application
+    #[serde(rename = "link_shared")]
     LinkShared,
-    /// Message A message was posted to a channel, private channel (group), im, or mim
-    Message,
-    /// Member Joined Channel
-    MemberJoinedChannel,
-    /// Member Left Channel
-    MemberLeftChannel,
-    /// PinAdded An item was pinned to a channel
-    PinAdded,
-    /// PinRemoved An item was unpinned from a channel
-    PinRemoved,
-    /// ReactionAdded An reaction was added to a message
-    ReactionAdded,
-    /// ReactionRemoved An reaction was removed from a message
-    ReactionRemoved,
-    /// TeamJoin A new user joined the workspace
-    TeamJoin,
-    /// TokensRevoked APP's API tokes are revoked
-    TokensRevoked,
-    /// EmojiChanged A custom emoji has been added or changed
+    /// A user joined a public or private channel
+    #[serde(rename = "member_joined_channel")]
+    MemberJoinedChannel {
+        user: String,
+        channel: String,
+        channel_type: String,
+        team: String,
+        inviter: String,
+    },
+    /// A user left a public or private channel
+    #[serde(rename = "member_joined_channel")]
+    MemberLeftChannel {
+        user: String,
+        channel: String,
+        channel_type: String,
+        team: String,
+    },
+    /// A message was sent to a channel
+    #[serde(rename = "member_joined_channel")]
+    Message {
+        channel: String,
+        user: String,
+        channel_type: String,
+        text: String,
+        ts: String,
+    },
+    #[serde(skip)]
+    None,
+}
+
+impl Event {
+    pub fn block_type(&self) -> EventType {
+        match self {
+            Event::AppHomeOpened { .. } => EventType::AppHomeOpened,
+            Event::AppMention { .. } => EventType::AppMention,
+            Event::AppRateLimited { .. } => EventType::AppRateLimited,
+            Event::AppRequested { .. } => EventType::AppRequested,
+            Event::AppUninstalled(_) => EventType::AppUninstalled,
+            Event::ChannelArchive { .. } => EventType::ChannelArchive,
+            Event::ChannelCreated { .. } => EventType::ChannelCreated,
+            Event::ChannelDeleted { .. } => EventType::ChannelDeleted,
+            Event::ChannelHistoryChanged { .. } => EventType::ChannelHistoryChanged,
+            Event::ChannelIDChanged { .. } => EventType::ChannelIDChanged,
+            Event::ChannelLeft { .. } => EventType::ChannelLeft,
+            Event::ChannelRename { .. } => EventType::ChannelRename,
+            Event::ChannelShared { .. } => EventType::ChannelShared,
+            Event::ChannelUnarchive { .. } => EventType::ChannelUnarchive,
+            Event::ChannelUnshared { .. } => EventType::ChannelUnshared,
+            Event::EmojiChanged { .. } => EventType::EmojiChanged,
+            Event::GridMigrationFinished(_) => EventType::GridMigrationFinished,
+            Event::GridMigrationStarted(_) => EventType::GridMigrationStarted,
+            Event::GroupArchive { .. } => EventType::GroupArchive,
+            Event::GroupClose { .. } => EventType::GroupClose,
+            Event::GroupDeleted { .. } => EventType::GroupDeleted,
+            Event::GroupHistoryChanged { .. } => EventType::GroupHistoryChanged,
+            Event::GroupLeft { .. } => EventType::GroupLeft,
+            Event::GroupOpen { .. } => EventType::GroupOpen,
+            Event::GroupRename { .. } => EventType::GroupRename,
+            Event::GroupUnarchive { .. } => EventType::GroupUnarchive,
+            Event::ImClose { .. } => EventType::ImClose,
+            Event::ImCreated { .. } => EventType::ImCreated,
+            Event::ImHistoryChanged { .. } => EventType::ImHistoryChanged,
+            Event::ImOpen { .. } => EventType::ImOpen,
+            Event::InviteRequested { .. } => EventType::InviteRequested,
+            Event::LinkShared => EventType::LinkShared,
+            Event::MemberJoinedChannel { .. } => EventType::MemberJoinedChannel,
+            Event::MemberLeftChannel { .. } => EventType::MemberLeftChannel,
+            Event::Message { .. } => EventType::Message,
+            Event::None => EventType::None,
+        }
+    }
+}
+
+/// [Event API Type](https://api.slack.com/events?filter=Events)
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
+#[serde(rename_all = "snake_case")]
+pub enum EventType {
+    AppHomeOpened,
+    AppMention,
+    AppRateLimited,
+    AppRequested,
+    AppUninstalled,
+    ChannelArchive,
+    ChannelCreated,
+    ChannelDeleted,
+    ChannelHistoryChanged,
+    ChannelIDChanged,
+    ChannelLeft,
+    ChannelRename,
+    ChannelShared,
+    ChannelUnarchive,
+    ChannelUnshared,
     EmojiChanged,
+    GridMigrationFinished,
+    GridMigrationStarted,
+    GroupArchive,
+    GroupClose,
+    GroupDeleted,
+    GroupHistoryChanged,
+    GroupLeft,
+    GroupOpen,
+    GroupRename,
+    GroupUnarchive,
+    ImClose,
+    ImCreated,
+    ImHistoryChanged,
+    ImOpen,
+    InviteRequested,
+    LinkShared,
+    MemberJoinedChannel,
+    MemberLeftChannel,
+    Message,
+    #[serde(skip)]
+    None,
+}
+
+#[skip_serializing_none]
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
+pub struct CallbackEvent {
+    token: String,
+    team_id: String,
+    api_app_id: String,
+    #[serde(rename = "event")]
+    callback_event: CallbackEventInner,
+    event_id: String,
+    event_time: i32,
+}
+
+#[skip_serializing_none]
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
+pub struct CallbackEventInner {
+    #[serde(rename = "type")]
+    pub type_filed: CallbackEventType,
+    pub enterprise_id: Option<String>,
 }
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
 #[serde(rename_all = "snake_case")]
-pub enum EventType {
-    AppMention,
-    AppHomeOpened,
+pub enum CallbackEventType {
     AppUninstalled,
-    ChannelCreated,
-    ChannelDeleted,
-    ChannelArchive,
-    ChannelUnarchive,
-    ChannelLeft,
-    ChannelRename,
-    ChannelIDChanged,
-    GroupDeleted,
-    GroupArchive,
-    GroupUnarchive,
-    GroupLeft,
-    GroupRename,
     GridMigrationFinished,
     GridMigrationStarted,
-    LinkShared,
-    Message,
-    MemberJoinedChannel,
-    MemberLeftChannel,
-    PinAdded,
-    PinRemoved,
-    ReactionAdded,
-    ReactionRemoved,
-    TeamJoin,
-    TokensRevoked,
-    EmojiChanged,
 }
