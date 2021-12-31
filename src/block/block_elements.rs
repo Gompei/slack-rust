@@ -365,6 +365,111 @@ pub struct MultiSelectBlockElement {
     pub focus_on_load: Option<bool>,
 }
 
+impl MultiSelectBlockElement {
+    pub fn builder(
+        placeholder: TextBlockObject,
+        action_id: String,
+        options: Vec<OptionBlockObject>,
+    ) -> MultiSelectBlockElementBuilder {
+        MultiSelectBlockElementBuilder::new(placeholder, action_id, options)
+    }
+}
+
+#[derive(Debug, Default)]
+pub struct MultiSelectBlockElementBuilder {
+    pub placeholder: TextBlockObject,
+    pub action_id: String,
+    pub options: Vec<OptionBlockObject>,
+    pub option_groups: Option<Vec<OptionGroupBlockObject>>,
+    pub initial_option: Option<OptionBlockObject>,
+    pub initial_users: Option<Vec<String>>,
+    pub initial_conversations: Option<Vec<String>>,
+    pub initial_channels: Option<Vec<String>>,
+    pub confirm: Option<ConfirmationBlockObject>,
+    pub min_query_length: Option<i32>,
+    pub max_selected_items: Option<i32>,
+    pub focus_on_load: Option<bool>,
+}
+
+impl MultiSelectBlockElementBuilder {
+    pub fn new(
+        placeholder: TextBlockObject,
+        action_id: String,
+        options: Vec<OptionBlockObject>,
+    ) -> MultiSelectBlockElementBuilder {
+        MultiSelectBlockElementBuilder {
+            placeholder,
+            action_id,
+            options,
+            ..Default::default()
+        }
+    }
+    pub fn option_groups(
+        mut self,
+        option_groups: Vec<OptionGroupBlockObject>,
+    ) -> MultiSelectBlockElementBuilder {
+        self.option_groups = Some(option_groups);
+        self
+    }
+    pub fn initial_option(
+        mut self,
+        initial_option: OptionBlockObject,
+    ) -> MultiSelectBlockElementBuilder {
+        self.initial_option = Some(initial_option);
+        self
+    }
+    pub fn initial_users(mut self, initial_users: Vec<String>) -> MultiSelectBlockElementBuilder {
+        self.initial_users = Some(initial_users);
+        self
+    }
+    pub fn initial_conversations(
+        mut self,
+        initial_conversations: Vec<String>,
+    ) -> MultiSelectBlockElementBuilder {
+        self.initial_conversations = Some(initial_conversations);
+        self
+    }
+    pub fn initial_channels(
+        mut self,
+        initial_channels: Vec<String>,
+    ) -> MultiSelectBlockElementBuilder {
+        self.initial_channels = Some(initial_channels);
+        self
+    }
+    pub fn confirm(mut self, confirm: ConfirmationBlockObject) -> MultiSelectBlockElementBuilder {
+        self.confirm = Some(confirm);
+        self
+    }
+    pub fn min_query_length(mut self, min_query_length: i32) -> MultiSelectBlockElementBuilder {
+        self.min_query_length = Some(min_query_length);
+        self
+    }
+    pub fn max_selected_items(mut self, max_selected_items: i32) -> MultiSelectBlockElementBuilder {
+        self.max_selected_items = Some(max_selected_items);
+        self
+    }
+    pub fn focus_on_load(mut self, focus_on_load: bool) -> MultiSelectBlockElementBuilder {
+        self.focus_on_load = Some(focus_on_load);
+        self
+    }
+    pub fn build(self) -> MultiSelectBlockElementBuilder {
+        MultiSelectBlockElementBuilder {
+            placeholder: self.placeholder,
+            action_id: self.action_id,
+            options: self.options,
+            option_groups: self.option_groups,
+            initial_option: self.initial_option,
+            initial_users: self.initial_users,
+            initial_conversations: self.initial_conversations,
+            initial_channels: self.initial_channels,
+            confirm: self.confirm,
+            min_query_length: self.min_query_length,
+            max_selected_items: self.max_selected_items,
+            focus_on_load: self.focus_on_load,
+        }
+    }
+}
+
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct OverflowBlockElement {
