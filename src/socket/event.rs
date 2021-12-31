@@ -117,7 +117,6 @@ pub struct AcknowledgeMessage<'s> {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::event_api::app::AppHomeOpenedEvent;
     use crate::payloads::interactive::InteractiveEventType;
 
     #[test]
@@ -174,7 +173,13 @@ mod test {
   "accepts_response_payload": false,
   "payload": {
     "type": "app_home_opened",
-    "user": "U061F7AUR"
+    "user": "U061F7AUR",
+    "channel": "D0LAN2Q65",
+    "event_ts": "1515449522000016",
+    "tab": "home",
+    "view": {
+      "id": "VPASKP233"
+    }
   }
 }"##;
         let event = serde_json::from_str::<SocketModeEvent>(json).unwrap();
@@ -188,8 +193,8 @@ mod test {
                 assert!(!accepts_response_payload, "false");
 
                 match payload {
-                    Event::AppHomeOpened(AppHomeOpenedEvent { user, .. }) => {
-                        assert_eq!(user.unwrap(), "U061F7AUR");
+                    Event::AppHomeOpened { user, .. } => {
+                        assert_eq!(user, "U061F7AUR");
                     }
                     _ => panic!("Payload deserialize into incorrect variant"),
                 }

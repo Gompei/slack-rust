@@ -6,7 +6,6 @@ use crate::team::teams::Team;
 use crate::views::view::View;
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
-use std::f32::consts::E;
 
 /// [Event API](https://api.slack.com/events?filter=Events)
 #[skip_serializing_none]

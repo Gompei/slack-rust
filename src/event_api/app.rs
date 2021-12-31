@@ -1,6 +1,6 @@
 use crate::team::teams::Team;
 use crate::users::user::User;
-use crate::views::view::View;
+
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 
