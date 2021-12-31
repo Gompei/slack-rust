@@ -339,6 +339,15 @@ pub struct ImageBlockElement {
     pub alt_text: String,
 }
 
+impl ImageBlockElement {
+    pub fn new(image_url: String, alt_text: String) -> ImageBlockElement {
+        ImageBlockElement {
+            image_url,
+            alt_text,
+        }
+    }
+}
+
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct MultiSelectBlockElement {
