@@ -284,6 +284,55 @@ pub struct DatePickerBlockElement {
     pub focus_on_load: Option<bool>,
 }
 
+impl DatePickerBlockElement {
+    pub fn builder(action_id: String) -> DatePickerBlockElementBuilder {
+        DatePickerBlockElementBuilder::new(action_id)
+    }
+}
+
+#[derive(Debug, Default)]
+pub struct DatePickerBlockElementBuilder {
+    pub action_id: String,
+    pub placeholder: Option<TextBlockObject>,
+    pub initial_date: Option<String>,
+    pub confirm: Option<ConfirmationBlockObject>,
+    pub focus_on_load: Option<bool>,
+}
+
+impl DatePickerBlockElementBuilder {
+    pub fn new(action_id: String) -> DatePickerBlockElementBuilder {
+        DatePickerBlockElementBuilder {
+            action_id,
+            ..Default::default()
+        }
+    }
+    pub fn placeholder(mut self, placeholder: TextBlockObject) -> DatePickerBlockElementBuilder {
+        self.placeholder = Some(placeholder);
+        self
+    }
+    pub fn initial_date(mut self, initial_date: String) -> DatePickerBlockElementBuilder {
+        self.initial_date = Some(initial_date);
+        self
+    }
+    pub fn confirm(mut self, confirm: ConfirmationBlockObject) -> DatePickerBlockElementBuilder {
+        self.confirm = Some(confirm);
+        self
+    }
+    pub fn focus_on_load(mut self, focus_on_load: bool) -> DatePickerBlockElementBuilder {
+        self.focus_on_load = Some(focus_on_load);
+        self
+    }
+    pub fn build(self) -> DatePickerBlockElement {
+        DatePickerBlockElement {
+            action_id: self.action_id,
+            placeholder: self.placeholder,
+            initial_date: self.initial_date,
+            confirm: self.confirm,
+            focus_on_load: self.focus_on_load,
+        }
+    }
+}
+
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct ImageBlockElement {
     pub image_url: String,
