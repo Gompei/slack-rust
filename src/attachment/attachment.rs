@@ -53,15 +53,6 @@ impl AttachmentFieldBuilder {
 
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
-pub struct ConfirmationField {
-    pub title: Option<String>,
-    pub text: Option<String>,
-    pub ok_text: Option<String>,
-    pub dismiss_text: Option<String>,
-}
-
-#[skip_serializing_none]
-#[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct Attachment {
     pub color: Option<String>,
     pub fallback: Option<String>,
