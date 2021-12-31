@@ -4,9 +4,13 @@ version = "0.0.1-alpha"
 authors = ["Gompei <shoueigonpei6028@gmail.com>"]
 edition = "2018"
 description = "Slack API Client"
+documentation = "https://docs.rs/slack-rust/"
 readme = "README.md"
+homepage = "https://crates.io/crates/slack-rust"
 repository = "https://github.com/Gompei/slack-rust"
 license = "Apache-2.0"
+keywords = ["slack-rust", "slack"]
+categories = ["web-programming::http-client", "web-programming::websocket"]
 
 [dependencies]
 async-std = { version = "1.10.0", features = ["attributes"] }
