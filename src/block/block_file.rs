@@ -4,7 +4,41 @@ use serde_with::skip_serializing_none;
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct FileBlock {
+    pub external_id: String,
+    pub source: String,
     pub block_id: Option<String>,
-    pub external_id: Option<String>,
-    pub source: Option<String>,
+}
+
+impl FileBlock {
+    pub fn builder(external_id: String, source: String) -> FileBlockBuilder {
+        FileBlockBuilder::new(external_id, source)
+    }
+}
+
+#[derive(Debug, Default)]
+pub struct FileBlockBuilder {
+    pub external_id: String,
+    pub source: String,
+    pub block_id: Option<String>,
+}
+
+impl FileBlockBuilder {
+    pub fn new(external_id: String, source: String) -> FileBlockBuilder {
+        FileBlockBuilder {
+            external_id,
+            source,
+            ..Default::default()
+        }
+    }
+    pub fn block_id(mut self, block_id: String) -> FileBlockBuilder {
+        self.block_id = Some(block_id);
+        self
+    }
+    pub fn build(self) -> FileBlockBuilder {
+        FileBlockBuilder {
+            external_id: self.external_id,
+            source: self.source,
+            block_id: self.block_id,
+        }
+    }
 }
