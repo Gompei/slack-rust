@@ -1,3 +1,6 @@
+//! Uninstalls your app from a workspace.  
+//! See: <https://api.slack.com/methods?filter=apps>
+
 use crate::error::Error;
 use crate::http_client::{get_slack_url, DefaultResponse, SlackWebAPIClient};
 use serde::{Deserialize, Serialize};
@@ -17,6 +20,8 @@ impl UninstallRequest {
     }
 }
 
+/// Uninstalls your app from a workspace.  
+/// See: <https://api.slack.com/methods?filter=apps>
 pub async fn uninstall<T>(
     client: &T,
     param: &UninstallRequest,

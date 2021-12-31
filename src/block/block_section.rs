@@ -1,8 +1,12 @@
+//! A section is one of the most flexible blocks available
+
 use crate::block::block_elements::BlockElement;
 use crate::block::block_object::TextBlockObject;
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 
+/// A section is one of the most flexible blocks available.  
+/// See: <https://api.slack.com/reference/block-kit/blocks#section>
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct SectionBlock {

@@ -1,8 +1,12 @@
+//! A block that collects information from users - it can hold a plain-text input element, a checkbox element, a radio button element, a select menu element, a multi-select menu element, or a datepicker.
+
 use crate::block::block_elements::BlockElement;
 use crate::block::block_object::TextBlockObject;
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 
+/// A block that collects information from users - it can hold a plain-text input element, a checkbox element, a radio button element, a select menu element, a multi-select menu element, or a datepicker.  
+/// See: <https://api.slack.com/reference/block-kit/blocks#input>
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct InputBlock {

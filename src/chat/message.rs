@@ -1,3 +1,5 @@
+//! Slack Message Object.
+
 use crate::attachment::attachment::Attachment;
 use crate::block::blocks::Block;
 use crate::reactions::reaction::Reaction;

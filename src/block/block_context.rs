@@ -1,7 +1,11 @@
+//! Displays message context, which can include both images and text.
+
 use crate::block::block_elements::MixedElement;
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 
+/// Displays message context, which can include both images and text.  
+/// See: <https://api.slack.com/reference/block-kit/blocks#context>
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct ContextBlock {

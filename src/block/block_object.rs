@@ -1,6 +1,11 @@
+//! Composition objects can be used inside of block elements and certain message payload fields.   
+//! See: <https://api.slack.com/reference/block-kit/composition-objects>
+
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 
+/// An object containing some text, formatted either as plain_text or using mrkdwn, our proprietary contribution to the much beloved Markdown standard.  
+/// See: <https://api.slack.com/reference/block-kit/composition-objects#text>
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct TextBlockObject {
@@ -66,6 +71,8 @@ impl Default for TextBlockType {
     }
 }
 
+/// An object that represents a single selectable item in a select menu, multi-select menu, checkbox group, radio button group, or overflow menu.  
+/// See: <https://api.slack.com/reference/block-kit/composition-objects#option>
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct OptionBlockObject {

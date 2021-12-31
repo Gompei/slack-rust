@@ -1,3 +1,6 @@
+//! List the workspaces a token can access.
+//! See: <https://api.slack.com/methods/auth.teams.list>
+
 use crate::error::Error;
 use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};
 use crate::team::teams::Team;
@@ -21,6 +24,8 @@ pub struct TeamsListResponse {
     pub teams: Option<Vec<Team>>,
 }
 
+/// List the workspaces a token can access.
+/// See: <https://api.slack.com/methods/auth.teams.list>
 pub async fn teams_list<T>(
     client: &T,
     param: &TeamsListRequest,

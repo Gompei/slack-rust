@@ -1,3 +1,6 @@
+//! Blocks are a series of components that can be combined to create visually rich and compellingly interactive messages.    
+//! See: <https://api.slack.com/reference/block-kit/blocks>
+
 use crate::block::block_actions::ActionBlock;
 use crate::block::block_context::ContextBlock;
 use crate::block::block_divider::DividerBlock;
@@ -10,6 +13,8 @@ use crate::block::block_section::SectionBlock;
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 
+/// Blocks are a series of components that can be combined to create visually rich and compellingly interactive messages.
+/// See: <https://api.slack.com/reference/block-kit/blocks>
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
 #[serde(tag = "type")]
 pub enum Block {

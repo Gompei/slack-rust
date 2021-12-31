@@ -1,3 +1,6 @@
+//! Generate a temporary Socket Mode WebSocket URL that your app can connect to in order to receive events and interactive payloads over.    
+//! See: <https://api.slack.com/methods/apps.connections.open>
+
 use crate::error::Error;
 use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};
 use serde::{Deserialize, Serialize};
@@ -12,6 +15,8 @@ pub struct ConnectionsOpenResponse {
     pub url: Option<String>,
 }
 
+/// Generate a temporary Socket Mode WebSocket URL that your app can connect to in order to receive events and interactive payloads over.    
+/// See: <https://api.slack.com/methods/apps.connections.open>
 pub async fn connections_open<T>(
     client: &T,
     app_token: &str,

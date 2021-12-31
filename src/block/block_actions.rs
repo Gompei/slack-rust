@@ -1,7 +1,11 @@
+//! A block that is used to hold interactive elements.
+
 use crate::block::block_elements::BlockElement;
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 
+/// A block that is used to hold interactive elements.  
+/// See: <https://api.slack.com/reference/block-kit/blocks#actions>
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct ActionBlock {

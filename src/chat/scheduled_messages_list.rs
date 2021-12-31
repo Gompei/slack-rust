@@ -1,3 +1,6 @@
+//! Returns a list of scheduled messages.  
+//! See: <https://api.slack.com/methods/chat.scheduledMessages.list>
+
 use crate::error::Error;
 use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};
 use serde::{Deserialize, Serialize};
@@ -33,6 +36,8 @@ pub struct ScheduledMessage {
     pub text: Option<String>,
 }
 
+/// Returns a list of scheduled messages.  
+/// See: <https://api.slack.com/methods/chat.scheduledMessages.list>
 pub async fn scheduled_messages_list<T>(
     client: &T,
     param: &ScheduledMessagesListRequest,

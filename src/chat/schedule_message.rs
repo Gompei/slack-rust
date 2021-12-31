@@ -1,3 +1,6 @@
+//! Schedules a message to be sent to a channel.  
+//! See: <https://api.slack.com/methods/chat.scheduleMessage>
+
 use crate::attachment::attachment::Attachment;
 use crate::block::blocks::Block;
 use crate::chat::message::Message;
@@ -35,6 +38,8 @@ pub struct ScheduledMessageResponse {
     pub message: Option<Message>,
 }
 
+/// Schedules a message to be sent to a channel.  
+/// See: <https://api.slack.com/methods/chat.scheduleMessage>
 pub async fn scheduled_message<T>(
     client: &T,
     param: &ScheduledMessageRequest,

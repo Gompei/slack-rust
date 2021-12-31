@@ -1,3 +1,6 @@
+//! Retrieve a permalink URL for a specific extant message.  
+//! See: <https://api.slack.com/methods/chat.getPermalink>
+
 use crate::error::Error;
 use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};
 use serde::{Deserialize, Serialize};
@@ -18,6 +21,8 @@ pub struct GetPermalinkResponse {
     pub permalink: Option<String>,
 }
 
+/// Retrieve a permalink URL for a specific extant message.  
+/// See: <https://api.slack.com/methods/chat.getPermalink>
 pub async fn get_permalink<T>(
     client: &T,
     param: &GetPermalinkRequest,

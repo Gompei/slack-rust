@@ -1,3 +1,6 @@
+//! Updates a message.  
+//! See: <https://api.slack.com/methods/chat.update>
+
 use crate::attachment::attachment::Attachment;
 use crate::block::blocks::Block;
 use crate::chat::message::Message;

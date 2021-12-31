@@ -1,3 +1,6 @@
+//! Checks authentication & identity.
+//! See: <https://api.slack.com/methods/auth.test>
+
 use crate::error::Error;
 use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};
 use serde::{Deserialize, Serialize};
@@ -16,6 +19,8 @@ pub struct TestResponse {
     pub user_id: Option<String>,
 }
 
+/// Checks authentication & identity.
+/// See: <https://api.slack.com/methods/auth.test>
 pub async fn test<T>(client: &T, bot_token: &str) -> Result<TestResponse, Error>
 where
     T: SlackWebAPIClient,

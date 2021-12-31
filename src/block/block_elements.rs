@@ -1,3 +1,4 @@
+//! Slack Block elements  
 use crate::block::block_object::{
     ConfirmationBlockObject, DispatchActionConfig, OptionBlockObject, OptionGroupBlockObject,
     TextBlockObject,
@@ -5,6 +6,7 @@ use crate::block::block_object::{
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 
+/// See: <https://api.slack.com/reference/block-kit/block-elements>
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
 #[serde(tag = "type")]
 pub enum BlockElement {
@@ -143,6 +145,8 @@ impl Default for BlockElementType {
     }
 }
 
+/// An interactive component that inserts a button.  
+/// See: <https://api.slack.com/reference/block-kit/block-elements#button>
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct ButtonElement {
@@ -206,6 +210,8 @@ impl ButtonElementBuilder {
     }
 }
 
+/// A checkbox group that allows a user to choose multiple items from a list of possible options.  
+/// See: <https://api.slack.com/reference/block-kit/block-elements#checkboxes>
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct CheckboxGroupsBlockElement {
@@ -274,6 +280,8 @@ impl CheckboxGroupsBlockElementBuilder {
     }
 }
 
+/// An element which lets users easily select a date from a calendar style UI.  
+/// See: <https://api.slack.com/reference/block-kit/block-elements#datepicker>
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct DatePickerBlockElement {
@@ -333,6 +341,8 @@ impl DatePickerBlockElementBuilder {
     }
 }
 
+/// An element to insert an image as part of a larger block of content.  
+/// See: <https://api.slack.com/reference/block-kit/block-elements#image>
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct ImageBlockElement {
     pub image_url: String,
@@ -348,6 +358,8 @@ impl ImageBlockElement {
     }
 }
 
+/// A multi-select menu allows a user to select multiple items from a list of options.  
+/// See: <https://api.slack.com/reference/block-kit/block-elements#multi_select>
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct MultiSelectBlockElement {
@@ -470,6 +482,8 @@ impl MultiSelectBlockElementBuilder {
     }
 }
 
+/// This is like a cross between a button and a select menu.  
+/// See: <https://api.slack.com/reference/block-kit/block-elements#overflow>
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct OverflowBlockElement {
@@ -515,6 +529,8 @@ impl OverflowBlockElementBuilder {
     }
 }
 
+/// A plain-text input, similar to the HTML <input> tag, creates a field where a user can enter freeform data.  
+/// See: <https://api.slack.com/reference/block-kit/block-elements#input>
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct PlainTextInputBlockElement {
@@ -601,6 +617,8 @@ impl PlainTextInputBlockElementBuilder {
     }
 }
 
+/// A radio button group that allows a user to choose one item from a list of possible options.  
+/// See: <https://api.slack.com/reference/block-kit/block-elements#radio>
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct RadioButtonsBlockElement {
@@ -659,6 +677,8 @@ impl RadioButtonsBlockElementBuilder {
     }
 }
 
+/// A select menu, just as with a standard HTML <select> tag, creates a drop down menu with a list of options for a user to choose.  
+/// See: <https://api.slack.com/reference/block-kit/block-elements#select>
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct SelectBlockElement {
@@ -778,6 +798,8 @@ impl SelectBlockElementBuilder {
     }
 }
 
+/// An element which allows selection of a time of day.  
+/// See: <https://api.slack.com/reference/block-kit/block-elements#timepicker>
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct TimePickerBlockElement {

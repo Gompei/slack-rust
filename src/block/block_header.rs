@@ -1,7 +1,11 @@
+//! A header is a plain-text block that displays in a larger, bold font.
+
 use crate::block::block_object::TextBlockObject;
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 
+/// A header is a plain-text block that displays in a larger, bold font.    
+/// See: <https://api.slack.com/reference/block-kit/blocks#header>
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct HeaderBlock {

@@ -1,3 +1,6 @@
+//! Sends a message to a channel.  
+//! See: <https://api.slack.com/methods/chat.postMessage>
+
 use crate::attachment::attachment::Attachment;
 use crate::block::blocks::Block;
 use crate::chat::message::Message;
@@ -139,6 +142,8 @@ pub struct PostMessageResponse {
     pub message: Option<Message>,
 }
 
+/// Sends a message to a channel.  
+/// See: <https://api.slack.com/methods/chat.postMessage>
 pub async fn post_message<T>(
     client: &T,
     param: &PostMessageRequest,

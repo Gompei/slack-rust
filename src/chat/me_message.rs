@@ -1,3 +1,6 @@
+//! Share a me message into a channel.  
+//! See: <https://api.slack.com/methods/chat.meMessage>
+
 use crate::error::Error;
 use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};
 use serde::{Deserialize, Serialize};
@@ -19,6 +22,8 @@ pub struct MeMessageResponse {
     pub ts: Option<String>,
 }
 
+/// Share a me message into a channel.  
+/// See: <https://api.slack.com/methods/chat.meMessage>
 pub async fn me_message<T>(
     client: &T,
     param: &MeMessageRequest,

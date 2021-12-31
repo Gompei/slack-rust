@@ -1,3 +1,5 @@
+//! Slack WEB API methods for [chat](https://api.slack.com/methods?filter=chat).
+
 pub mod delete;
 pub mod delete_scheduled_message;
 pub mod get_permalink;

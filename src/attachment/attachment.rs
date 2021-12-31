@@ -1,7 +1,10 @@
+//! [Attachment](https://api.slack.com/reference/messaging/attachments)
+
 use crate::block::blocks::Block;
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 
+/// See: <https://api.slack.com/reference/messaging/attachments#field_objects>
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct AttachmentField {
@@ -51,6 +54,7 @@ impl AttachmentFieldBuilder {
     }
 }
 
+/// See: <https://api.slack.com/reference/messaging/attachments#fields>
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct Attachment {

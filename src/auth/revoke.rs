@@ -1,3 +1,6 @@
+//! Revokes a token.
+//! See: <https://api.slack.com/methods/auth.revoke>
+
 use crate::error::Error;
 use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};
 use serde::{Deserialize, Serialize};
@@ -18,6 +21,8 @@ pub struct RevokeResponse {
     pub revoked: Option<bool>,
 }
 
+/// Revokes a token.
+/// See: <https://api.slack.com/methods/auth.revoke>
 pub async fn revoke<T>(
     client: &T,
     param: &RevokeRequest,

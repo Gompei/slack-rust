@@ -1,3 +1,5 @@
+//! [Slack Layout Blocks.](https://api.slack.com/reference/block-kit/blocks)
+
 pub mod block_actions;
 pub mod block_context;
 pub mod block_divider;

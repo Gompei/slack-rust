@@ -1,3 +1,6 @@
+//! Sends an ephemeral message to a user in a channel.  
+//! See: <https://api.slack.com/methods/chat.postEphemeral>
+
 use crate::attachment::attachment::Attachment;
 use crate::block::blocks::Block;
 use crate::error::Error;
