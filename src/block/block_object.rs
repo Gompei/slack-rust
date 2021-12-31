@@ -136,6 +136,56 @@ pub struct ConfirmationBlockObject {
     pub style: Option<String>,
 }
 
+impl ConfirmationBlockObject {
+    pub fn builder(
+        title: TextBlockObject,
+        text: TextBlockObject,
+        confirm: TextBlockObject,
+        deny: TextBlockObject,
+    ) -> ConfirmationBlockObjectBuilder {
+        ConfirmationBlockObjectBuilder::new(title, text, confirm, deny)
+    }
+}
+
+#[derive(Debug, Default)]
+pub struct ConfirmationBlockObjectBuilder {
+    pub title: TextBlockObject,
+    pub text: TextBlockObject,
+    pub confirm: TextBlockObject,
+    pub deny: TextBlockObject,
+    pub style: Option<String>,
+}
+
+impl ConfirmationBlockObjectBuilder {
+    pub fn new(
+        title: TextBlockObject,
+        text: TextBlockObject,
+        confirm: TextBlockObject,
+        deny: TextBlockObject,
+    ) -> ConfirmationBlockObjectBuilder {
+        ConfirmationBlockObjectBuilder {
+            title,
+            text,
+            confirm,
+            deny,
+            ..Default::default()
+        }
+    }
+    pub fn style(mut self, style: String) -> ConfirmationBlockObjectBuilder {
+        self.style = Some(style);
+        self
+    }
+    pub fn build(self) -> ConfirmationBlockObject {
+        ConfirmationBlockObject {
+            title: self.title,
+            text: self.text,
+            confirm: self.confirm,
+            deny: self.deny,
+            style: self.style,
+        }
+    }
+}
+
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct DispatchActionConfig {
