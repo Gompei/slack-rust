@@ -26,10 +26,104 @@ pub struct PostMessageRequest {
 }
 
 impl PostMessageRequest {
-    pub fn new(channel: String) -> PostMessageRequest {
-        PostMessageRequest {
+    pub fn builder(channel: String) -> PostMessageRequestBuilder {
+        PostMessageRequestBuilder::new(channel)
+    }
+}
+
+#[derive(Debug, Default)]
+pub struct PostMessageRequestBuilder {
+    pub channel: String,
+    pub attachments: Option<Vec<Attachment>>,
+    pub blocks: Option<Vec<Block>>,
+    pub text: Option<String>,
+    pub icon_emoji: Option<String>,
+    pub icon_url: Option<String>,
+    pub link_names: Option<bool>,
+    pub mrkdwn: Option<bool>,
+    pub parse: Option<String>,
+    pub reply_broadcast: Option<bool>,
+    pub thread_ts: Option<String>,
+    pub unfurl_links: Option<bool>,
+    pub unfurl_media: Option<bool>,
+    pub username: Option<String>,
+}
+
+impl PostMessageRequestBuilder {
+    pub fn new(channel: String) -> PostMessageRequestBuilder {
+        PostMessageRequestBuilder {
             channel,
             ..Default::default()
+        }
+    }
+    pub fn attachments(mut self, attachments: Vec<Attachment>) -> PostMessageRequestBuilder {
+        self.attachments = Some(attachments);
+        self
+    }
+    pub fn blocks(mut self, blocks: Vec<Block>) -> PostMessageRequestBuilder {
+        self.blocks = Some(blocks);
+        self
+    }
+    pub fn text(mut self, text: String) -> PostMessageRequestBuilder {
+        self.text = Some(text);
+        self
+    }
+    pub fn icon_emoji(mut self, icon_emoji: String) -> PostMessageRequestBuilder {
+        self.icon_emoji = Some(icon_emoji);
+        self
+    }
+    pub fn icon_url(mut self, icon_url: String) -> PostMessageRequestBuilder {
+        self.icon_url = Some(icon_url);
+        self
+    }
+    pub fn link_names(mut self, link_names: bool) -> PostMessageRequestBuilder {
+        self.link_names = Some(link_names);
+        self
+    }
+    pub fn mrkdwn(mut self, mrkdwn: bool) -> PostMessageRequestBuilder {
+        self.mrkdwn = Some(mrkdwn);
+        self
+    }
+    pub fn parse(mut self, parse: String) -> PostMessageRequestBuilder {
+        self.parse = Some(parse);
+        self
+    }
+    pub fn reply_broadcast(mut self, reply_broadcast: bool) -> PostMessageRequestBuilder {
+        self.reply_broadcast = Some(reply_broadcast);
+        self
+    }
+    pub fn thread_ts(mut self, thread_ts: String) -> PostMessageRequestBuilder {
+        self.thread_ts = Some(thread_ts);
+        self
+    }
+    pub fn unfurl_links(mut self, unfurl_links: bool) -> PostMessageRequestBuilder {
+        self.unfurl_links = Some(unfurl_links);
+        self
+    }
+    pub fn unfurl_media(mut self, unfurl_media: bool) -> PostMessageRequestBuilder {
+        self.unfurl_media = Some(unfurl_media);
+        self
+    }
+    pub fn username(mut self, username: String) -> PostMessageRequestBuilder {
+        self.username = Some(username);
+        self
+    }
+    pub fn build(self) -> PostMessageRequest {
+        PostMessageRequest {
+            channel: self.channel,
+            attachments: self.attachments,
+            blocks: self.blocks,
+            text: self.text,
+            icon_emoji: self.icon_emoji,
+            icon_url: self.icon_url,
+            link_names: self.link_names,
+            mrkdwn: self.mrkdwn,
+            parse: self.parse,
+            reply_broadcast: self.reply_broadcast,
+            thread_ts: self.thread_ts,
+            unfurl_links: self.unfurl_links,
+            unfurl_media: self.unfurl_media,
+            username: self.username,
         }
     }
 }
