@@ -1,5 +1,4 @@
 //! Updates a message.  
-//! See: <https://api.slack.com/methods/chat.update>
 
 use crate::attachment::attachment::Attachment;
 use crate::block::blocks::Block;
@@ -36,6 +35,8 @@ pub struct UpdateResponse {
     pub message: Option<Message>,
 }
 
+/// Updates a message.  
+/// See: <https://api.slack.com/methods/chat.update>
 pub async fn update<T>(
     client: &T,
     param: &UpdateRequest,

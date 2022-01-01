@@ -1,5 +1,4 @@
 //! Checks authentication & identity.
-//! See: <https://api.slack.com/methods/auth.test>
 
 use crate::error::Error;
 use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};

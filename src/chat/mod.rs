@@ -1,4 +1,4 @@
-//! Slack WEB API methods for [chat](https://api.slack.com/methods?filter=chat).
+//! Slack WEB API Client for [chat](https://api.slack.com/methods?filter=chat) methods.
 
 pub mod delete;
 pub mod delete_scheduled_message;

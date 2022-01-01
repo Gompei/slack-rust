@@ -1,5 +1,4 @@
 //! Deletes a pending scheduled message from the queue.
-//! See: <https://api.slack.com/methods/chat.deleteScheduledMessage>
 
 use crate::error::Error;
 use crate::http_client::{get_slack_url, DefaultResponse, SlackWebAPIClient};

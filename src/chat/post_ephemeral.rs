@@ -1,5 +1,4 @@
 //! Sends an ephemeral message to a user in a channel.  
-//! See: <https://api.slack.com/methods/chat.postEphemeral>
 
 use crate::attachment::attachment::Attachment;
 use crate::block::blocks::Block;
@@ -34,6 +33,8 @@ pub struct PostEphemeralResponse {
     pub message_ts: Option<String>,
 }
 
+/// Sends an ephemeral message to a user in a channel.  
+/// See: <https://api.slack.com/methods/chat.postEphemeral>
 pub async fn post_ephemeral<T>(
     client: &T,
     param: &PostEphemeralRequest,

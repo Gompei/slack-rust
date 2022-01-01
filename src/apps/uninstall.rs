@@ -1,5 +1,4 @@
 //! Uninstalls your app from a workspace.  
-//! See: <https://api.slack.com/methods?filter=apps>
 
 use crate::error::Error;
 use crate::http_client::{get_slack_url, DefaultResponse, SlackWebAPIClient};

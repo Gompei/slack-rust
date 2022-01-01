@@ -1,5 +1,4 @@
 //! Share a me message into a channel.  
-//! See: <https://api.slack.com/methods/chat.meMessage>
 
 use crate::error::Error;
 use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};

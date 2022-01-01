@@ -7,6 +7,7 @@ use mockall::automock;
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 
+/// Slack WEB API Client.
 #[cfg_attr(test, automock)]
 #[async_trait]
 pub trait SlackWebAPIClient: Sync + Send {
@@ -14,11 +15,12 @@ pub trait SlackWebAPIClient: Sync + Send {
     async fn post(&self, url: &str, token: &str) -> Result<String, Error>;
 }
 
+/// HTTP Client(surf::Client).
 pub type Client = surf::Client;
 
 #[async_trait]
 impl SlackWebAPIClient for Client {
-    /// Send a post request to the slack api.
+    /// Send a post request including the body to the slack web api.
     async fn post_json(&self, url: &str, body: &str, token: &str) -> Result<String, Error> {
         let check_url = url::Url::parse(url)?;
 
@@ -31,8 +33,7 @@ impl SlackWebAPIClient for Client {
             .body_string()
             .await?)
     }
-
-    /// Send a post request to the slack api.
+    /// Send a post request to the slack web api.
     async fn post(&self, url: &str, token: &str) -> Result<String, Error> {
         let check_url = url::Url::parse(url)?;
 
@@ -55,7 +56,7 @@ pub fn default_client() -> Client {
     surf::Client::new()
 }
 
-/// Slack default response.
+/// Slack WEB API default response.
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct DefaultResponse {
@@ -64,7 +65,7 @@ pub struct DefaultResponse {
     pub response_metadata: Option<ResponseMetadata>,
 }
 
-/// Metadata.
+/// Slack WEB API response metadata.
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct ResponseMetadata {

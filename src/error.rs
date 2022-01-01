@@ -1,3 +1,5 @@
+//! The Error type.
+
 use std::fmt;
 
 #[derive(Debug)]

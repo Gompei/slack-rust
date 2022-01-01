@@ -1,5 +1,4 @@
 //! Retrieve a permalink URL for a specific extant message.  
-//! See: <https://api.slack.com/methods/chat.getPermalink>
 
 use crate::error::Error;
 use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};

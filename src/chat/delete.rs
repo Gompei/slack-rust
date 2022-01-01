@@ -1,5 +1,4 @@
 //! Deletes a message.  
-//! See: <https://api.slack.com/methods/chat.delete>
 
 use crate::error::Error;
 use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};

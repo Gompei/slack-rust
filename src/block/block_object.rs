@@ -1,5 +1,4 @@
 //! Composition objects can be used inside of block elements and certain message payload fields.   
-//! See: <https://api.slack.com/reference/block-kit/composition-objects>
 
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;

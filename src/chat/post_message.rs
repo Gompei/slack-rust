@@ -1,5 +1,4 @@
 //! Sends a message to a channel.  
-//! See: <https://api.slack.com/methods/chat.postMessage>
 
 use crate::attachment::attachment::Attachment;
 use crate::block::blocks::Block;

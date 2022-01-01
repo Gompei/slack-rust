@@ -1,5 +1,4 @@
 //! Schedules a message to be sent to a channel.  
-//! See: <https://api.slack.com/methods/chat.scheduleMessage>
 
 use crate::attachment::attachment::Attachment;
 use crate::block::blocks::Block;

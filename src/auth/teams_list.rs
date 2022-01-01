@@ -1,5 +1,4 @@
 //! List the workspaces a token can access.
-//! See: <https://api.slack.com/methods/auth.teams.list>
 
 use crate::error::Error;
 use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};

@@ -1,5 +1,4 @@
 //! Revokes a token.
-//! See: <https://api.slack.com/methods/auth.revoke>
 
 use crate::error::Error;
 use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};
