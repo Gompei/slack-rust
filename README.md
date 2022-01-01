@@ -1,4 +1,4 @@
-# [Slack API in Rust](https://api.slack.com)
+# [Slack API Client for Rust](https://api.slack.com)
 
 [<img alt="github" src="https://img.shields.io/badge/github-Gompei/slack_rust-6ba5dd?style=for-the-badge&logo=github" height="20">](https://github.com/Gompei/slack-rust)
 [<img alt="crates.io" src="https://img.shields.io/crates/v/slack-rust.svg?style=for-the-badge&color=fc8d62&logo=rust" height="20">](https://crates.io/crates/slack-rust)
