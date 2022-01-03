@@ -309,3 +309,39 @@ pub enum CallbackEventType {
     GridMigrationFinished,
     GridMigrationStarted,
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn deserialize_app_home_opened_event() {
+        let json = r##"{
+  "type": "app_home_opened",
+  "user": "U061F7AUR",
+  "channel": "D0LAN2Q65",
+  "event_ts": "1515449522000016",
+  "tab": "home",
+  "view": {
+    "id": "VPASKP233"
+  }
+}"##;
+        let event = serde_json::from_str::<Event>(json).unwrap();
+        match event {
+            Event::AppHomeOpened {
+                user,
+                channel,
+                event_ts,
+                tab,
+                view,
+            } => {
+                assert_eq!(user, "U061F7AUR");
+                assert_eq!(channel, "D0LAN2Q65");
+                assert_eq!(event_ts, "1515449522000016");
+                assert_eq!(tab, "home");
+                assert_eq!(view.id.unwrap(), "VPASKP233");
+            }
+            _ => panic!("Event deserialize into incorrect variant"),
+        }
+    }
+}
