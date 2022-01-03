@@ -192,8 +192,8 @@ pub enum Event {
         text: String,
         ts: String,
     },
-    #[serde(skip)]
-    None,
+    #[serde(other)]
+    Other,
 }
 
 impl Event {
@@ -234,7 +234,7 @@ impl Event {
             Event::MemberJoinedChannel { .. } => EventType::MemberJoinedChannel,
             Event::MemberLeftChannel { .. } => EventType::MemberLeftChannel,
             Event::Message { .. } => EventType::Message,
-            Event::None => EventType::None,
+            Event::Other => EventType::Other,
         }
     }
 }
@@ -278,8 +278,8 @@ pub enum EventType {
     MemberJoinedChannel,
     MemberLeftChannel,
     Message,
-    #[serde(skip)]
-    None,
+    #[serde(other)]
+    Other,
 }
 
 #[skip_serializing_none]
@@ -341,6 +341,19 @@ mod test {
                 assert_eq!(tab, "home");
                 assert_eq!(view.id.unwrap(), "VPASKP233");
             }
+            _ => panic!("Event deserialize into incorrect variant"),
+        }
+    }
+
+    #[test]
+    fn deserialize_unknown_event() {
+        let json = r##"{
+  "type": "other"
+}"##;
+
+        let event = serde_json::from_str::<Event>(json).unwrap();
+        match event {
+            Event::Other => assert!(true, "true"),
             _ => panic!("Event deserialize into incorrect variant"),
         }
     }
