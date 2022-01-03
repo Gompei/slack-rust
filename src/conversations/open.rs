@@ -1,3 +1,5 @@
+//! Opens or resumes a direct message or multi-person direct message.
+
 use crate::channels::channel::Channel;
 use crate::error::Error;
 use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};
@@ -24,6 +26,8 @@ pub struct OpenResponse {
     pub channel: Option<Channel>,
 }
 
+/// Opens or resumes a direct message or multi-person direct message.  
+/// See: <https://api.slack.com/methods/conversations.open>
 pub async fn open<T>(
     client: &T,
     param: &OpenRequest,

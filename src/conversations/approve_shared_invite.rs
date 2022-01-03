@@ -1,3 +1,5 @@
+//! Approves an invitation to a Slack Connect channel.
+
 use crate::error::Error;
 use crate::http_client::{get_slack_url, DefaultResponse, SlackWebAPIClient};
 use serde::{Deserialize, Serialize};
@@ -10,6 +12,8 @@ pub struct ApproveSharedInviteRequest {
     pub target_team: Option<String>,
 }
 
+/// Approves an invitation to a Slack Connect channel.  
+/// See: <https://api.slack.com/methods/conversations.approveSharedInvite>
 pub async fn approve_shared_invite<T>(
     client: &T,
     param: &ApproveSharedInviteRequest,

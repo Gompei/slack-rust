@@ -1,3 +1,5 @@
+//! Closes a direct message or multi-person direct message.
+
 use crate::error::Error;
 use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};
 use serde::{Deserialize, Serialize};
@@ -18,6 +20,8 @@ pub struct CloseResponse {
     pub already_closed: Option<bool>,
 }
 
+/// Closes a direct message or multi-person direct message.  
+/// See: <https://api.slack.com/methods/conversations.close>
 pub async fn close<T>(
     client: &T,
     param: &CloseRequest,

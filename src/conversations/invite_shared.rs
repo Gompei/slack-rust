@@ -1,3 +1,5 @@
+//! Sends an invitation to a Slack Connect channel.
+
 use crate::error::Error;
 use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};
 use serde::{Deserialize, Serialize};
@@ -24,6 +26,8 @@ pub struct InviteSharedResponse {
     pub is_legacy_shared_channel: Option<bool>,
 }
 
+/// Sends an invitation to a Slack Connect channel.  
+/// See: <https://api.slack.com/methods/conversations.inviteShared>
 pub async fn invite_shared<T>(
     client: &T,
     param: &InviteSharedRequest,

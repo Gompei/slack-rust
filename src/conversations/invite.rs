@@ -1,3 +1,5 @@
+//! Invites users to a channel.
+
 use crate::channels::channel::Channel;
 use crate::error::Error;
 use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};
@@ -20,6 +22,8 @@ pub struct InviteResponse {
     pub channel: Option<Channel>,
 }
 
+/// Invites users to a channel.  
+/// See: <https://api.slack.com/methods/conversations.invite>
 pub async fn invite<T>(
     client: &T,
     param: &InviteRequest,

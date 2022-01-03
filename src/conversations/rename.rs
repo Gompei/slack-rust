@@ -1,3 +1,5 @@
+//! Renames a conversation.
+
 use crate::channels::channel::Channel;
 use crate::error::Error;
 use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};
@@ -19,6 +21,8 @@ pub struct RenameResponse {
     pub channel: Option<Channel>,
 }
 
+/// Renames a conversation.  
+/// See: <https://api.slack.com/methods/conversations.rename>
 pub async fn rename<T>(
     client: &T,
     param: &RenameRequest,

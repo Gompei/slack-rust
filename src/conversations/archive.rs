@@ -1,3 +1,5 @@
+//! Archives a conversation.
+
 use crate::error::Error;
 use crate::http_client::{get_slack_url, DefaultResponse, SlackWebAPIClient};
 use serde::{Deserialize, Serialize};
@@ -7,6 +9,8 @@ pub struct ArchiveRequest {
     pub channel: String,
 }
 
+/// Archives a conversation.  
+/// See: <https://api.slack.com/methods/conversations.archive>
 pub async fn archive<T>(
     client: &T,
     param: &ArchiveRequest,

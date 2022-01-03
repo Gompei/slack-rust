@@ -1,3 +1,4 @@
+//! Initiates a public or private channel-based conversation.
 use crate::channels::channel::Channel;
 use crate::error::Error;
 use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};
@@ -21,6 +22,8 @@ pub struct CreateResponse {
     pub channel: Option<Channel>,
 }
 
+/// Initiates a public or private channel-based conversation.  
+/// See: <https://api.slack.com/methods/conversations.create>
 pub async fn create<T>(
     client: &T,
     param: &CreateRequest,

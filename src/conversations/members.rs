@@ -1,3 +1,5 @@
+//! Retrieve members of a conversation.
+
 use crate::error::Error;
 use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};
 use serde::{Deserialize, Serialize};
@@ -20,6 +22,8 @@ pub struct MembersResponse {
     pub members: Option<Vec<String>>,
 }
 
+/// Retrieve members of a conversation.  
+/// See: <https://api.slack.com/methods/conversations.members>
 pub async fn members<T>(
     client: &T,
     param: &MembersRequest,

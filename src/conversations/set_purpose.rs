@@ -1,3 +1,5 @@
+//! Sets the purpose for a conversation.
+
 use crate::error::Error;
 use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};
 use serde::{Deserialize, Serialize};
@@ -18,6 +20,8 @@ pub struct SetPurposeResponse {
     pub purpose: Option<String>,
 }
 
+/// Sets the purpose for a conversation.  
+/// See: <https://api.slack.com/methods/conversations.setPurpose>
 pub async fn set_purpose<T>(
     client: &T,
     param: &SetPurposeRequest,

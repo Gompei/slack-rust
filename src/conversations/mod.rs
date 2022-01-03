@@ -1,3 +1,5 @@
+//! Slack WEB API Client for [conversations](https://api.slack.com/methods?filter=conversations) methods.
+
 pub mod accept_shared_invite;
 pub mod approve_shared_invite;
 pub mod archive;

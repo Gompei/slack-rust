@@ -1,3 +1,5 @@
+//! Joins an existing conversation.
+
 use crate::channels::channel::Channel;
 use crate::error::Error;
 use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};
@@ -19,6 +21,8 @@ pub struct JoinResponse {
     pub warning: Option<String>,
 }
 
+/// Joins an existing conversation.  
+/// See: <https://api.slack.com/methods/conversations.join>
 pub async fn join<T>(
     client: &T,
     param: &JoinRequest,

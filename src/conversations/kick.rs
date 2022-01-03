@@ -1,3 +1,5 @@
+//! Removes a user from a conversation.
+
 use crate::error::Error;
 use crate::http_client::{get_slack_url, DefaultResponse, SlackWebAPIClient};
 use serde::{Deserialize, Serialize};
@@ -8,6 +10,8 @@ pub struct KickRequest {
     pub user: String,
 }
 
+/// Removes a user from a conversation.  
+/// See: <https://api.slack.com/methods/conversations.kick>
 pub async fn kick<T>(
     client: &T,
     param: &KickRequest,

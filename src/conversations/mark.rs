@@ -1,3 +1,5 @@
+//! Sets the read cursor in a channel.
+
 use crate::error::Error;
 use crate::http_client::{get_slack_url, DefaultResponse, SlackWebAPIClient};
 use serde::{Deserialize, Serialize};
@@ -8,6 +10,8 @@ pub struct MarkRequest {
     pub ts: String,
 }
 
+/// Sets the read cursor in a channel.  
+/// See: <https://api.slack.com/methods/conversations.mark>
 pub async fn mark<T>(
     client: &T,
     param: &MarkRequest,

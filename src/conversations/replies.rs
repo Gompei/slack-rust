@@ -1,3 +1,5 @@
+//!  Retrieve a thread of messages posted to a conversation.
+
 use crate::chat::message::Message;
 use crate::error::Error;
 use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};
@@ -26,6 +28,8 @@ pub struct RepliesResponse {
     pub has_more: Option<bool>,
 }
 
+/// Retrieve a thread of messages posted to a conversation.  
+/// See: <https://api.slack.com/methods/conversations.replies>
 pub async fn replies<T>(
     client: &T,
     param: &RepliesRequest,

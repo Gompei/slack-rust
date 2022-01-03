@@ -1,3 +1,5 @@
+//! Leaves a conversation.
+
 use crate::error::Error;
 use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};
 use serde::{Deserialize, Serialize};
@@ -17,6 +19,8 @@ pub struct LeaveResponse {
     pub not_in_channel: Option<bool>,
 }
 
+/// Leaves a conversation.  
+/// See: <https://api.slack.com/methods/conversations.leave>
 pub async fn leave<T>(
     client: &T,
     param: &LeaveRequest,

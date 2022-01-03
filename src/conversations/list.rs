@@ -1,3 +1,5 @@
+//! Lists all channels in a Slack team.
+
 use crate::channels::channel::Channel;
 use crate::error::Error;
 use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};
@@ -23,6 +25,8 @@ pub struct ListResponse {
     pub channels: Option<Vec<Channel>>,
 }
 
+/// Lists all channels in a Slack team.  
+/// See: <https://api.slack.com/methods/conversations.list>
 pub async fn list<T>(
     client: &T,
     param: &ListRequest,

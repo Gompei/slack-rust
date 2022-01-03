@@ -1,3 +1,4 @@
+//! Fetches a conversation's history of messages and events.
 use crate::chat::message::Message;
 use crate::error::Error;
 use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};
@@ -26,6 +27,8 @@ pub struct HistoryResponse {
     pub pin_count: Option<i32>,
 }
 
+/// Fetches a conversation's history of messages and events.  
+/// See: <https://api.slack.com/methods/conversations.history>
 pub async fn history<T>(
     client: &T,
     param: &HistoryRequest,

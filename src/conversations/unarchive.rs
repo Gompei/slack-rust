@@ -1,3 +1,5 @@
+//! Reverses conversation archival.
+
 use crate::error::Error;
 use crate::http_client::{get_slack_url, DefaultResponse, SlackWebAPIClient};
 use serde::{Deserialize, Serialize};
@@ -7,6 +9,8 @@ pub struct UnarchiveRequest {
     pub channel: String,
 }
 
+/// Reverses conversation archival.  
+/// See: <https://api.slack.com/methods/conversations.unarchive>
 pub async fn unarchive<T>(
     client: &T,
     param: &UnarchiveRequest,

@@ -1,3 +1,5 @@
+//! Retrieve information about a conversation.
+
 use crate::channels::channel::Channel;
 use crate::error::Error;
 use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};
@@ -21,6 +23,8 @@ pub struct InfoResponse {
     pub channel: Option<Channel>,
 }
 
+/// Retrieve information about a conversation.  
+/// See: <https://api.slack.com/methods/conversations.info>
 pub async fn info<T>(
     client: &T,
     param: &InfoRequest,

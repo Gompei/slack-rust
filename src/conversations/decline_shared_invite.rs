@@ -1,3 +1,5 @@
+//! Declines a Slack Connect channel invite.
+
 use crate::error::Error;
 use crate::http_client::{get_slack_url, DefaultResponse, SlackWebAPIClient};
 use serde::{Deserialize, Serialize};
@@ -10,6 +12,8 @@ pub struct DeclineSharedInviteRequest {
     pub target_team: Option<String>,
 }
 
+/// Declines a Slack Connect channel invite.  
+/// See: <https://api.slack.com/methods/conversations.declineSharedInvite>
 pub async fn decline_shared_invite<T>(
     client: &T,
     param: &DeclineSharedInviteRequest,

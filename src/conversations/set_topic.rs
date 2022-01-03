@@ -1,3 +1,5 @@
+//! Sets the topic for a conversation.
+
 use crate::error::Error;
 use crate::http_client::{get_slack_url, ResponseMetadata, SlackWebAPIClient};
 use serde::{Deserialize, Serialize};
@@ -18,6 +20,8 @@ pub struct SetTopicResponse {
     pub topic: Option<String>,
 }
 
+/// Sets the topic for a conversation.  
+/// See: <https://api.slack.com/methods/conversations.setTopic>
 pub async fn set_topic<T>(
     client: &T,
     param: &SetTopicRequest,
