@@ -117,7 +117,7 @@ pub struct AcknowledgeMessage<'s> {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::payloads::interactive::InteractiveEventType;
+    use crate::{event_api::event::EventCallbackType, payloads::interactive::InteractiveEventType};
 
     #[test]
     fn deserialize_hello_event() {
@@ -172,13 +172,21 @@ mod test {
   "envelope_id": "dbdd0ef3-1543-4f94-bfb4-133d0e6c1545",
   "accepts_response_payload": false,
   "payload": {
-    "type": "app_home_opened",
-    "user": "U061F7AUR",
-    "channel": "D0LAN2Q65",
-    "event_ts": "1515449522000016",
-    "tab": "home",
-    "view": {
-      "id": "VPASKP233"
+    "token": "bHKJ2n9AW6Ju3MjciOHfbA1b",
+    "team_id": "T1234567890",
+    "api_app_id": "A0000000000",
+    "event_id": "Ev0000000000",
+    "event_time": 1600000000,
+    "type": "event_callback",
+    "event": {
+      "type": "app_home_opened",
+      "user": "U061F7AUR",
+      "channel": "D0LAN2Q65",
+      "event_ts": "1515449522000016",
+      "tab": "home",
+      "view": {
+        "id": "VPASKP233"
+      }
     }
   }
 }"##;
@@ -193,10 +201,12 @@ mod test {
                 assert!(!accepts_response_payload, "false");
 
                 match payload {
-                    Event::AppHomeOpened { user, .. } => {
-                        assert_eq!(user, "U061F7AUR");
-                    }
-                    _ => panic!("Payload deserialize into incorrect variant"),
+                    Event::EventCallback(event_callback) => match event_callback.event {
+                        EventCallbackType::AppHomeOpened { user, .. } => {
+                            assert_eq!(user, "U061F7AUR");
+                        }
+                        _ => panic!("Event callback deserialize into incorrect variant"),
+                    },
                 }
             }
             _ => panic!("Event deserialize into incorrect variant"),

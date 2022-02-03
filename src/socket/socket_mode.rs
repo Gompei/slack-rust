@@ -182,7 +182,7 @@ pub async fn connector_for_ca_file(ca_file_path: &str) -> Result<TlsConnector, E
 
 #[cfg(test)]
 mod test {
-    use crate::event_api::event::Event;
+    use crate::event_api::event::{Event, EventCallbackType};
     use crate::http_client::{MockSlackWebAPIClient, SlackWebAPIClient};
     use crate::payloads::interactive::InteractiveEventType;
     use crate::socket::event::{
@@ -238,10 +238,12 @@ mod test {
             assert!(!e.accepts_response_payload, "false");
 
             match e.payload {
-                Event::AppHomeOpened { user, .. } => {
-                    assert_eq!(user, "U061F7AUR");
-                }
-                _ => panic!("Payload deserialize into incorrect variant"),
+                Event::EventCallback(event_callback) => match event_callback.event {
+                    EventCallbackType::AppHomeOpened { user, .. } => {
+                        assert_eq!(user, "U061F7AUR");
+                    }
+                    _ => panic!("Event callback deserialize into incorrect variant"),
+                },
             }
             log::info!("success on_events_api test");
         }
@@ -298,13 +300,16 @@ mod test {
   "envelope_id": "dbdd0ef3-1543-4f94-bfb4-133d0e6c1545",
   "accepts_response_payload": false,
   "payload": {
-    "type": "app_home_opened",
-    "user": "U061F7AUR",
-    "channel": "D0LAN2Q65",
-    "event_ts": "1515449522000016",
-    "tab": "home",
-    "view": {
-      "id": "VPASKP233"
+    "type": "event_callback",
+    "event": {
+      "type": "app_home_opened",
+      "user": "U061F7AUR",
+      "channel": "D0LAN2Q65",
+      "event_ts": "1515449522000016",
+      "tab": "home",
+      "view": {
+        "id": "VPASKP233"
+      }
     }
   }
 }"##
