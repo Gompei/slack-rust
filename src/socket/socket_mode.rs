@@ -132,6 +132,7 @@ where
 
             match message? {
                 Message::Text(t) => {
+                    log::info!("{}", t);
                     let event = serde_json::from_str::<SocketModeEvent>(&t)?;
                     match event {
                         SocketModeEvent::HelloEvent(e) => handler.on_hello(&self, e, &mut ws).await,
@@ -300,6 +301,11 @@ mod test {
   "envelope_id": "dbdd0ef3-1543-4f94-bfb4-133d0e6c1545",
   "accepts_response_payload": false,
   "payload": {
+    "token": "bHKJ2n9AW6Ju3MjciOHfbA1b",
+    "team_id": "T1234567890",
+    "api_app_id": "A0000000000",
+    "event_id": "Ev0000000000",
+    "event_time": 1600000000,
     "type": "event_callback",
     "event": {
       "type": "app_home_opened",
