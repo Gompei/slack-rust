@@ -2,7 +2,7 @@ use std::env;
 
 use async_trait::async_trait;
 use slack::chat::post_message::{post_message, PostMessageRequest};
-use slack::event_api::event::{Event, EventCallbackType};
+use slack::event_api::event::{Event, EventCallback};
 use slack::http_client::{default_client, SlackWebAPIClient};
 use slack::socket::event::{EventsAPI, HelloEvent};
 use slack::socket::socket_mode::{ack, EventHandler, SocketMode, Stream};
@@ -50,39 +50,37 @@ where
             .await
             .expect("socket mode ack error.");
 
-        match e.payload {
-            Event::EventCallback(event_callback) => match event_callback.event {
-                EventCallbackType::AppMention {
-                    text,
-                    channel,
-                    ts,
-                    thread_ts,
-                    ..
-                } => {
-                    let (reply_thread_ts, reply_text) = if let Some(thread_ts) = thread_ts {
-                        (thread_ts, "Hello again!".to_string())
-                    } else {
-                        (ts, "Hello!".to_string())
-                    };
+        match e.payload.event {
+            EventCallback::AppMention {
+                text,
+                channel,
+                ts,
+                thread_ts,
+                ..
+            } => {
+                let (reply_thread_ts, reply_text) = if let Some(thread_ts) = thread_ts {
+                    (thread_ts, "Hello again!".to_string())
+                } else {
+                    (ts, "Hello!".to_string())
+                };
 
-                    let request = PostMessageRequest {
-                        channel: socket_mode
-                            .option_parameter
-                            .get("SLACK_CHANNEL_ID")
-                            .unwrap()
-                            .to_string(),
-                        thread_ts: Some(reply_thread_ts),
-                        text: Some(reply_text),
-                        ..Default::default()
-                    };
-                    let response =
-                        post_message(&socket_mode.api_client, &request, &socket_mode.bot_token)
-                            .await
-                            .expect("post message api error.");
-                    log::info!("post message api response: {:?}", response);
-                }
-                _ => {}
-            },
+                let request = PostMessageRequest {
+                    channel: socket_mode
+                        .option_parameter
+                        .get("SLACK_CHANNEL_ID")
+                        .unwrap()
+                        .to_string(),
+                    thread_ts: Some(reply_thread_ts),
+                    text: Some(reply_text),
+                    ..Default::default()
+                };
+                let response =
+                    post_message(&socket_mode.api_client, &request, &socket_mode.bot_token)
+                        .await
+                        .expect("post message api error.");
+                log::info!("post message api response: {:?}", response);
+            }
+            _ => {}
         }
     }
 }

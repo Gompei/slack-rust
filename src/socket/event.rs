@@ -117,7 +117,8 @@ pub struct AcknowledgeMessage<'s> {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::{event_api::event::EventCallbackType, payloads::interactive::InteractiveEventType};
+    use crate::event_api::event::*;
+    use crate::payloads::interactive::InteractiveEventType;
 
     #[test]
     fn deserialize_hello_event() {
@@ -200,13 +201,11 @@ mod test {
                 assert_eq!(envelope_id, "dbdd0ef3-1543-4f94-bfb4-133d0e6c1545");
                 assert!(!accepts_response_payload, "false");
 
-                match payload {
-                    Event::EventCallback(event_callback) => match event_callback.event {
-                        EventCallbackType::AppHomeOpened { user, .. } => {
-                            assert_eq!(user, "U061F7AUR");
-                        }
-                        _ => panic!("Event callback deserialize into incorrect variant"),
-                    },
+                match payload.event {
+                    EventCallback::AppHomeOpened { user, .. } => {
+                        assert_eq!(user, "U061F7AUR");
+                    }
+                    _ => panic!("Event callback deserialize into incorrect variant"),
                 }
             }
             _ => panic!("Event deserialize into incorrect variant"),
