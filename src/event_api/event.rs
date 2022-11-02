@@ -10,115 +10,21 @@ use serde_with::skip_serializing_none;
 /// [Event API](https://api.slack.com/events?filter=Events)
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
 #[serde(tag = "type")]
-pub enum Event {
-    /// Event callback
-    #[serde(rename = "event_callback")]
-    EventCallback(EventCallback),
-}
-
-impl Event {
-    pub fn block_type(&self) -> EventType {
-        match self {
-            Event::EventCallback(event_callback) => match event_callback.event {
-                EventCallbackType::AppHomeOpened { .. } => EventType::AppHomeOpened,
-                EventCallbackType::AppMention { .. } => EventType::AppMention,
-                EventCallbackType::AppRateLimited { .. } => EventType::AppRateLimited,
-                EventCallbackType::AppRequested { .. } => EventType::AppRequested,
-                EventCallbackType::AppUninstalled { .. } => EventType::AppUninstalled,
-                EventCallbackType::ChannelArchive { .. } => EventType::ChannelArchive,
-                EventCallbackType::ChannelCreated { .. } => EventType::ChannelCreated,
-                EventCallbackType::ChannelDeleted { .. } => EventType::ChannelDeleted,
-                EventCallbackType::ChannelHistoryChanged { .. } => EventType::ChannelHistoryChanged,
-                EventCallbackType::ChannelIDChanged { .. } => EventType::ChannelIDChanged,
-                EventCallbackType::ChannelLeft { .. } => EventType::ChannelLeft,
-                EventCallbackType::ChannelRename { .. } => EventType::ChannelRename,
-                EventCallbackType::ChannelShared { .. } => EventType::ChannelShared,
-                EventCallbackType::ChannelUnarchive { .. } => EventType::ChannelUnarchive,
-                EventCallbackType::ChannelUnshared { .. } => EventType::ChannelUnshared,
-                EventCallbackType::EmojiChanged { .. } => EventType::EmojiChanged,
-                EventCallbackType::GridMigrationFinished { .. } => EventType::GridMigrationFinished,
-                EventCallbackType::GridMigrationStarted { .. } => EventType::GridMigrationStarted,
-                EventCallbackType::GroupArchive { .. } => EventType::GroupArchive,
-                EventCallbackType::GroupClose { .. } => EventType::GroupClose,
-                EventCallbackType::GroupDeleted { .. } => EventType::GroupDeleted,
-                EventCallbackType::GroupHistoryChanged { .. } => EventType::GroupHistoryChanged,
-                EventCallbackType::GroupLeft { .. } => EventType::GroupLeft,
-                EventCallbackType::GroupOpen { .. } => EventType::GroupOpen,
-                EventCallbackType::GroupRename { .. } => EventType::GroupRename,
-                EventCallbackType::GroupUnarchive { .. } => EventType::GroupUnarchive,
-                EventCallbackType::ImClose { .. } => EventType::ImClose,
-                EventCallbackType::ImCreated { .. } => EventType::ImCreated,
-                EventCallbackType::ImHistoryChanged { .. } => EventType::ImHistoryChanged,
-                EventCallbackType::ImOpen { .. } => EventType::ImOpen,
-                EventCallbackType::InviteRequested { .. } => EventType::InviteRequested,
-                EventCallbackType::LinkShared => EventType::LinkShared,
-                EventCallbackType::MemberJoinedChannel { .. } => EventType::MemberJoinedChannel,
-                EventCallbackType::MemberLeftChannel { .. } => EventType::MemberLeftChannel,
-                EventCallbackType::Message { .. } => EventType::Message,
-                EventCallbackType::Other => EventType::Other,
-            },
-        }
-    }
-}
-
-/// [Event API Type](https://api.slack.com/events?filter=Events)
-#[derive(Deserialize, Serialize, Debug, PartialEq)]
-#[serde(rename_all = "snake_case")]
-pub enum EventType {
-    AppHomeOpened,
-    AppMention,
-    AppRateLimited,
-    AppRequested,
-    AppUninstalled,
-    ChannelArchive,
-    ChannelCreated,
-    ChannelDeleted,
-    ChannelHistoryChanged,
-    ChannelIDChanged,
-    ChannelLeft,
-    ChannelRename,
-    ChannelShared,
-    ChannelUnarchive,
-    ChannelUnshared,
-    EmojiChanged,
-    GridMigrationFinished,
-    GridMigrationStarted,
-    GroupArchive,
-    GroupClose,
-    GroupDeleted,
-    GroupHistoryChanged,
-    GroupLeft,
-    GroupOpen,
-    GroupRename,
-    GroupUnarchive,
-    ImClose,
-    ImCreated,
-    ImHistoryChanged,
-    ImOpen,
-    InviteRequested,
-    LinkShared,
-    MemberJoinedChannel,
-    MemberLeftChannel,
-    Message,
-    #[serde(other)]
-    Other,
-}
-
-#[skip_serializing_none]
-#[derive(Deserialize, Serialize, Debug, PartialEq)]
-pub struct EventCallback {
+pub struct Event {
     pub token: String,
     pub team_id: String,
     pub api_app_id: String,
-    pub event: EventCallbackType,
+    pub event: EventCallback,
     pub event_id: String,
     pub event_time: i32,
+    #[serde(rename = "type")]
+    pub _type: String,
 }
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
 #[skip_serializing_none]
 #[serde(rename_all = "snake_case", tag = "type")]
-pub enum EventCallbackType {
+pub enum EventCallback {
     /// User clicked into your App Home
     #[serde(rename = "app_home_opened")]
     AppHomeOpened {
@@ -326,23 +232,21 @@ mod test {
   }
 }"##;
         let event = serde_json::from_str::<Event>(json).unwrap();
-        match event {
-            Event::EventCallback(event_callback) => match event_callback.event {
-                EventCallbackType::AppHomeOpened {
-                    user,
-                    channel,
-                    event_ts,
-                    tab,
-                    view,
-                } => {
-                    assert_eq!(user, "U061F7AUR");
-                    assert_eq!(channel, "D0LAN2Q65");
-                    assert_eq!(event_ts, "1515449522000016");
-                    assert_eq!(tab, "home");
-                    assert_eq!(view.id.unwrap(), "VPASKP233");
-                }
-                _ => panic!("Event callback deserialize into incorrect variant"),
-            },
+        match event.event {
+            EventCallback::AppHomeOpened {
+                user,
+                channel,
+                event_ts,
+                tab,
+                view,
+            } => {
+                assert_eq!(user, "U061F7AUR");
+                assert_eq!(channel, "D0LAN2Q65");
+                assert_eq!(event_ts, "1515449522000016");
+                assert_eq!(tab, "home");
+                assert_eq!(view.id.unwrap(), "VPASKP233");
+            }
+            _ => panic!("Event callback deserialize into incorrect variant"),
         }
     }
 
@@ -361,11 +265,9 @@ mod test {
 }"##;
 
         let event = serde_json::from_str::<Event>(json).unwrap();
-        match event {
-            Event::EventCallback(event_callback) => match event_callback.event {
-                EventCallbackType::Other => assert!(true, "true"),
-                _ => panic!("Event callback deserialize into incorrect variant"),
-            },
+        match event.event {
+            EventCallback::Other => assert!(true, "true"),
+            _ => panic!("Event callback deserialize into incorrect variant"),
         }
     }
 }
