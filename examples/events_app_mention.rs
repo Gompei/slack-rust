@@ -2,7 +2,7 @@ use std::env;
 
 use async_trait::async_trait;
 use slack::chat::post_message::{post_message, PostMessageRequest};
-use slack::event_api::event::{Event, EventCallbackType};
+use slack::event_api::event::{Event, EventType};
 use slack::http_client::{default_client, SlackWebAPIClient};
 use slack::socket::event::{EventsAPI, HelloEvent};
 use slack::socket::socket_mode::{ack, EventHandler, SocketMode, Stream};
@@ -51,8 +51,8 @@ where
             .expect("socket mode ack error.");
 
         match e.payload {
-            Event::EventCallback(event_callback) => match event_callback.event {
-                EventCallbackType::AppMention {
+            Event{event, ..} => match event {
+                EventType::AppMention {
                     text,
                     channel,
                     ts,

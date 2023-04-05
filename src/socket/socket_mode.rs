@@ -183,7 +183,7 @@ pub async fn connector_for_ca_file(ca_file_path: &str) -> Result<TlsConnector, E
 
 #[cfg(test)]
 mod test {
-    use crate::event_api::event::{Event, EventCallbackType};
+    use crate::event_api::event::*;
     use crate::http_client::{MockSlackWebAPIClient, SlackWebAPIClient};
     use crate::payloads::interactive::InteractiveEventType;
     use crate::socket::event::{
@@ -239,10 +239,8 @@ mod test {
             assert!(!e.accepts_response_payload, "false");
 
             match e.payload {
-                Event::EventCallback(event_callback) => match event_callback.event {
-                    EventCallbackType::AppHomeOpened { user, .. } => {
-                        assert_eq!(user, "U061F7AUR");
-                    }
+                Event{event, ..} => match event {
+                    EventType::AppHomeOpened {user, .. } => assert_eq!(user, "U061F7AUR"),
                     _ => panic!("Event callback deserialize into incorrect variant"),
                 },
             }

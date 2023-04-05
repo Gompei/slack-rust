@@ -2,123 +2,53 @@
 
 use crate::channels::channel::Channel;
 use crate::event_api::app::AppRequest;
+use crate::event_api::messages::{MessageBasic, MessageSubtype};
 use crate::team::teams::Team;
 use crate::views::view::View;
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 
 /// [Event API](https://api.slack.com/events?filter=Events)
-#[derive(Deserialize, Serialize, Debug, PartialEq)]
-#[serde(tag = "type")]
-pub enum Event {
-    /// Event callback
-    #[serde(rename = "event_callback")]
-    EventCallback(EventCallback),
-}
-
-impl Event {
-    pub fn block_type(&self) -> EventType {
-        match self {
-            Event::EventCallback(event_callback) => match event_callback.event {
-                EventCallbackType::AppHomeOpened { .. } => EventType::AppHomeOpened,
-                EventCallbackType::AppMention { .. } => EventType::AppMention,
-                EventCallbackType::AppRateLimited { .. } => EventType::AppRateLimited,
-                EventCallbackType::AppRequested { .. } => EventType::AppRequested,
-                EventCallbackType::AppUninstalled { .. } => EventType::AppUninstalled,
-                EventCallbackType::ChannelArchive { .. } => EventType::ChannelArchive,
-                EventCallbackType::ChannelCreated { .. } => EventType::ChannelCreated,
-                EventCallbackType::ChannelDeleted { .. } => EventType::ChannelDeleted,
-                EventCallbackType::ChannelHistoryChanged { .. } => EventType::ChannelHistoryChanged,
-                EventCallbackType::ChannelIDChanged { .. } => EventType::ChannelIDChanged,
-                EventCallbackType::ChannelLeft { .. } => EventType::ChannelLeft,
-                EventCallbackType::ChannelRename { .. } => EventType::ChannelRename,
-                EventCallbackType::ChannelShared { .. } => EventType::ChannelShared,
-                EventCallbackType::ChannelUnarchive { .. } => EventType::ChannelUnarchive,
-                EventCallbackType::ChannelUnshared { .. } => EventType::ChannelUnshared,
-                EventCallbackType::EmojiChanged { .. } => EventType::EmojiChanged,
-                EventCallbackType::GridMigrationFinished { .. } => EventType::GridMigrationFinished,
-                EventCallbackType::GridMigrationStarted { .. } => EventType::GridMigrationStarted,
-                EventCallbackType::GroupArchive { .. } => EventType::GroupArchive,
-                EventCallbackType::GroupClose { .. } => EventType::GroupClose,
-                EventCallbackType::GroupDeleted { .. } => EventType::GroupDeleted,
-                EventCallbackType::GroupHistoryChanged { .. } => EventType::GroupHistoryChanged,
-                EventCallbackType::GroupLeft { .. } => EventType::GroupLeft,
-                EventCallbackType::GroupOpen { .. } => EventType::GroupOpen,
-                EventCallbackType::GroupRename { .. } => EventType::GroupRename,
-                EventCallbackType::GroupUnarchive { .. } => EventType::GroupUnarchive,
-                EventCallbackType::ImClose { .. } => EventType::ImClose,
-                EventCallbackType::ImCreated { .. } => EventType::ImCreated,
-                EventCallbackType::ImHistoryChanged { .. } => EventType::ImHistoryChanged,
-                EventCallbackType::ImOpen { .. } => EventType::ImOpen,
-                EventCallbackType::InviteRequested { .. } => EventType::InviteRequested,
-                EventCallbackType::LinkShared => EventType::LinkShared,
-                EventCallbackType::MemberJoinedChannel { .. } => EventType::MemberJoinedChannel,
-                EventCallbackType::MemberLeftChannel { .. } => EventType::MemberLeftChannel,
-                EventCallbackType::Message { .. } => EventType::Message,
-                EventCallbackType::Other => EventType::Other,
-            },
-        }
-    }
-}
-
 /// [Event API Type](https://api.slack.com/events?filter=Events)
+/// Example of an [event wrapper](https://api.slack.com/types/event)
+/// ```
+/// {
+///         "token": "XXYYZZ",
+///         "team_id": "TXXXXXXXX",
+///         "api_app_id": "AXXXXXXXXX",
+///         "event": {
+///                 "type": "name_of_event",
+///                 "event_ts": "1234567890.123456",
+///                 "user": "UXXXXXXX1"
+///         },
+///         "type": "event_callback",
+///         "authed_users": [
+///                 "UXXXXXXX1",
+///                 "UXXXXXXX2"
+///         ],
+///         "event_id": "Ev08MFMKH6",
+///         "event_time": 1234567890
+/// }
+/// ```
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
-#[serde(rename_all = "snake_case")]
-pub enum EventType {
-    AppHomeOpened,
-    AppMention,
-    AppRateLimited,
-    AppRequested,
-    AppUninstalled,
-    ChannelArchive,
-    ChannelCreated,
-    ChannelDeleted,
-    ChannelHistoryChanged,
-    ChannelIDChanged,
-    ChannelLeft,
-    ChannelRename,
-    ChannelShared,
-    ChannelUnarchive,
-    ChannelUnshared,
-    EmojiChanged,
-    GridMigrationFinished,
-    GridMigrationStarted,
-    GroupArchive,
-    GroupClose,
-    GroupDeleted,
-    GroupHistoryChanged,
-    GroupLeft,
-    GroupOpen,
-    GroupRename,
-    GroupUnarchive,
-    ImClose,
-    ImCreated,
-    ImHistoryChanged,
-    ImOpen,
-    InviteRequested,
-    LinkShared,
-    MemberJoinedChannel,
-    MemberLeftChannel,
-    Message,
-    #[serde(other)]
-    Other,
-}
-
-#[skip_serializing_none]
-#[derive(Deserialize, Serialize, Debug, PartialEq)]
-pub struct EventCallback {
+#[serde(tag = "type", rename = "event_callback")]
+pub struct Event {
     pub token: String,
     pub team_id: String,
     pub api_app_id: String,
-    pub event: EventCallbackType,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub authed_users: Option<Vec<String>>,
     pub event_id: String,
-    pub event_time: i32,
+    pub event_time: u32,
+    pub event: EventType,
 }
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
 #[skip_serializing_none]
 #[serde(rename_all = "snake_case", tag = "type")]
-pub enum EventCallbackType {
+// TODO - Message will have a type but an optional subtype as well. How can I avoid encoding that
+// in this serde serialization?
+pub enum EventType {
     /// User clicked into your App Home
     #[serde(rename = "app_home_opened")]
     AppHomeOpened {
@@ -126,7 +56,8 @@ pub enum EventCallbackType {
         channel: String,
         event_ts: String,
         tab: String,
-        view: View,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        view: Option<View>,
     },
     /// Subscribe to only the message events that mention your app or bot
     AppMention {
@@ -280,7 +211,7 @@ pub enum EventCallbackType {
         inviter: String,
     },
     /// A user left a public or private channel
-    #[serde(rename = "member_joined_channel")]
+    #[serde(rename = "member_left_channel")]
     MemberLeftChannel {
         user: String,
         channel: String,
@@ -288,22 +219,18 @@ pub enum EventCallbackType {
         team: String,
     },
     /// A message was sent to a channel
-    Message {
-        channel_type: String,
-        channel: String,
-        event_ts: String,
-        text: String,
-        thread_ts: Option<String>,
-        ts: String,
-        user: String,
-    },
+    #[serde(rename = "message")]
+    Message(MessageBasic),
+    #[serde(rename = "message")]
+    MessageSubtype(MessageSubtype),
     #[serde(other)]
     Other,
 }
 
 #[cfg(test)]
 mod test {
-    use super::*;
+    use assert_json_diff::*;
+    use crate::event_api::event::{Event, EventType};
 
     #[test]
     fn deserialize_app_home_opened_event() {
@@ -326,24 +253,50 @@ mod test {
   }
 }"##;
         let event = serde_json::from_str::<Event>(json).unwrap();
-        match event {
-            Event::EventCallback(event_callback) => match event_callback.event {
-                EventCallbackType::AppHomeOpened {
-                    user,
-                    channel,
-                    event_ts,
-                    tab,
-                    view,
-                } => {
-                    assert_eq!(user, "U061F7AUR");
-                    assert_eq!(channel, "D0LAN2Q65");
-                    assert_eq!(event_ts, "1515449522000016");
-                    assert_eq!(tab, "home");
-                    assert_eq!(view.id.unwrap(), "VPASKP233");
-                }
-                _ => panic!("Event callback deserialize into incorrect variant"),
-            },
+        match event.event {
+            EventType::AppHomeOpened{..} => assert!(true, "true"),
+            _ => panic!("Event callback deserialize into incorrect variant"),
         }
+    }
+
+    #[test]
+    fn it_serializes_event_from_a_struct() {
+      let json = r##"{
+        "token": "bHKJ2n9AW6Ju3MjciOHfbA1b",
+        "team_id": "T1234567890",
+        "api_app_id": "A0000000000",
+        "event_id": "Ev0000000000",
+        "event_time": 1600000000,
+        "type": "event_callback",
+        "event": {
+          "type": "app_home_opened",
+          "user": "U061F7AUR",
+          "channel": "D0LAN2Q65",
+          "event_ts": "1515449522000016",
+          "tab": "home"
+        }
+      }"##;
+
+      let struct_thing = Event {
+        token: "bHKJ2n9AW6Ju3MjciOHfbA1b".to_string(),
+        team_id: "T1234567890".to_string(),
+        api_app_id: "A0000000000".to_string(),
+        event_id: "Ev0000000000".to_string(),
+        event_time: 1600000000,
+        authed_users: None,
+        event: EventType::AppHomeOpened {
+          user: "U061F7AUR".to_string(),
+          channel: "D0LAN2Q65".to_string(),
+          event_ts: "1515449522000016".to_string(),
+          tab: "home".to_string(),
+          view: None,
+        }
+      };
+
+      let serialized_json = serde_json::to_string(&struct_thing).unwrap();
+      let deserialized = serde_json::from_str::<Event>(&serialized_json).unwrap();
+      let expected = serde_json::from_str::<Event>(&json).unwrap();
+      assert_json_eq!(deserialized, expected);
     }
 
     #[test]
@@ -361,11 +314,9 @@ mod test {
 }"##;
 
         let event = serde_json::from_str::<Event>(json).unwrap();
-        match event {
-            Event::EventCallback(event_callback) => match event_callback.event {
-                EventCallbackType::Other => assert!(true, "true"),
-                _ => panic!("Event callback deserialize into incorrect variant"),
-            },
+        match event.event {
+          EventType::Other => assert!(true, "true"),
+          _ => panic!("Event callback deserialize into incorrect variant"),
         }
     }
 }
