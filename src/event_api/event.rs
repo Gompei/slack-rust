@@ -46,9 +46,11 @@ pub struct Event {
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
 #[skip_serializing_none]
 #[serde(rename_all = "snake_case", tag = "type")]
-// TODO - Message will have a type but an optional subtype as well. How can I avoid encoding that
-// in this serde serialization?
 pub enum EventType {
+    /// The list of accounts a user is signed into has changed
+    ///
+    /// <https://api.slack.com/events/accounts_changed>
+    AccountsChanged,
     /// User clicked into your App Home
     #[serde(rename = "app_home_opened")]
     AppHomeOpened {
@@ -60,6 +62,8 @@ pub enum EventType {
         view: Option<View>,
     },
     /// Subscribe to only the message events that mention your app or bot
+    /// 
+    /// <https://api.slack.com/events/app_mention>
     AppMention {
         channel: String,
         event_ts: String,
@@ -69,7 +73,8 @@ pub enum EventType {
         user: String,
     },
     /// Indicates your app's event subscriptions are being rate limited
-    #[serde(rename = "app_rate_limited")]
+    ///
+    /// <https://api.slack.com/events/app_rate_limited>
     AppRateLimited {
         token: String,
         team_id: String,
@@ -77,8 +82,11 @@ pub enum EventType {
         api_app_id: String,
     },
     /// User requested an app
-    #[serde(rename = "app_requested")]
-    AppRequested { app_request: AppRequest },
+    ///
+    /// <https://api.slack.com/events/app_requested>
+    AppRequested {
+      app_request: AppRequest
+    },
     /// Your Slack app was uninstalled.
     AppUninstalled,
     /// A channel was archived
@@ -297,6 +305,54 @@ mod test {
       let deserialized = serde_json::from_str::<Event>(&serialized_json).unwrap();
       let expected = serde_json::from_str::<Event>(&json).unwrap();
       assert_json_eq!(deserialized, expected);
+    }
+
+    #[test]
+    fn deserializes_accounts_changed() {
+        let json = r##"
+        {
+          "type": "accounts_changed"
+        }"##;
+        let event = serde_json::from_str::<EventType>(json).unwrap();
+        match event {
+            EventType::AccountsChanged{..} => assert!(true),
+            _ => panic!("Did not deserialize into expected variant"),
+        }
+    }
+
+    #[test]
+    fn deserializes_app_rate_limited() {
+        let json = r##"
+        {
+          "token": "Jhj5dZrVaK7ZwHHjRyZWjbDl",
+          "type": "app_rate_limited",
+          "team_id": "T123456",
+          "minute_rate_limited": 1518467820,
+          "api_app_id": "A123456"
+        }"##;
+        let event = serde_json::from_str::<EventType>(json).unwrap();
+        match event {
+            EventType::AppRateLimited{..} => assert!(true),
+            _ => panic!("Did not deserialize into expected variant"),
+        }
+    }
+
+    #[test]
+    fn deserializes_app_mention() {
+        let json = r##"
+        {
+            "type": "app_mention",
+            "user": "U061F7AUR",
+            "text": "<@U0LAN0Z89> is it everything a river should be?",
+            "ts": "1515449522.000016",
+            "channel": "C0LAN2Q65",
+            "event_ts": "1515449522000016"
+        }"##;
+        let event = serde_json::from_str::<EventType>(json).unwrap();
+        match event {
+            EventType::AppMention{..} => assert!(true),
+            _ => panic!("Did not deserialize into expected variant"),
+        }
     }
 
     #[test]
