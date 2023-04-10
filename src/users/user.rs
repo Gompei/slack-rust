@@ -38,6 +38,7 @@ pub struct User {
     pub team_id: Option<String>,
     pub name: Option<String>,
     pub deleted: Option<bool>,
+    pub email: Option<String>,
     pub color: Option<String>,
     pub real_name: Option<String>,
     pub tz: Option<String>,

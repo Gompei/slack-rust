@@ -3,14 +3,25 @@ use crate::users::user::User;
 
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
+use serde_json::Value;
 
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
 /// See more at <https://api.slack.com/events/app_requested>
+///
+/// Note that the `enterprise` field is a bit ambiguous. Slack's official
+/// documentation says this value may be null or not null (but does not provide
+/// an example). Therefore we use the `serde_json::Value::Null` variant to
+/// represent this possibility
 pub struct AppRequest {
-    pub id: Option<String>,
     pub app: Option<App>,
+    pub enterprise: Value,
+    pub id: Option<String>,
+    pub message: Option<String>,
     pub previous_resolution: Option<PreviousResolution>,
+    pub scopes: Option<Vec<Scope>>,
+    pub team: Option<Team>,
+    pub user: Option<User>,
 }
 
 #[skip_serializing_none]
@@ -26,10 +37,6 @@ pub struct App {
     pub is_app_directory_approved: Option<bool>,
     pub is_internal: Option<bool>,
     pub additional_info: Option<String>,
-    pub user: Option<User>,
-    pub team: Option<Team>,
-    pub scopes: Option<Vec<Scope>>,
-    pub message: Option<String>,
 }
 
 #[skip_serializing_none]
