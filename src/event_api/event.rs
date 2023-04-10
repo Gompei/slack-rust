@@ -88,7 +88,18 @@ pub enum EventType {
       app_request: AppRequest
     },
     /// Your Slack app was uninstalled.
+    ///
+    /// <https://api.slack.com/events/app_uninstalled>
     AppUninstalled,
+    /// A call was rejected
+    ///
+    /// <https://api.slack.com/events/call_rejected>
+    CallRejected {
+      call_id: String,
+      channel_id: String,
+      external_unique_id: String,
+      user_id: String,
+    },
     /// A channel was archived
     #[serde(rename = "channel_archive")]
     ChannelArchive { channel: String, user: String },
@@ -311,10 +322,20 @@ mod test {
     fn deserializes_accounts_changed() {
         let json = r##"
         {
-          "type": "accounts_changed"
-        }"##;
-        let event = serde_json::from_str::<EventType>(json).unwrap();
-        match event {
+          "token": "12345FVmRUzNDOAu12345h",
+          "team_id": "TL1BBBQBD",
+          "api_app_id": "BBBU04BB4",
+          "event": {
+              "type": "accounts_changed"
+          },
+          "type": "event_callback",
+          "event_id": "EvLLACMB6BB",
+          "event_time": 1563448153,
+          "authed_users": ["UBBB1TYR5"]
+        }
+        "##;
+        let event = serde_json::from_str::<Event>(json).unwrap();
+        match event.event {
             EventType::AccountsChanged{..} => assert!(true),
             _ => panic!("Did not deserialize into expected variant"),
         }
@@ -351,6 +372,56 @@ mod test {
         let event = serde_json::from_str::<EventType>(json).unwrap();
         match event {
             EventType::AppMention{..} => assert!(true),
+            _ => panic!("Did not deserialize into expected variant"),
+        }
+    }
+
+    #[test]
+    fn deserializes_call_rejected() {
+        let json = r##"
+        {
+          "token": "12345FVmRUzNDOAu12345h",
+          "team_id": "TL1BBBQBD",
+          "api_app_id": "BBBU04BB4",
+          "event": {
+            "type": "call_rejected",
+            "call_id": "RL731AVEF",
+            "user_id": "ULJS1TYR5",
+            "channel_id": "DL5JN9K0T",
+            "external_unique_id": "123-456-7890"
+          },
+          "type": "event_callback",
+          "event_id": "EvLLACMB6BB",
+          "event_time": 1563448153,
+          "authed_users": ["UBBB1TYR5"]
+        }
+        "##;
+        let event = serde_json::from_str::<Event>(json).unwrap();
+        println!("{:?}", event.event);
+        match event.event {
+            EventType::CallRejected{..} => assert!(true),
+            _ => panic!("Did not deserialize into expected variant CallRejected"),
+        }
+    }
+
+    #[test]
+    fn deserializes_app_uninstalled() {
+        let json = r##"
+          {
+            "token": "XXYYZZ",
+            "team_id": "TXXXXXXXX",
+            "api_app_id": "AXXXXXXXXX",
+            "event": {
+              "type": "app_uninstalled"
+            },
+            "type": "event_callback",
+            "event_id": "EvXXXXXXXX",
+            "event_time": 1234567890
+          }
+        "##;
+        let event = serde_json::from_str::<Event>(json).unwrap();
+        match event.event {
+            EventType::AppUninstalled{..} => assert!(true),
             _ => panic!("Did not deserialize into expected variant"),
         }
     }
