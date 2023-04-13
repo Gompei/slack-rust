@@ -205,12 +205,10 @@ pub enum EventType {
         event_ts: String,
     },
     /// A custom emoji has been added or changed
+    ///
+    /// <https://api.slack.com/events/emoji_changed>
     #[serde(rename = "emoji_changed")]
-    EmojiChanged {
-        subtype: String,
-        names: Vec<String>,
-        event_ts: String,
-    },
+    EmojiChanged(EmojiSubtype),
     /// An enterprise grid migration has finished on this workspace.
     GridMigrationFinished,
     /// An enterprise grid migration has started on this workspace.
@@ -312,10 +310,30 @@ pub struct DoNotDisturbStatus {
     pub snooze_endtime: Option<u32>,
 }
 
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
+#[serde(tag = "subtype", rename_all = "snake_case")]
+pub enum EmojiSubtype {
+    Add {
+        name: String,
+        value: String,
+        event_ts: String,
+    },
+    Remove {
+        names: Vec<String>,
+        event_ts: String,
+    },
+    Rename {
+        old_name: String,
+        new_name: String,
+        value: String,
+        event_ts: String,
+    }
+}
+
 #[cfg(test)]
 mod test {
     use assert_json_diff::*;
-    use crate::event_api::event::{Event, EventType};
+    use crate::event_api::event::{Event, EventType, EmojiSubtype};
 
     #[test]
     fn deserialize_app_home_opened_event() {
@@ -622,6 +640,67 @@ mod test {
         match event.event {
             EventType::DoNotDisturbUpdatedUser{..} => assert!(true),
             _ => panic!("Did not deserialize into expected variant DoNotDisturbUpdatedUser"),
+        }
+    }
+
+    #[test]
+    fn deserializes_emoji_changed() {
+        let json = r##"
+          {
+            "token": "XXYYZZ",
+            "team_id": "TXXXXXXXX",
+            "api_app_id": "AXXXXXXXXX",
+            "event": {
+                "type": "emoji_changed",
+                "subtype": "add",
+                "name": "picard_facepalm",
+                "value": "https://my.slack.com/emoji/picard_facepalm/db8e287430eaa459.gif",
+                "event_ts" : "1361482916.000004"
+            },
+            "type": "event_callback",
+            "event_id": "EvXXXXXXXX",
+            "event_time": 1234567890
+          }
+        "##;
+        let event = serde_json::from_str::<Event>(json).unwrap();
+        match event.event {
+            EventType::EmojiChanged(subtype) => {
+                match subtype {
+                    EmojiSubtype::Add{..} => assert!(true),
+                    _ => panic!("Did not deserialize into expected variant EmojiSubtype::Add")
+                }
+            },
+            _ => panic!("Did not deserialize into expected variant EmojiChanged"),
+        }
+    }
+
+    #[test]
+    fn deserializes_emoji_changed_removed() {
+        let json = r##"
+          {
+            "token": "XXYYZZ",
+            "team_id": "TXXXXXXXX",
+            "api_app_id": "AXXXXXXXXX",
+            "event": {
+                "type": "emoji_changed",
+                "subtype": "remove",
+                "names": ["picard_facepalm"],
+                "event_ts" : "1361482916.000004"
+            },
+            "type": "event_callback",
+            "event_id": "EvXXXXXXXX",
+            "event_time": 1234567890
+          }
+        "##;
+        let event = serde_json::from_str::<Event>(json).unwrap();
+        match event.event {
+            EventType::EmojiChanged(subtype) => {
+                match subtype {
+                    EmojiSubtype::Remove{..} => assert!(true),
+                    _ => panic!("Did not deserialize into expected variant EmojiSubtype::Remove")
+                }
+            },
+            _ => panic!("Did not deserialize into expected variant EmojiChanged"),
         }
     }
 
