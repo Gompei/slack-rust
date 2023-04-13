@@ -101,15 +101,30 @@ pub enum EventType {
       user_id: String,
     },
     /// A channel was archived
+    ///
+    /// <https://api.slack.com/events/channel_archive>
     #[serde(rename = "channel_archive")]
-    ChannelArchive { channel: String, user: String },
+    ChannelArchive {
+      channel: String,
+      user: String
+    },
     /// A channel was created
+    ///
+    /// <https://api.slack.com/events/channel_created>
     #[serde(rename = "channel_created")]
-    ChannelCreated { channel: Channel },
+    ChannelCreated {
+      channel: Channel
+    },
     /// A channel was deleted
+    ///
+    /// <https://api.slack.com/events/channel_deleted>
     #[serde(rename = "channel_deleted")]
-    ChannelDeleted { channel: String },
+    ChannelDeleted {
+        channel: String
+    },
     /// Bulk updates were made to a channel's history
+    ///
+    /// <https://api.slack.com/events/channel_history_changed>
     #[serde(rename = "channel_history_changed")]
     ChannelHistoryChanged {
         latest: String,
@@ -117,6 +132,8 @@ pub enum EventType {
         event_ts: String,
     },
     /// A channel ID changed
+    ///
+    /// <https://api.slack.com/events/channel_id_changed>
     #[serde(rename = "channel_id_changed")]
     ChannelIDChanged {
         old_channel_id: String,
@@ -124,12 +141,22 @@ pub enum EventType {
         event_ts: String,
     },
     /// You left a channel
+    ///
+    /// <https://api.slack.com/events/channel_left>
     #[serde(rename = "channel_left")]
-    ChannelLeft { channel: String },
+    ChannelLeft {
+        channel: String
+    },
     /// A channel was renamed
+    ///
+    /// <https://api.slack.com/events/channel_rename>
     #[serde(rename = "channel_rename")]
-    ChannelRename { channel: Channel },
+    ChannelRename {
+        channel: Channel
+    },
     /// A channel has been shared with an external workspace
+    ///
+    /// <https://api.slack.com/events/channel_shared>
     #[serde(rename = "channel_shared")]
     ChannelShared {
         connected_team_id: String,
@@ -137,9 +164,16 @@ pub enum EventType {
         event_ts: String,
     },
     /// A channel was unarchived
+    ///
+    /// <https://api.slack.com/events/channel_unarchive>
     #[serde(rename = "channel_unarchive")]
-    ChannelUnarchive { channel: String, user: String },
+    ChannelUnarchive {
+        channel: String,
+        user: String
+    },
     ///A channel has been unshared with an external workspace
+    ///
+    /// <https://api.slack.com/events/channel_unshared>
     #[serde(rename = "channel_unshared")]
     ChannelUnshared {
         previously_connected_team_id: String,
@@ -423,6 +457,81 @@ mod test {
         match event.event {
             EventType::AppUninstalled{..} => assert!(true),
             _ => panic!("Did not deserialize into expected variant"),
+        }
+    }
+
+    #[test]
+    fn deserializes_channel_archive() {
+        let json = r##"
+          {
+            "token": "XXYYZZ",
+            "team_id": "TXXXXXXXX",
+            "api_app_id": "AXXXXXXXXX",
+            "event": {
+              "type": "channel_archive",
+              "channel": "C024BE91L",
+              "user": "U024BE7LH"
+            },
+            "type": "event_callback",
+            "event_id": "EvXXXXXXXX",
+            "event_time": 1234567890
+          }
+        "##;
+        let event = serde_json::from_str::<Event>(json).unwrap();
+        match event.event {
+            EventType::ChannelArchive{..} => assert!(true),
+            _ => panic!("Did not deserialize into expected variant"),
+        }
+    }
+
+    #[test]
+    fn deserializes_channel_created() {
+        let json = r##"
+          {
+            "token": "XXYYZZ",
+            "team_id": "TXXXXXXXX",
+            "api_app_id": "AXXXXXXXXX",
+            "event": {
+              "type": "channel_created",
+              "channel": {
+                "id": "C024BE91L",
+                "name": "fun",
+                "created": 1360782804,
+                "creator": "U024BE7LH"
+              }
+            },
+            "type": "event_callback",
+            "event_id": "EvXXXXXXXX",
+            "event_time": 1234567890
+          }
+        "##;
+        let event = serde_json::from_str::<Event>(json).unwrap();
+        match event.event {
+            EventType::ChannelCreated{..} => assert!(true),
+            _ => panic!("Did not deserialize into expected variant"),
+        }
+    }
+
+    #[test]
+    fn deserializes_channel_deleted() {
+        let json = r##"
+          {
+            "token": "XXYYZZ",
+            "team_id": "TXXXXXXXX",
+            "api_app_id": "AXXXXXXXXX",
+            "event": {
+              "type": "channel_deleted",
+              "channel": "C024BE91L"
+            },
+            "type": "event_callback",
+            "event_id": "EvXXXXXXXX",
+            "event_time": 1234567890
+          }
+        "##;
+        let event = serde_json::from_str::<Event>(json).unwrap();
+        match event.event {
+            EventType::ChannelDeleted{..} => assert!(true),
+            _ => panic!("Did not deserialize into expected variant ChannelDeleted"),
         }
     }
 
