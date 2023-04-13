@@ -181,6 +181,29 @@ pub enum EventType {
         is_ext_shared: bool,
         event_ts: String,
     },
+    /// Do not Disturb settings changed for the current user
+    ///
+    /// <https://api.slack.com/events/dnd_updated>
+    #[serde(rename = "dnd_updated")]
+    DoNotDisturbUpdated {
+        user: String,
+        dnd_status: DoNotDisturbStatus
+    },
+    /// Do not Disturb settings changed for a member
+    ///
+    /// <https://api.slack.com/events/dnd_updated_user>
+    #[serde(rename = "dnd_updated_user")]
+    DoNotDisturbUpdatedUser {
+        user: String,
+        dnd_status: DoNotDisturbStatus
+    },
+    /// The workspace email domain has changed
+    ///
+    /// <https://api.slack.com/events/email_domain_changed>
+    EmailDomainChanged {
+        email_domain: String,
+        event_ts: String,
+    },
     /// A custom emoji has been added or changed
     #[serde(rename = "emoji_changed")]
     EmojiChanged {
@@ -278,6 +301,15 @@ pub enum EventType {
     MessageSubtype(MessageSubtype),
     #[serde(other)]
     Other,
+}
+
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
+pub struct DoNotDisturbStatus {
+    pub dnd_enabled: bool,
+    pub next_dnd_start_ts: u32,
+    pub next_dnd_end_ts: u32,
+    pub snooze_enabled: Option<bool>,
+    pub snooze_endtime: Option<u32>,
 }
 
 #[cfg(test)]
@@ -532,6 +564,64 @@ mod test {
         match event.event {
             EventType::ChannelDeleted{..} => assert!(true),
             _ => panic!("Did not deserialize into expected variant ChannelDeleted"),
+        }
+    }
+
+    #[test]
+    fn deserializes_do_not_disturb_updated() {
+        let json = r##"
+          {
+            "token": "XXYYZZ",
+            "team_id": "TXXXXXXXX",
+            "api_app_id": "AXXXXXXXXX",
+            "event": {
+                "type": "dnd_updated",
+                "user": "U1234",
+                "dnd_status": {
+                    "dnd_enabled": true,
+                    "next_dnd_start_ts": 1450387800,
+                    "next_dnd_end_ts": 1450423800,
+                    "snooze_enabled": true,
+                    "snooze_endtime": 1450373897
+                }
+            },
+            "type": "event_callback",
+            "event_id": "EvXXXXXXXX",
+            "event_time": 1234567890
+          }
+        "##;
+        let event = serde_json::from_str::<Event>(json).unwrap();
+        match event.event {
+            EventType::DoNotDisturbUpdated{..} => assert!(true),
+            _ => panic!("Did not deserialize into expected variant DoNotDisturbUpdated"),
+        }
+    }
+
+    #[test]
+    fn deserializes_do_not_disturb_updated_user() {
+        let json = r##"
+          {
+            "token": "XXYYZZ",
+            "team_id": "TXXXXXXXX",
+            "api_app_id": "AXXXXXXXXX",
+            "event": {
+                "type": "dnd_updated_user",
+                "user": "U1234",
+                "dnd_status": {
+                    "dnd_enabled": true,
+                    "next_dnd_start_ts": 1450387800,
+                    "next_dnd_end_ts": 1450423800
+                }
+            },
+            "type": "event_callback",
+            "event_id": "EvXXXXXXXX",
+            "event_time": 1234567890
+          }
+        "##;
+        let event = serde_json::from_str::<Event>(json).unwrap();
+        match event.event {
+            EventType::DoNotDisturbUpdatedUser{..} => assert!(true),
+            _ => panic!("Did not deserialize into expected variant DoNotDisturbUpdatedUser"),
         }
     }
 
