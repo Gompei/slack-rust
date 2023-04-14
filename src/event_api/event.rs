@@ -3,6 +3,7 @@
 use crate::channels::channel::Channel;
 use crate::event_api::app::AppRequest;
 use crate::event_api::messages::{MessageBasic, MessageSubtype};
+use crate::files::file::{File};
 use crate::team::teams::Team;
 use crate::views::view::View;
 use serde::{Deserialize, Serialize};
@@ -209,6 +210,51 @@ pub enum EventType {
     /// <https://api.slack.com/events/emoji_changed>
     #[serde(rename = "emoji_changed")]
     EmojiChanged(EmojiSubtype),
+    /// A file was changed
+    ///
+    /// <https://api.slack.com/events/file_change>
+    FileChange {
+        file_id: String,
+        file: File,
+    },
+    /// A file was created
+    ///
+    /// <https://api.slack.com/events/file_created>
+    FileCreated {
+        file_id: String,
+        file: File,
+    },
+    /// A file was deleted
+    ///
+    /// <https://api.slack.com/events/file_deleted>
+    FileDeleted {
+        file_id: String,
+        event_ts: String,
+    },
+    /// A file was made public
+    ///
+    /// <https://api.slack.com/events/file_public>
+    FilePublic {
+        file_id: String,
+        file: File,
+    },
+    /// A file was shared
+    ///
+    /// <https://api.slack.com/events/file_shared>
+    FileShared {
+        channel_id: String,
+        event_ts: String,
+        file_id: String,
+        file: File,
+        user_id: String,
+    },
+    /// A file was unshared
+    ///
+    /// <https://api.slack.com/events/file_unshared>
+    FileUnshared {
+        file_id: String,
+        file: File,
+    },
     /// An enterprise grid migration has finished on this workspace.
     GridMigrationFinished,
     /// An enterprise grid migration has started on this workspace.
@@ -701,6 +747,32 @@ mod test {
                 }
             },
             _ => panic!("Did not deserialize into expected variant EmojiChanged"),
+        }
+    }
+
+    #[test]
+    fn deserializes_file_change() {
+        let json = r##"
+          {
+            "token": "XXYYZZ",
+            "team_id": "TXXXXXXXX",
+            "api_app_id": "AXXXXXXXXX",
+            "event": {
+                "type": "file_change",
+                "file_id": "F2147483862",
+                "file": {
+                    "id": "F2147483862"
+                }
+            },
+            "type": "event_callback",
+            "event_id": "EvXXXXXXXX",
+            "event_time": 1234567890
+          }
+        "##;
+        let event = serde_json::from_str::<Event>(json).unwrap();
+        match event.event {
+            EventType::FileChange{..} => assert!(true),
+            _ => panic!("Did not deserialize into expected variant EmojiSubtype::Remove")
         }
     }
 
