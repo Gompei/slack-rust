@@ -256,37 +256,69 @@ pub enum EventType {
         file: File,
     },
     /// An enterprise grid migration has finished on this workspace.
-    GridMigrationFinished,
+    ///
+    /// <https://api.slack.com/events/grid_migration_finished>
+    GridMigrationFinished {
+        enterprise_id: String,
+    },
     /// An enterprise grid migration has started on this workspace.
-    GridMigrationStarted,
+    ///
+    /// <https://api.slack.com/events/grid_migration_started>
+    GridMigrationStarted {
+        enterprise_id: String,
+    },
     /// A private channel was archived
-    #[serde(rename = "group_archive")]
-    GroupArchive { channel: String },
+    ///
+    /// <https://api.slack.com/events/group_archive>
+    GroupArchive {
+       channel: String
+    },
     /// You closed a private channel
-    #[serde(rename = "group_close")]
-    GroupClose { user: String, channel: String },
+    ///
+    /// <https://api.slack.com/events/group_close>
+    GroupClose {
+        user: String,
+        channel: String
+    },
     /// A private channel was deleted
-    #[serde(rename = "group_deleted")]
-    GroupDeleted { channel: String },
+    ///
+    /// <https://api.slack.com/events/group_deleted>
+    GroupDeleted {
+       channel: String
+    },
     /// A private channel was deleted
-    #[serde(rename = "group_history_changed")]
+    ///
+    /// <https://api.slack.com/events/group_history_changed>
     GroupHistoryChanged {
         latest: String,
         ts: String,
         event_ts: String,
     },
     /// You left a private channel
-    #[serde(rename = "group_left")]
-    GroupLeft { channel: String },
+    ///
+    /// <https://api.slack.com/events/group_left>
+    GroupLeft {
+        channel: String
+    },
     /// You created a group DM
-    #[serde(rename = "group_open")]
-    GroupOpen { user: String, channel: String },
+    ///
+    /// <https://api.slack.com/events/group_open>
+    GroupOpen {
+        user: String,
+        channel: String
+    },
     /// A private channel was renamed
-    #[serde(rename = "group_rename")]
-    GroupRename { channel: Channel },
+    ///
+    /// <https://api.slack.com/events/group_rename>
+    GroupRename {
+        channel: Channel
+    },
     /// A private channel was unarchived
-    #[serde(rename = "group_unarchive")]
-    GroupUnarchive { channel: String },
+    ///
+    /// <https://api.slack.com/events/group_unarchive>
+    GroupUnarchive {
+        channel: String
+    },
     /// You closed a DM
     #[serde(rename = "im_close")]
     ImClose { user: String, channel: String },
