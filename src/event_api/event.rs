@@ -320,23 +320,37 @@ pub enum EventType {
         channel: String
     },
     /// You closed a DM
-    #[serde(rename = "im_close")]
-    ImClose { user: String, channel: String },
+    ///
+    /// <https://api.slack.com/events/im_close>
+    ImClose {
+        user: String,
+        channel: String
+    },
     /// A DM was created
-    #[serde(rename = "im_created")]
-    ImCreated { user: String, channel: Channel },
+    ///
+    /// <https://api.slack.com/events/im_created>
+    ImCreated {
+        user: String,
+        channel: Channel
+    },
     /// Bulk updates were made to a DM's history
-    #[serde(rename = "im_history_changed")]
+    ///
+    /// <https://api.slack.com/events/im_history_changed>
     ImHistoryChanged {
         latest: String,
         ts: String,
         event_ts: String,
     },
     /// You opened a DM
-    #[serde(rename = "im_open")]
-    ImOpen { user: String, channel: String },
+    ///
+    /// <https://api.slack.com/events/im_open>
+    ImOpen {
+        user: String,
+        channel: String
+    },
     /// User requested an invite
-    #[serde(rename = "invite_requested")]
+    ///
+    /// <https://api.slack.com/events/invite_requested>
     InviteRequested {
         id: String,
         email: String,
@@ -349,10 +363,19 @@ pub enum EventType {
         request_reason: String,
         team: Team,
     },
-    // TODO: To be implemented in the future
     /// A message was posted containing one or more links relevant to your application
-    #[serde(rename = "link_shared")]
-    LinkShared,
+    ///
+    /// <https://api.slack.com/events/link_shared>
+    LinkShared {
+        channel: String,
+        is_bot_user_member: bool,
+        user: String,
+        message_ts: String,
+        unfurl_id: String,
+        thread_ts: String,
+        source: LinkSource,
+        links: Vec<Link>,
+    },
     /// A user joined a public or private channel
     #[serde(rename = "member_joined_channel")]
     MemberJoinedChannel {
@@ -406,6 +429,20 @@ pub enum EmojiSubtype {
         value: String,
         event_ts: String,
     }
+}
+
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
+// TODO implement a better type for URL (besides a string)
+pub struct Link {
+    pub domain: String,
+    pub url: String,
+}
+
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
+#[serde(rename_all = "snake_case")]
+pub enum LinkSource {
+    Composer,
+    ConversationsHistory,
 }
 
 #[cfg(test)]
@@ -805,6 +842,53 @@ mod test {
         match event.event {
             EventType::FileChange{..} => assert!(true),
             _ => panic!("Did not deserialize into expected variant EmojiSubtype::Remove")
+        }
+    }
+
+    #[test]
+    fn deserializes_link_shared() {
+        let json = r##"
+        {
+            "token": "XXYYZZ",
+            "team_id": "TXXXXXXXX",
+            "api_app_id": "AXXXXXXXXX",
+            "event": {
+                "type": "link_shared",
+                "channel": "Cxxxxxx",
+                "is_bot_user_member": true,
+                "user": "Uxxxxxxx",
+                "message_ts": "123456789.9875",
+                "unfurl_id": "C123456.123456789.987501.1b90fa1278528ce6e2f6c5c2bfa1abc9a41d57d02b29d173f40399c9ffdecf4b",
+                "thread_ts": "123456621.1855",
+                "source": "conversations_history",
+                "links": [
+                    {
+                        "domain": "example.com",
+                        "url": "https://example.com/12345"
+                    },
+                    {
+                        "domain": "example.com",
+                        "url": "https://example.com/67890"
+                    },
+                    {
+                        "domain": "another-example.com",
+                        "url": "https://yet.another-example.com/v/abcde"
+                    }
+                ]
+            },
+            "type": "event_callback",
+            "authed_users": [
+                "UXXXXXXX1",
+                "UXXXXXXX2"
+            ],
+            "event_id": "Ev08MFMKH6",
+            "event_time": 123456789
+        }
+        "##;
+        let event = serde_json::from_str::<Event>(json).unwrap();
+        match event.event {
+            EventType::LinkShared{..} => assert!(true),
+            _ => panic!("Did not deserialize into expected variant EventType::LinkShared")
         }
     }
 
