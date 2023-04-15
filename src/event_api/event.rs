@@ -377,20 +377,22 @@ pub enum EventType {
         links: Vec<Link>,
     },
     /// A user joined a public or private channel
-    #[serde(rename = "member_joined_channel")]
+    ///
+    /// <https://api.slack.com/events/member_joined_channel>
     MemberJoinedChannel {
         user: String,
         channel: String,
-        channel_type: String,
+        channel_type: ChannelType,
         team: String,
         inviter: String,
     },
     /// A user left a public or private channel
-    #[serde(rename = "member_left_channel")]
+    ///
+    /// <https://api.slack.com/events/member_left_channel>
     MemberLeftChannel {
         user: String,
         channel: String,
-        channel_type: String,
+        channel_type: ChannelType,
         team: String,
     },
     /// A message was sent to a channel
@@ -443,6 +445,15 @@ pub struct Link {
 pub enum LinkSource {
     Composer,
     ConversationsHistory,
+}
+
+/// See <https://api.slack.com/events/member_joined_channel> for more
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
+pub enum ChannelType {
+    #[serde(rename = "C")]
+    Public,
+    #[serde(rename = "G")]
+    Private
 }
 
 #[cfg(test)]
@@ -889,6 +900,33 @@ mod test {
         match event.event {
             EventType::LinkShared{..} => assert!(true),
             _ => panic!("Did not deserialize into expected variant EventType::LinkShared")
+        }
+    }
+
+    #[test]
+    fn deserializes_member_joined_channel() {
+        let json = r##"
+          {
+            "token": "XXYYZZ",
+            "team_id": "TXXXXXXXX",
+            "api_app_id": "AXXXXXXXXX",
+            "event": {
+                "type": "member_joined_channel",
+                "user": "W06GH7XHN",
+                "channel": "C0698JE0H",
+                "channel_type": "C",
+                "team": "T024BE7LD",
+                "inviter": "U123456789"
+            },
+            "type": "event_callback",
+            "event_id": "EvXXXXXXXX",
+            "event_time": 1234567890
+          }
+        "##;
+        let event = serde_json::from_str::<Event>(json).unwrap();
+        match event.event {
+            EventType::MemberJoinedChannel{..} => assert!(true),
+            _ => panic!("Did not deserialize into expected variant MemberJoinedChannel")
         }
     }
 
