@@ -2,7 +2,7 @@
 
 use crate::channels::channel::Channel;
 use crate::event_api::app::AppRequest;
-use crate::event_api::messages::{MessageBasic, MessageSubtype};
+use crate::event_api::messages::{MessageBasic, MessageSubtype, MessageMetadata};
 use crate::files::file::{File};
 use crate::team::teams::Team;
 use crate::views::view::View;
@@ -400,6 +400,20 @@ pub enum EventType {
     Message(MessageBasic),
     #[serde(rename = "message")]
     MessageSubtype(MessageSubtype),
+
+    /// Message metadata was posted
+    ///
+    /// <https://api.slack.com/events/message_metadata_posted>
+    MessageMetadataPosted {
+        app_id: String,
+        bot_id: String,
+        channel_id: String,
+        event_ts: String,
+        message_ts: String,
+        metadata: MessageMetadata,
+        team_id: String,
+        user_id: String,
+    },
     #[serde(other)]
     Other,
 }
@@ -927,6 +941,47 @@ mod test {
         match event.event {
             EventType::MemberJoinedChannel{..} => assert!(true),
             _ => panic!("Did not deserialize into expected variant MemberJoinedChannel")
+        }
+    }
+
+    #[test]
+    fn deserializes_message_metadata_posted() {
+        let json = r##"
+        {
+            "token": "XXYYZZ",
+            "team_id": "TXXXXXXXX",
+            "api_app_id": "AXXXXXXXXX",
+            "event": {
+                "type": "message_metadata_posted",
+                "app_id": "AQF4F123M",
+                "bot_id": "B8241P2B34D",
+                "user_id": "UA8829BFL",
+                "team_id": "T12F3JCAP",
+                "channel_id": "CJN879K8A",
+                "metadata":
+                {
+                    "event_type": "task_created",
+                    "event_payload":
+                    {
+                        "id": "TK-2132",
+                        "summary": "New issue with the display of mobile element",
+                        "description": "An end user has found a problem with the new mobile container for data entry. It was reproduced in the current version of IOS.",
+                        "priority": "HIGH",
+                        "resource_type": "TASK"
+                    }
+                },
+                "message_ts": "1658903885.673769",
+                "event_ts": "1658903885.673769"
+            },
+            "type": "event_callback",
+            "event_id": "EvXXXXXXXX",
+            "event_time": 1234567890
+        }
+        "##;
+        let event = serde_json::from_str::<Event>(json).unwrap();
+        match event.event {
+            EventType::MessageMetadataPosted{..} => assert!(true),
+            _ => panic!("Did not deserialize into expected variant MessageMetadataPosted")
         }
     }
 

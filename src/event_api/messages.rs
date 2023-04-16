@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
+use serde_json::Value;
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
 #[serde(tag = "subtype")]
@@ -64,6 +65,20 @@ pub struct MessageUpdate {
     pub text: String,
     pub ts: String,
     pub user: String,
+}
+
+#[derive(Deserialize, Serialize, Debug, PartialEq)]
+/// Metadata Events are structured data payloads that contain information about
+/// events occurring in your Slack-connected application, in the form of a
+/// custom `event_payload` as part of a message's `metadata` property.
+///
+/// See <https://api.slack.com/reference/metadata> for more
+///
+/// Note here that we use the `serde_json::Value` since the `event_payload` can
+/// be dynamic (user-defined keys and values) which cannot be represented here
+pub struct MessageMetadata {
+    pub event_type: String,
+    pub event_payload: Value,
 }
 
 #[cfg(test)]
