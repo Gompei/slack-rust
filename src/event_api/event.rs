@@ -3,6 +3,7 @@
 use crate::channels::channel::Channel;
 use crate::event_api::app::AppRequest;
 use crate::event_api::messages::{MessageBasic, MessageSubtype, MessageMetadata};
+use crate::items::item::{Item};
 use crate::files::file::{File};
 use crate::team::teams::Team;
 use crate::views::view::View;
@@ -440,6 +441,45 @@ pub enum EventType {
         previous_metadata: MessageMetadata,
         team_id: String,
         user_id: String,
+    },
+    /// A pin was added to a channel
+    ///
+    /// <https://api.slack.com/events/pin_added>
+    PinAdded {
+        channel_id: String,
+        event_ts: String,
+        item: Item,
+        user: String,
+    },
+    /// A pin was removed from a channel
+    ///
+    /// <https://api.slack.com/events/pin_removed>
+    PinRemoved {
+        channel_id: String,
+        event_ts: String,
+        has_pins: bool,
+        item: Item,
+        user: String,
+    },
+    /// A member added an emoji reaction
+    ///
+    /// <https://api.slack.com/events/reaction_added>
+    ReactionAdded {
+        event_ts: String,
+        item: Item,
+        item_user: String,
+        reaction: String,
+        user: String,
+    },
+    /// A member removed an emoji reaction
+    ///
+    /// <https://api.slack.com/events/reaction_removed>
+    ReactionRemoved {
+        event_ts: String,
+        item: Item,
+        item_user: String,
+        reaction: String,
+        user: String,
     },
     #[serde(other)]
     Other,
@@ -1102,6 +1142,37 @@ mod test {
         let event = serde_json::from_str::<Event>(json).unwrap();
         match event.event {
             EventType::MessageMetadataUpdated{..} => assert!(true),
+            _ => panic!("Did not deserialize into expected variant MessageMetadataUpdated")
+        }
+    }
+
+    #[test]
+    fn deserializes_reaction_added() {
+        let json = r##"
+        {
+            "token": "XXYYZZ",
+            "team_id": "TXXXXXXXX",
+            "api_app_id": "AXXXXXXXXX",
+            "event": {
+                "type": "reaction_added",
+                "user": "U024BE7LH",
+                "reaction": "thumbsup",
+                "item_user": "U0G9QF9C6",
+                "item": {
+                    "type": "message",
+                    "channel": "C0G9QF9GZ",
+                    "ts": "1360782400.498405"
+                },
+                "event_ts": "1360782804.083113"
+            },
+            "type": "event_callback",
+            "event_id": "EvXXXXXXXX",
+            "event_time": 1234567890
+        }
+        "##;
+        let event = serde_json::from_str::<Event>(json).unwrap();
+        match event.event {
+            EventType::ReactionAdded{..} => assert!(true),
             _ => panic!("Did not deserialize into expected variant MessageMetadataUpdated")
         }
     }
