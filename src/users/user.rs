@@ -4,6 +4,7 @@ use serde_with::skip_serializing_none;
 #[skip_serializing_none]
 #[derive(Deserialize, Serialize, Debug, Default, PartialEq)]
 pub struct UserProfile {
+    pub avatar_hash: Option<String>,
     pub first_name: Option<String>,
     pub last_name: Option<String>,
     pub real_name: Option<String>,
@@ -19,7 +20,7 @@ pub struct UserProfile {
     pub image_72: Option<String>,
     pub image_192: Option<String>,
     pub image_512: Option<String>,
-    pub mage_original: Option<String>,
+    pub image_original: Option<String>,
     pub title: Option<String>,
     pub bot_id: Option<String>,
     pub api_app_id: Option<String>,

@@ -67,6 +67,7 @@ mod test {
             team: Some(Team {
                 id: Some("T12345".to_string()),
                 name: Some("My Team".to_string()),
+                date_created: None,
                 domain: Some("example".to_string()),
                 email_domain: Some("example.com".to_string()),
                 icon: Some(Icon {
@@ -78,6 +79,7 @@ mod test {
                     image_132: Some("https://...".to_string()),
                     image_default: Some(true),
                 }),
+                is_verified: None,
                 enterprise_id: Some("E1234A12AB".to_string()),
                 enterprise_name: Some("Umbrella Corporation".to_string()),
             }),
@@ -150,6 +152,7 @@ mod test {
             team: Some(Team {
                 id: Some("T12345".to_string()),
                 name: Some("My Team".to_string()),
+                date_created: None,
                 domain: Some("example".to_string()),
                 email_domain: Some("example.com".to_string()),
                 icon: Some(Icon {
@@ -161,6 +164,7 @@ mod test {
                     image_132: Some("https://...".to_string()),
                     image_default: Some(true),
                 }),
+                is_verified: None,
                 enterprise_id: Some("E1234A12AB".to_string()),
                 enterprise_name: Some("Umbrella Corporation".to_string()),
             }),

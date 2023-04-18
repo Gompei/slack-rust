@@ -6,9 +6,11 @@ use serde_with::skip_serializing_none;
 pub struct Team {
     pub id: Option<String>,
     pub name: Option<String>,
+    pub date_created: Option<u32>,
     pub domain: Option<String>,
     pub email_domain: Option<String>,
     pub icon: Option<Icon>,
+    pub is_verified: Option<bool>,
     pub enterprise_id: Option<String>,
     pub enterprise_name: Option<String>,
 }

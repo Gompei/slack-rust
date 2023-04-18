@@ -3,9 +3,11 @@
 use crate::channels::channel::Channel;
 use crate::event_api::app::AppRequest;
 use crate::event_api::messages::{MessageBasic, MessageSubtype, MessageMetadata};
+use crate::invites::invites::{Invite};
 use crate::items::item::{Item};
 use crate::files::file::{File};
-use crate::team::teams::Team;
+use crate::team::teams::{Team};
+use crate::users::user::{User};
 use crate::views::view::View;
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
@@ -480,6 +482,47 @@ pub enum EventType {
         item_user: String,
         reaction: String,
         user: String,
+    },
+    /// A shared channel invite was accepted
+    ///
+    /// <https://api.slack.com/events/shared_channel_invite_accepted>
+    SharedChannelInviteAccepted {
+        accepting_user: User,
+        approval_required: bool,
+        channel: Channel,
+        event_ts: String,
+        invite: Invite,
+        teams_in_channel: Vec<Team>,
+    },
+    /// A shared channel invite was approved
+    ///
+    /// <https://api.slack.com/events/shared_channel_invite_approved>
+    SharedChannelInviteApproved {
+        approving_user: User,
+        approving_team_id: String,
+        channel: Channel,
+        event_ts: String,
+        invite: Invite,
+        teams_in_channel: Vec<Team>,
+    },
+    /// A shared channel invite was declined
+    ///
+    /// <https://api.slack.com/events/shared_channel_invite_declined>
+    SharedChannelInviteDeclined {
+        channel: Channel,
+        declining: User,
+        declining_team_id: String,
+        event_ts: String,
+        invite: Invite,
+        teams_in_channel: Vec<Team>,
+    },
+    /// A shared channel invite was received
+    ///
+    /// <https://api.slack.com/events/shared_channel_invite_received>
+    SharedChannelInviteReceived {
+        channel: Channel,
+        event_ts: String,
+        invite: Invite,
     },
     #[serde(other)]
     Other,
@@ -1143,6 +1186,164 @@ mod test {
         match event.event {
             EventType::MessageMetadataUpdated{..} => assert!(true),
             _ => panic!("Did not deserialize into expected variant MessageMetadataUpdated")
+        }
+    }
+
+    #[test]
+    fn deserializes_shared_channel_invite_accepted() {
+        let json = r##"
+        {
+            "token": "XXYYZZ",
+            "team_id": "TXXXXXXXX",
+            "api_app_id": "AXXXXXXXXX",
+            "event": {
+                "type": "shared_channel_invite_accepted",
+                "approval_required": false,
+                "invite": {
+                    "id": "I028YDERZSQ",
+                    "date_created": 1626876000,
+                    "date_invalid": 1628085600,
+                    "inviting_team": {
+                        "id": "T12345678",
+                        "name": "Corgis",
+                        "is_verified": false,
+                        "domain": "corgis",
+                        "date_created": 1480946400
+                    },
+                    "inviting_user": {
+                        "id": "U12345678",
+                        "team_id": "T12345678",
+                        "name": "crus",
+                        "updated": 1608081902,
+                        "profile": {
+                            "real_name": "Corgis Rus",
+                            "display_name": "Corgis Rus",
+                            "real_name_normalized": "Corgis Rus",
+                            "display_name_normalized": "Corgis Rus",
+                            "team": "T12345678",
+                            "avatar_hash": "gcfh83a4c72k",
+                            "email": "corgisrus@slack-corp.com",
+                            "image_24": "https://placekitten.com/24/24",
+                            "image_32": "https://placekitten.com/32/32",
+                            "image_48": "https://placekitten.com/48/48",
+                            "image_72": "https://placekitten.com/72/72",
+                            "image_192": "https://placekitten.com/192/192",
+                            "image_512": "https://placekitten.com/512/512"
+                        }
+                    },
+                    "recipient_email": "golden@doodle.com",
+                    "recipient_user_id": "U87654321"
+                },
+                "channel": {
+                    "id": "C12345678",
+                    "is_private": false,
+                    "is_im": false,
+                    "name": "test-slack-connect"
+                },
+                "teams_in_channel": [
+                {
+                    "id": "T12345678",
+                    "name": "Corgis",
+                    "is_verified": false,
+                    "domain": "corgis",
+                    "date_created": 1626789600
+                }
+                ],
+                "accepting_user": {
+                    "id": "U87654321",
+                    "team_id": "T87654321",
+                    "name": "golden",
+                    "updated": 1624406113,
+                    "profile": {
+                        "real_name": "Golden Doodle",
+                        "display_name": "Golden",
+                        "real_name_normalized": "Golden Doodle",
+                        "display_name_normalized": "Golden",
+                        "team": "T87654321",
+                        "avatar_hash": "g717728b118x",
+                        "email": "golden@doodle.com",
+                        "image_24": "https://placekitten.com/24/24",
+                        "image_32": "https://placekitten.com/32/32",
+                        "image_48": "https://placekitten.com/48/48",
+                        "image_72": "https://placekitten.com/72/72",
+                        "image_192": "https://placekitten.com/192/192",
+                        "image_512": "https://placekitten.com/512/512"
+                    }
+                },
+                "event_ts": "1626877800.000000"
+            },
+            "type": "event_callback",
+            "event_id": "EvXXXXXXXX",
+            "event_time": 1234567890
+        }
+        "##;
+        let event = serde_json::from_str::<Event>(json).unwrap();
+        match event.event {
+            EventType::SharedChannelInviteAccepted{..} => assert!(true),
+            _ => panic!("Did not deserialize into expected variant SharedChannelInviteAccepted")
+        }
+    }
+
+    #[test]
+    fn deserializes_shared_channel_invite_received() {
+        let json = r##"
+        {
+            "token": "XXYYZZ",
+            "team_id": "TXXXXXXXX",
+            "api_app_id": "AXXXXXXXXX",
+            "event": {
+                "type": "shared_channel_invite_received",
+                "invite": {
+                    "id": "I028YDERZSQ",
+                    "date_created": 1626876000,
+                    "date_invalid": 1628085600,
+                    "inviting_team": {
+                        "id": "T12345678",
+                        "name": "Corgis",
+                        "is_verified": false,
+                        "domain": "corgis",
+                        "date_created": 1480946400
+                    },
+                    "inviting_user": {
+                        "id": "U12345678",
+                        "team_id": "T12345678",
+                        "name": "crus",
+                        "updated": 1608081902,
+                        "profile": {
+                            "real_name": "Corgis Rus",
+                            "display_name": "Corgis Rus",
+                            "real_name_normalized": "Corgis Rus",
+                            "display_name_normalized": "Corgis Rus",
+                            "team": "T12345678",
+                            "avatar_hash": "gcfh83a4c72k",
+                            "email": "corgisrus@slack-corp.com",
+                            "image_24": "https://placekitten.com/24/24",
+                            "image_32": "https://placekitten.com/32/32",
+                            "image_48": "https://placekitten.com/48/48",
+                            "image_72": "https://placekitten.com/72/72",
+                            "image_192": "https://placekitten.com/192/192",
+                            "image_512": "https://placekitten.com/512/512"
+                        }
+                    },
+                    "recipient_user_id": "U87654321"
+                },
+                "channel": {
+                    "id": "C12345678",
+                    "is_private": false,
+                    "is_im": false,
+                    "name": "test-slack-connect"
+                },
+                "event_ts": "1626876010.000100"
+            },
+            "type": "event_callback",
+            "event_id": "EvXXXXXXXX",
+            "event_time": 1234567890
+        }
+        "##;
+        let event = serde_json::from_str::<Event>(json).unwrap();
+        match event.event {
+            EventType::SharedChannelInviteReceived{..} => assert!(true),
+            _ => panic!("Did not deserialize into expected variant SharedChannelInviteReceived")
         }
     }
 
