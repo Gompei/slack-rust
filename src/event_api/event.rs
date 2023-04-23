@@ -7,10 +7,12 @@ use crate::invites::invites::{Invite};
 use crate::items::item::{Item};
 use crate::files::file::{File};
 use crate::team::teams::{Team};
+use crate::team::subteams::*;
 use crate::users::user::{User};
 use crate::views::view::View;
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize};
 use serde_with::skip_serializing_none;
+use serde_json::{Value};
 
 /// [Event API](https://api.slack.com/events?filter=Events)
 /// [Event API Type](https://api.slack.com/events?filter=Events)
@@ -524,6 +526,28 @@ pub enum EventType {
         event_ts: String,
         invite: Invite,
     },
+    /// A member has starred an item
+    ///
+    /// <https://api.slack.com/events/star_added>
+    StarAdded {
+        event_ts: String,
+        item: Item,
+        user: String,
+    },
+    /// A member removed a star
+    ///
+    /// <https://api.slack.com/events/star_removed>
+    StarRemoved {
+        event_ts: String,
+        item: Item,
+        user: String,
+    },
+    /// A User Group has been added to the workspace
+    ///
+    /// <https://api.slack.com/events/subteam_created>
+    SubteamCreated {
+        subteam: Subteam,
+    },
     #[serde(other)]
     Other,
 }
@@ -579,6 +603,7 @@ pub enum ChannelType {
     #[serde(rename = "G")]
     Private
 }
+
 
 #[cfg(test)]
 mod test {
@@ -1375,6 +1400,53 @@ mod test {
         match event.event {
             EventType::ReactionAdded{..} => assert!(true),
             _ => panic!("Did not deserialize into expected variant MessageMetadataUpdated")
+        }
+    }
+
+    #[test]
+    fn deserializes_subteam_created() {
+        let json = r##"
+        {
+            "token": "XXYYZZ",
+            "team_id": "TXXXXXXXX",
+            "api_app_id": "AXXXXXXXXX",
+            "event": {
+                "type": "subteam_created",
+                "subteam": {
+                    "id": "S0615G0KT",
+                    "team_id": "T060RNRCH",
+                    "is_usergroup": true,
+                    "name": "Marketing Team",
+                    "description": "Marketing gurus, PR experts and product advocates.",
+                    "handle": "marketing-team",
+                    "is_external": false,
+                    "date_create": 1446746793,
+                    "date_update": 1446746793,
+                    "date_delete": 0,
+                    "auto_type": null,
+                    "created_by": "U060RNRCZ",
+                    "updated_by": "U060RNRCZ",
+                    "deleted_by": null,
+                    "prefs": {
+                        "channels": [
+
+                        ],
+                        "groups": [
+
+                        ]
+                    },
+                    "user_count": "0"
+                }
+            },
+            "type": "event_callback",
+            "event_id": "EvXXXXXXXX",
+            "event_time": 1234567890
+        }
+        "##;
+        let event = serde_json::from_str::<Event>(json).unwrap();
+        match event.event {
+            EventType::SubteamCreated{..} => assert!(true),
+            _ => panic!("Did not deserialize into expected variant SubteamCreated")
         }
     }
 

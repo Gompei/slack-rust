@@ -7,4 +7,5 @@ pub mod integration_logs;
 pub mod log;
 pub mod preferences_list;
 pub mod profile_get;
+pub mod subteams;
 pub mod teams;
