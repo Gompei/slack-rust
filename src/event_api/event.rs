@@ -10,9 +10,8 @@ use crate::team::teams::{Team};
 use crate::team::subteams::*;
 use crate::users::user::{User};
 use crate::views::view::View;
-use serde::{Deserialize, Deserializer, Serialize};
+use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
-use serde_json::{Value};
 
 /// [Event API](https://api.slack.com/events?filter=Events)
 /// [Event API Type](https://api.slack.com/events?filter=Events)
@@ -546,6 +545,39 @@ pub enum EventType {
     ///
     /// <https://api.slack.com/events/subteam_created>
     SubteamCreated {
+        subteam: Subteam,
+    },
+    /// The membership of an existing User Group has changed
+    ///
+    /// <https://api.slack.com/events/subteam_members_changed>
+    SubteamMembersChanged {
+        added_users: Vec<String>,
+        #[serde(deserialize_with = "Subteam::make_int")]
+        added_users_count: u64,
+        date_previous_update: u32,
+        date_update: u32,
+        removed_users: Vec<String>,
+        #[serde(deserialize_with = "Subteam::make_int")]
+        removed_users_count: u64,
+        subteam_id: String,
+        team_id: String,
+    },
+    /// You have been added to a User Group
+    ///
+    /// <https://api.slack.com/events/subteam_self_added>
+    SubteamSelfAdded {
+        subteam_id: String,
+    },
+    /// You have been removed from a User Group
+    ///
+    /// <https://api.slack.com/events/subteam_self_removed>
+    SubteamSelfRemoved {
+        subteam_id: String,
+    },
+    /// An existing User Group has been updated or its members changed
+    ///
+    /// <https://api.slack.com/events/subteam_updated>
+    SubteamUpdated {
         subteam: Subteam,
     },
     #[serde(other)]
@@ -1404,6 +1436,42 @@ mod test {
     }
 
     #[test]
+    fn deserializes_subteam_members_changed() {
+        let json = r##"
+        {
+            "token": "XXYYZZ",
+            "team_id": "TXXXXXXXX",
+            "api_app_id": "AXXXXXXXXX",
+            "event": {
+                "type": "subteam_members_changed",
+                "subteam_id": "S0614TZR7",
+                "team_id": "T060RNRCH",
+                "date_previous_update": 1446670362,
+                "date_update": 1492906952,
+                "added_users": [
+                   "U060RNRCZ",
+                   "U060ULRC0",
+                   "U061309JM"
+                ],
+                "added_users_count": "3",
+                "removed_users": [
+                   "U06129G2V"
+                ],
+                "removed_users_count": "1"
+            },
+            "type": "event_callback",
+            "event_id": "EvXXXXXXXX",
+            "event_time": 1234567890
+        }
+        "##;
+        let event = serde_json::from_str::<Event>(json).unwrap();
+        match event.event {
+            EventType::SubteamMembersChanged{..} => assert!(true),
+            _ => panic!("Did not deserialize into expected variant SubteamMembersChanged")
+        }
+    }
+
+    #[test]
     fn deserializes_subteam_created() {
         let json = r##"
         {
@@ -1447,6 +1515,64 @@ mod test {
         match event.event {
             EventType::SubteamCreated{..} => assert!(true),
             _ => panic!("Did not deserialize into expected variant SubteamCreated")
+        }
+    }
+
+    #[test]
+    fn deserializes_subteam_updated() {
+        let json = r##"
+        {
+            "token": "XXYYZZ",
+            "team_id": "TXXXXXXXX",
+            "api_app_id": "AXXXXXXXXX",
+            "event": {
+                "type": "subteam_updated",
+                "subteam": {
+                    "id": "S516MPG9X",
+                    "team_id": "T0GMXV71T",
+                    "is_usergroup": true,
+                    "is_subteam": true,
+                    "name": "My User Group Test",
+                    "description": "User Group Test",
+                    "handle": "user-group-test",
+                    "is_external": false,
+                    "date_create": 1492655498,
+                    "date_update": 1595814882,
+                    "date_delete": 0,
+                    "auto_type": null,
+                    "auto_provision": false,
+                    "enterprise_subteam_id": "",
+                    "created_by": "U0GN26UBG",
+                    "updated_by": "U0GN26UBG",
+                    "deleted_by": null,
+                    "prefs": {
+                        "channels": [
+                            "CJG07GZDK"
+                        ],
+                        "groups": []
+                    },
+                    "users": [
+                        "U0GN26UBG",
+                        "U0GNBSG1G",
+                        "U0K0XMM2R",
+                        "U1FLR7FB8",
+                        "U3S7347ED",
+                        "U5ZR5M0FM",
+                        "U600XRXS9"
+                    ],
+                    "user_count": "7",
+                    "channel_count": 0
+                }
+            },
+            "type": "event_callback",
+            "event_id": "EvXXXXXXXX",
+            "event_time": 1234567890
+        }
+        "##;
+        let event = serde_json::from_str::<Event>(json).unwrap();
+        match event.event {
+            EventType::SubteamUpdated{..} => assert!(true),
+            _ => panic!("Did not deserialize into expected variant SubteamUpdated")
         }
     }
 
