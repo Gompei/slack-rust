@@ -580,6 +580,39 @@ pub enum EventType {
     SubteamUpdated {
         subteam: Subteam,
     },
+    /// Access to a set of teams was granted to your org app
+    ///
+    /// <https://api.slack.com/events/team_access_granted>
+    TeamAccessGranted {
+        team_ids: Vec<String>
+    },
+    /// Access to a set of teams was revoked from your org app
+    ///
+    /// <https://api.slack.com/events/team_access_revoked>
+    TeamAccessRevoked {
+        team_ids: Vec<String>
+    },
+    /// The workspace domain has changed
+    ///
+    /// <https://api.slack.com/events/team_domain_change>
+    TeamAccessRevoked {
+        domain: String,
+        team_id: String,
+        url: String,
+    },
+    /// A new member has joined
+    ///
+    /// <https://api.slack.com/events/team_join>
+    TeamAccessRevoked {
+        user: User,
+    },
+    /// The workspace name has changed
+    ///
+    /// <https://api.slack.com/events/team_rename>
+    TeamRename {
+        name: String,
+        team_id: String,
+    },
     #[serde(other)]
     Other,
 }
